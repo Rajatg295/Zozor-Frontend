@@ -26,7 +26,7 @@ const Login: React.FC = () => {
                     placeholder="+91 Enter mobile number"
                     className="w-full py-3 px-4 border-[1px] border-primary/30 mt-4"
                   />
-                  <button className="mt-4 py-3 px-5 rounded-[10px] bg-primary font-semibold text-white border-[1px] border-primary hover:bg-white hover:text-primary transition ease-in duration-2000">
+                  <button className="mt-4 py-3 px-5 rounded-[10px] bg-blue-500 font-semibold text-white border-[1px] border-primary hover:bg-white hover:text-primary transition ease-in duration-2000">
                     CONTINUE
                   </button>
                   <div className="w-full flex justify-center flex-col items-center py-8">

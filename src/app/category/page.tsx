@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaChevronRight, FaLocationArrow, FaMinus, FaStar, FaCartPlus } from "react-icons/fa";
 import axios from "axios";
+import { useRouter } from 'next/navigation';
 
 
 interface Product {
@@ -35,6 +36,7 @@ const CategoryComponent = () => {
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [showInStock, setShowInStock] = useState<boolean>(false);
   const [searchBrand, setSearchBrand] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -55,19 +57,24 @@ const CategoryComponent = () => {
 
 
 
-  const handleAddToCart = (product: Product) => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingProductIndex = cart.findIndex((item: Product) => item._id === product._id);
+    const handleAddToCart = (product: Product) => {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const existingProductIndex = cart.findIndex((item: Product) => item._id === product._id);
 
-    if (existingProductIndex > -1) {
-      cart[existingProductIndex].quantity += 1;
-    } else {
-      cart.push({ ...product, quantity: 1 });
-    }
+      if (existingProductIndex > -1) {
+        cart[existingProductIndex].quantity += 1;
+      } else {
+        cart.push({ ...product, quantity: 1 });
+      }
 
-    localStorage.setItem('cart', JSON.stringify(cart));
-    alert('Product added to cart!');
-  };
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert('Product added to cart!');
+    };
+
+    const handleBuyNow = (product: Product) => {
+      const productQueryString = encodeURIComponent(JSON.stringify(product));
+      router.push(`/Buynowhomepage?product=${productQueryString}`);
+    };
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
@@ -372,11 +379,11 @@ const CategoryComponent = () => {
                       >
                         <FaCartPlus className="text-[25px]" />
                       </button>
-                      <Link href="/product">
-                        <button className="py-3 px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-red-500 hover:bg-white hover:text-red-500 transition ease-in duration-2000">
+                      
+                        <button onClick={() => handleBuyNow(product)} className="py-3 px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-red-500 hover:bg-white hover:text-red-500 transition ease-in duration-2000">
                           BUY NOW
                         </button>
-                      </Link>
+                      
                     </div>
                   </li>
                 ))}

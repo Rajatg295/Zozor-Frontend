@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 const backendUrl = "http://localhost:8080";
 
 interface Product {
-  id: number;
+  _id?: number;
   name: string;
     price: number;
   image: string;
@@ -48,7 +48,22 @@ export default function ProductsPage() {
   }, []);
 
   const handleAddToCart = (product: Product) => {
-    console.log('Add to cart:', product);
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const existingProductIndex = cart.findIndex((item: Product) => item._id === product._id);
+
+    if (existingProductIndex > -1) {
+      cart[existingProductIndex].quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert('Product added to cart!');
+  };
+
+  const handleBuyNow = (product: Product) => {
+    const productQueryString = encodeURIComponent(JSON.stringify(product));
+    router.push(`/Buynowhomepage?product=${productQueryString}`);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -65,7 +80,7 @@ export default function ProductsPage() {
             <div className="relative flex overflow-x-auto space-x-4 pb-2">
               <ul className="flex space-x-4">
                 {products.map((product) => (
-                  <li key={product.id} className="inline-block bg-white px-4 py-8 rounded-[5px] w-full max-w-xs">
+                  <li key={product._id} className="inline-block bg-white px-4 py-8 rounded-[5px] w-full max-w-xs">
                     <div className="flex justify-start">
                       <a href="#">
                         <Image
@@ -107,11 +122,11 @@ export default function ProductsPage() {
                       >
                         <FaCartPlus className="text-[20px] md:text-[25px]" />
                       </button>
-                      <Link href="/product">
-                        <button className="py-2 px-4 md:py-3 md:px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-red-500 hover:bg-white hover:text-red-500 transition ease-in duration-2000">
+                     
+                        <button onClick={() => handleBuyNow(product)} className="py-2 px-4 md:py-3 md:px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-red-500 hover:bg-white hover:text-red-500 transition ease-in duration-2000">
                           BUY NOW
                         </button>
-                      </Link>
+                      
                     </div>
                   </li>
                 ))}

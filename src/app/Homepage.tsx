@@ -8,9 +8,7 @@
 // import { useRouter } from 'next/navigation';
 // import axios from 'axios';
 
-
 // const backendUrl = "http://localhost:8080";
-
 
 // interface Product {
 //   id: number;
@@ -36,7 +34,7 @@
 
 //   const slides = [
 //     "/assets/images/banner.png",
-//     "/assets/images/banner.png",  
+//     "/assets/images/banner.png",
 //     "/assets/images/banner.png"
 //   ];
 
@@ -60,7 +58,6 @@
 //     }
 //   };
 
-
 //   useEffect(() => {
 //     const fetchProducts = async () => {
 //       try {
@@ -81,18 +78,17 @@
 //   const handleAddToCart = (product: Product) => {
 //     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
 //     const existingProductIndex = cart.findIndex((item: Product) => item.id === product.id);
-  
+
 //     if (existingProductIndex > -1) {
 //       cart[existingProductIndex].quantity += 1;
 //     } else {
 //       cart.push({ ...product, quantity: 1 });
 //     }
-  
+
 //     localStorage.setItem('cart', JSON.stringify(cart));
 //     alert('Product added to cart!');
 //   };
 
-  
 //   return (
 //     <div className="w-full justify-center px-4 mt-6">
 //       <div className="ml-[60px] lg:w-[90%] md:w-[90%] w-full flex flex-col lg:flex-row gap-4 relative">
@@ -123,7 +119,6 @@
 //   </div>
 
 //   <div className="w-full grow relative">
-   
 
 //     <div className="hidden lg:grid md:grid grid-cols-5 gap-2 bg-white mt-4">
 //       <div className="w-full border-r-[1px] border-b-[2px] border-primary h-20 flex flex-col items-center justify-center">
@@ -178,11 +173,6 @@
 //   </div>
 // </div>
 
-
-
-
-
-
 //       <div className="w-full flex justify-center px-4 mt-4">
 //         <div className="lg:w-[90%] md:w-[90%] w-full flex flex-col bg-white p-4 rounded-[5px] gap-4 relative">
 //           <div className="w-full flex items-center justify-between">
@@ -233,7 +223,7 @@
 //                       <span className="text-[14px] font-semibold text-black/50 line-through">₹ {product.originalPrice.toLocaleString()}</span>
 //                       <span className="text-[16px] font-bold text-green">{product.discountPercentage}% OFF</span>
 //                     </div>
-                    
+
 //                     <div className="flex justify-between mt-3 gap-2">
 //                       <button
 //                         className="py-3 px-5 rounded-[10px] bg-blue-500 text-white border-[1px] border-blue-500 hover:bg-white hover:text-blue-500 transition ease-in duration-2000"
@@ -244,7 +234,7 @@
 //                       <Link href="/product"><button className="py-3 px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-red-500 hover:bg-white hover:text-red-500 transition ease-in duration-2000">
 //                         BUY NOW
 //                       </button></Link>
-                      
+
 //                     </div>
 //                   </li>
 //                 ))}
@@ -258,34 +248,31 @@
 //             </div>
 //           </div>
 
-
 //         </div>
 //       </div>
 
-
-     
-
-
-
 //     </div>
-
 
 //   );
 // };
 
 // export default Homepage;
 
-
-
 "use client";
-import { useRef } from 'react';
+import { useRef } from "react";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaChevronRight, FaLocationArrow, FaMinus, FaStar, FaCartPlus } from "react-icons/fa";
-import './globals.css'
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import {
+  FaChevronRight,
+  FaLocationArrow,
+  FaMinus,
+  FaStar,
+  FaCartPlus,
+} from "react-icons/fa";
+import "./globals.css";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const backendUrl = "http://localhost:8080";
 
@@ -306,7 +293,6 @@ interface Product {
 }
 
 const Homepage = () => {
-
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -315,8 +301,8 @@ const Homepage = () => {
 
   const slides = [
     "/assets/images/banner.png",
-    "/assets/images/banner.png",  
-    "/assets/images/banner.png"
+    "/assets/images/banner.png",
+    "/assets/images/banner.png",
   ];
 
   const goToNextSlide = () => {
@@ -329,13 +315,13 @@ const Homepage = () => {
 
   const scrollLeft = () => {
     if (sliderRef.current) {
-      sliderRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+      sliderRef.current.scrollBy({ left: -300, behavior: "smooth" });
     }
   };
 
   const scrollRight = () => {
     if (sliderRef.current) {
-      sliderRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+      sliderRef.current.scrollBy({ left: 300, behavior: "smooth" });
     }
   };
 
@@ -343,11 +329,11 @@ const Homepage = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(`${backendUrl}/products`);
-        console.log('Fetched products:', response.data);
+        console.log("Fetched products:", response.data);
 
         setProducts(response.data);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       } finally {
         setLoading(false);
       }
@@ -357,8 +343,10 @@ const Homepage = () => {
   }, []);
 
   const handleAddToCart = (product: Product) => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingProductIndex = cart.findIndex((item: Product) => item._id === product._id);
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const existingProductIndex = cart.findIndex(
+      (item: Product) => item._id === product._id
+    );
 
     if (existingProductIndex > -1) {
       cart[existingProductIndex].quantity += 1;
@@ -366,8 +354,8 @@ const Homepage = () => {
       cart.push({ ...product, quantity: 1 });
     }
 
-    localStorage.setItem('cart', JSON.stringify(cart));
-    alert('Product added to cart!');
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Product added to cart!");
   };
 
   const handleBuyNow = (product: Product) => {
@@ -382,24 +370,69 @@ const Homepage = () => {
           id="sideCategories"
           className="h-max shadow-lg w-80 bg-white flex-none lg:static absolute top-0 left-0 flex-col lg:gap-4 md:gap-4 gap-2 lg:py-12 md:py-12 py-4 px-4 lg:rounded-[20px] md:rounded-[20px] rounded-[5px] z-40 lg:flex md:flex hidden"
         >
-          <Link href="#" className="flex gap-2 items-center hover:text-primary transition ease-in duration-2000">
-            <Image className="h-12 w-12" src="/assets/images/mobile.png" alt="Mobile Display Screens" width={48} height={48} />
+          <Link
+            href="#"
+            className="flex gap-2 items-center hover:text-primary transition ease-in duration-2000"
+          >
+            <Image
+              className="h-12 w-12"
+              src="/assets/images/mobile.png"
+              alt="Mobile Display Screens"
+              width={48}
+              height={48}
+            />
             <span className="text-lg font-bold">Mobile Display Screens</span>
           </Link>
-          <Link href="#" className="flex gap-2 items-center hover:text-primary transition ease-in duration-2000">
-            <Image className="h-12 w-12" src="/assets/images/mobilea.png" alt="Mobile Accessories" width={48} height={48} />
+          <Link
+            href="#"
+            className="flex gap-2 items-center hover:text-primary transition ease-in duration-2000"
+          >
+            <Image
+              className="h-12 w-12"
+              src="/assets/images/mobilea.png"
+              alt="Mobile Accessories"
+              width={48}
+              height={48}
+            />
             <span className="text-lg font-bold">Mobile Accessories</span>
           </Link>
-          <Link href="#" className="flex gap-2 items-center hover:text-primary transition ease-in duration-2000">
-            <Image className="h-12 w-12" src="/assets/images/mobiles.png" alt="Mobile Spare Parts" width={48} height={48} />
+          <Link
+            href="#"
+            className="flex gap-2 items-center hover:text-primary transition ease-in duration-2000"
+          >
+            <Image
+              className="h-12 w-12"
+              src="/assets/images/mobiles.png"
+              alt="Mobile Spare Parts"
+              width={48}
+              height={48}
+            />
             <span className="text-lg font-bold">Mobile Spare Parts</span>
           </Link>
-          <Link href="#" className="flex gap-2 items-center hover:text-primary transition ease-in duration-2000">
-            <Image className="h-12 w-12" src="/assets/images/mobilet.png" alt="Mobile Tool Kits" width={48} height={48} />
+          <Link
+            href="#"
+            className="flex gap-2 items-center hover:text-primary transition ease-in duration-2000"
+          >
+            <Image
+              className="h-12 w-12"
+              src="/assets/images/mobilet.png"
+              alt="Mobile Tool Kits"
+              width={48}
+              height={48}
+            />
             <span className="text-lg font-bold">Mobile Tool Kits</span>
           </Link>
-          <Link href="/category" className="flex gap-2 items-center text-red-400 transition ease-in duration-2000">
-            <Image className="h-12 w-12" src="/assets/images/mobilea.png" alt="View All Categories" width={48} height={48} />
+          <Link
+            href="/category"
+            className="flex gap-2 items-center text-red-400 transition ease-in duration-2000"
+          >
+            <Image
+              className="h-12 w-12"
+              src="/assets/images/mobilea.png"
+              alt="View All Categories"
+              width={48}
+              height={48}
+            />
             <span className="text-lg font-semibold">View All Categories</span>
           </Link>
         </div>
@@ -439,11 +472,23 @@ const Homepage = () => {
             &lt;
           </button>
 
-          <div className="flex overflow-x-auto scroll-smooth whitespace-nowrap gap-4 py-2" ref={sliderRef}>
+          <div
+            className="flex overflow-x-auto scroll-smooth whitespace-nowrap gap-4 py-2"
+            ref={sliderRef}
+          >
             {[1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3].map((index) => (
-              <div key={index} className="inline-block bg-white px-4 py-9 rounded-[5px] w-full max-w-xs">
+              <div
+                key={index}
+                className="inline-block bg-white px-4 py-9 rounded-[5px] w-full max-w-xs"
+              >
                 <div className="h-24 w-24 rounded-full shadow-lg shadow-black/20 inline-block">
-                  <Image className="h-24 w-24 rounded-full" src={`/assets/images/image${index}.png`} alt={`Image ${index}`} width={96} height={96} />
+                  <Image
+                    className="h-24 w-24 rounded-full"
+                    src={`/assets/images/image${index}.png`}
+                    alt={`Image ${index}`}
+                    width={96}
+                    height={96}
+                  />
                 </div>
               </div>
             ))}
@@ -461,8 +506,12 @@ const Homepage = () => {
       <div className="w-full flex justify-center px-4 mt-4">
         <div className="lg:w-[90%] md:w-[90%] w-full flex flex-col bg-white p-4 rounded-[5px] gap-4 relative">
           <div className="w-full flex items-center justify-between">
-            <span className="text-md font-semibold text-primary">RECENTLY VIEWED PRODUCTS</span>
-            <Link href="/products" className="text-sm flex gap-2 items-center">View All <FaChevronRight /></Link>
+            <span className="text-md font-semibold text-primary">
+              RECENTLY VIEWED PRODUCTS
+            </span>
+            <Link href="/products" className="text-sm flex gap-2 items-center">
+              View All <FaChevronRight />
+            </Link>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -470,32 +519,56 @@ const Homepage = () => {
               <div>Loading...</div>
             ) : (
               products.map((product) => (
-                <div key={product._id} className=" p-4 rounded shadow-md flex flex-col items-center justify-center relative">
-                  <Image src={product.image} alt={product.name} width={150} height={150} className="object-contain" />
-                  <span className="text-[13px] text-black/70">({product.reviewCount} Reviews)</span>
+                <div
+                  key={product._id}
+                  className=" p-4 rounded shadow-md flex flex-col items-center justify-center relative"
+                >
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    width={150}
+                    height={150}
+                    className="object-contain"
+                  />
+                  <span className="text-[13px] text-black/70">
+                    ({product.reviewCount} Reviews)
+                  </span>
                   <button className="bg-green-500 text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
-                        {product.rating} <FaStar className="text-[10px]" />
-                      </button>    
+                    {product.rating} <FaStar className="text-[10px]" />
+                  </button>
                   <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
-                  <span className="text-2xl font-bold text-black">₹ {product.price.toLocaleString()}</span>
-                               
-                      <span className="text-[14px] font-semibold text-black/50">By: {product.brand}</span>
-                      <span className="text-[14px] font-semibold text-black/50 line-through">₹ {product.originalPrice.toLocaleString()}</span>
-                      <span className="text-[16px] font-bold text-green">{product.discountPercentage}% OFF</span>
+                  <span className="text-2xl font-bold text-black">
+                    ₹ {product.price.toLocaleString()}
+                  </span>
 
+                  <span className="text-[14px] font-semibold text-black/50">
+                    By: {product.brand}
+                  </span>
+                  <span className="text-[14px] font-semibold text-black/50 line-through">
+                    ₹ {product.originalPrice.toLocaleString()}
+                  </span>
+                  <span className="text-[16px] font-bold text-green">
+                    {product.discountPercentage}% OFF
+                  </span>
                   <button
                     onClick={() => handleAddToCart(product)}
                     className="flex bg-blue-500 text-white py-1 px-2 mt-2 rounded hover:bg-blue-600"
                   >
                     <FaCartPlus />
                   </button>
-                  <button onClick={() => handleBuyNow(product)} className='bg-blue-500 text-white py-1 px-2 mt-2 rounded hover:bg-blue-600'>
+                  <button
+                    onClick={() => handleBuyNow(product)}
+                    className="bg-blue-500 text-white py-1 px-2 mt-2 rounded hover:bg-blue-600"
+                  >
                     Buy now
                   </button>
                 </div>
               ))
             )}
           </div>
+
+         
+
         </div>
       </div>
     </div>
@@ -503,3 +576,92 @@ const Homepage = () => {
 };
 
 export default Homepage;
+
+
+// const ProductGrid = ({ products, loading }) => {
+//   const router = useRouter();
+
+//   const handleAddToCart = (product) => {
+//     // Your existing add to cart functionality
+//   };
+
+//   const handleBuyNow = (product) => {
+//     // Your existing buy now functionality
+//   };
+
+//   return (
+//     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+//       {loading ? (
+//         <div>Loading...</div>
+//       ) : (
+//         products.map((product) => (
+//           <Link
+//             key={product._id}
+//             href={{
+//               pathname: '/productdetails',
+//               query: { ...product },
+//             }}
+//             passHref
+//           >
+//             <div
+//               className="p-4 rounded shadow-md flex flex-col items-center justify-center relative cursor-pointer"
+//               onClick={(e) => {
+//                 if (e.target.tagName === 'BUTTON' || e.target.tagName === 'svg') {
+//                   e.preventDefault();
+//                 }
+//               }}
+//             >
+//               <Image
+//                 src={product.image}
+//                 alt={product.name}
+//                 width={150}
+//                 height={150}
+//                 className="object-contain"
+//               />
+//               <span className="text-[13px] text-black/70">
+//                 ({product.reviewCount} Reviews)
+//               </span>
+//               <button className="bg-green-500 text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
+//                 {product.rating} <FaStar className="text-[10px]" />
+//               </button>
+//               <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
+//               <span className="text-2xl font-bold text-black">
+//                 ₹ {product.price.toLocaleString()}
+//               </span>
+
+//               <span className="text-[14px] font-semibold text-black/50">
+//                 By: {product.brand}
+//               </span>
+//               <span className="text-[14px] font-semibold text-black/50 line-through">
+//                 ₹ {product.originalPrice.toLocaleString()}
+//               </span>
+//               <span className="text-[16px] font-bold text-green">
+//                 {product.discountPercentage}% OFF
+//               </span>
+//               <button
+//                 onClick={(e) => {
+//                   e.stopPropagation();
+//                   handleAddToCart(product);
+//                 }}
+//                 className="flex bg-blue-500 text-white py-1 px-2 mt-2 rounded hover:bg-blue-600"
+//               >
+//                 <FaCartPlus />
+//               </button>
+//               <button
+//                 onClick={(e) => {
+//                   e.stopPropagation();
+//                   handleBuyNow(product);
+//                 }}
+//                 className="bg-blue-500 text-white py-1 px-2 mt-2 rounded hover:bg-blue-600"
+//               >
+//                 Buy now
+//               </button>
+//             </div>
+//           </Link>
+//         ))
+//       )}
+//     </div>
+//   );
+// };
+
+// export default ProductGrid;

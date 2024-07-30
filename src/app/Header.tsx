@@ -39,19 +39,13 @@ const Header: React.FC = () => {
         <div className="h-full flex items-center lg:gap-8 md:gap-8">
          
           <a href="#">
-            <div className="lg:flex md:flex hidden items-center gap-2 border-b-[1px] border-white hover:border-primary transition ease-in duration-2000">
-              <FaUserCircle className="text-lg text-primary" />
-              
-              <span className="text-sm font-semibold">User Name</span>
-              
-              <i className="fa fa-chevron-down text-md"></i>
-            </div>
+            
           </a>
           <a href="/login">
           <div className="lg:flex md:flex hidden items-center gap-2 border-b-[1px] border-white hover:border-primary transition ease-in duration-2000">
           <FaSignOutAlt className="text-lg" />
               
-              <span className="text-sm font-semibold">Logout</span>
+              <span className="text-sm font-semibold">Login</span>
               
               <i className="fa fa-chevron-down text-md"></i>
             </div>
