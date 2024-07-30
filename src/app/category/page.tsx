@@ -7,11 +7,8 @@ import { FaChevronRight, FaLocationArrow, FaMinus, FaStar, FaCartPlus } from "re
 import axios from "axios";
 
 
-
-
-
 interface Product {
-  id: number;
+  _id?: number;
   name: string;
   price: number;
   image: string;
@@ -22,6 +19,8 @@ interface Product {
   originalPrice: number;
   discountPercentage: number;
   quantity: number;
+  category?: string;
+  stock?: number;
 }
 
 
@@ -30,11 +29,18 @@ const CategoryComponent = () => {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState<number[][]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
+  const [showInStock, setShowInStock] = useState<boolean>(false);
+  const [searchBrand, setSearchBrand] = useState<string>("");
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:8080/products');
-        console.log('Fetched products:', response.data); 
+        console.log('Fetched products:', response.data);
 
         setProducts(response.data);
       } catch (error) {
@@ -51,23 +57,91 @@ const CategoryComponent = () => {
 
   const handleAddToCart = (product: Product) => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingProductIndex = cart.findIndex((item: Product) => item.id === product.id);
-  
+    const existingProductIndex = cart.findIndex((item: Product) => item._id === product._id);
+
     if (existingProductIndex > -1) {
       cart[existingProductIndex].quantity += 1;
     } else {
       cart.push({ ...product, quantity: 1 });
     }
-  
+
     localStorage.setItem('cart', JSON.stringify(cart));
     alert('Product added to cart!');
   };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+  };
+  type PriceRange = [number, number];
+
+  const handlePriceChange = (range) => {
+    if (selectedPriceRanges.some(r => r[0] === range[0] && r[1] === range[1])) {
+      setSelectedPriceRanges(prevRanges => prevRanges.filter(r => !(r[0] === range[0] && r[1] === range[1])));
+    } else {
+      setSelectedPriceRanges(prevRanges => [...prevRanges, range]);
+    }
+  };
+
+
+
+  const handleBrandChange = (brand: string) => {
+    if (selectedBrands.includes(brand)) {
+      setSelectedBrands(selectedBrands.filter(b => b !== brand));
+    } else {
+      setSelectedBrands([...selectedBrands, brand]);
+    }
+  };
+
+  const handleRatingChange = (rating: number) => {
+    setSelectedRating(rating);
+  };
+
+
+  const handleSearchBrandChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchBrand(event.target.value);
+  };
+
+  const handleInStockChange = () => {
+    setShowInStock(!showInStock);
+  };
+
+  const filteredProducts = products.filter(product => {
+    let isValid = true;
+
+    if (selectedCategory && product.category !== selectedCategory) {
+      isValid = false;
+    }
+
+    if (selectedPriceRanges.length > 0) {
+      const inRange = selectedPriceRanges.some(([min, max]) => product.price >= min && product.price <= max);
+      if (!inRange) {
+        isValid = false;
+      }
+    }
+
+    if (selectedBrands.length > 0 && !selectedBrands.includes(product.brand)) {
+      isValid = false;
+    }
+
+    if (selectedRating && product.rating < selectedRating) {
+      isValid = false;
+    }
+
+    if (showInStock && product.stock === 0) {
+      isValid = false;
+    }
+
+    return isValid;
+  });
+
 
 
   return (
     <div className="w-full flex justify-center px-4 mt-6">
       <div className="lg:w-[90%] md:w-[90%] w-full flex lg:flex-row md:flex-row flex-col gap-4 relative">
         <div className="h-max lg:w-80 md:w-80 w-full bg-white flex-none flex flex-col lg:gap-4 md:gap-4 gap-2 rounded-[5px] z-40">
+
+
           {/* Category Filter */}
           <div className="w-full flex flex-col gap-2 border-b-[1px] border-primary/30 py-6 px-4">
             <div className="flex justify-between items-center">
@@ -76,14 +150,36 @@ const CategoryComponent = () => {
             </div>
             <div className="flex flex-col gap-2 mt-4">
               <div className="flex justify-between items-center">
-                <Link href="#" className="flex items-center">
+                <Link href="#" className="flex items-center" onClick={() => handleCategoryChange("Mobile Tool Kits")}>
                   <FaChevronRight className="mr-2" />
                   <span className="font-medium text-md">Mobile Tool Kits</span>
                 </Link>
-                <span className="font-medium text-md">(4)</span>
+                <span className="font-medium text-md">(1)</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <Link href="#" className="flex items-center" onClick={() => handleCategoryChange("Mobile Display Screens")}>
+                  <FaChevronRight className="mr-2" />
+                  <span className="font-medium text-md">Mobile Display Screens</span>
+                </Link>
+                <span className="font-medium text-md">(1)</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <Link href="#" className="flex items-center" onClick={() => handleCategoryChange("Mobile Spare Parts")}>
+                  <FaChevronRight className="mr-2" />
+                  <span className="font-medium text-md">Mobile Spare Parts</span>
+                </Link>
+                <span className="font-medium text-md">(1)</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <Link href="#" className="flex items-center" onClick={() => handleCategoryChange("Accessories")}>
+                  <FaChevronRight className="mr-2" />
+                  <span className="font-medium text-md">Accessories</span>
+                </Link>
+                <span className="font-medium text-md">(1)</span>
               </div>
             </div>
           </div>
+
 
           {/* Price Filter */}
           <div className="w-full flex flex-col gap-2 border-b-[1px] border-primary/30 py-6 px-4">
@@ -92,26 +188,32 @@ const CategoryComponent = () => {
               <FaMinus className="text-md" />
             </div>
             <div className="flex flex-col gap-2 mt-4">
-              <div className="flex justify-between items-center">
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  <span className="font-medium text-md">₹1 - ₹500</span>
-                </label>
-              </div>
-              <div className="flex justify-between items-center">
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  <span className="font-medium text-md">₹501 - ₹1000</span>
-                </label>
-              </div>
-              <div className="flex justify-between items-center">
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  <span className="font-medium text-md">₹1001 - ₹2000</span>
-                </label>
-              </div>
+              {[
+                [0, 500],
+                [500, 1000],
+                [1000, 2500],
+                [2500, 5000],
+                [5000, 10000],
+                [10000, Infinity]
+              ].map(range => (
+                <div className="flex justify-between items-center" key={range[1]}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      className="mr-2"
+                      onChange={() => handlePriceChange(range)}
+                      checked={selectedPriceRanges.some(r => r[0] === range[0] && r[1] === range[1])}
+                    />
+                    <span className="font-medium text-md">
+                      ₹{range[0]} - ₹{range[1] === Infinity ? "10000+" : range[1]}
+                    </span>
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
+
+
 
           {/* Brands Filter */}
           <div className="w-full flex flex-col gap-2 border-b-[1px] border-primary/30 py-6 px-4">
@@ -124,25 +226,48 @@ const CategoryComponent = () => {
                 type="text"
                 className="w-full rounded-[5px] border-[1px] border-primary/30 px-4 py-2"
                 placeholder="Search....."
+                value={searchBrand}
+                onChange={handleSearchBrandChange}
               />
-              <div className="flex justify-between items-center">
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  <span className="font-medium text-md">Oppo</span>
-                </label>
-              </div>
-              <div className="flex justify-between items-center">
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  <span className="font-medium text-md">Vivo</span>
-                </label>
-              </div>
-              <div className="flex justify-between items-center">
-                <label>
-                  <input type="checkbox" className="mr-2" />
-                  <span className="font-medium text-md">Realme</span>
-                </label>
-              </div>
+              {['Brand 1', 'Brand 2', 'Brand 3', 'Brand 4', 'Brand 5'].filter(brand => brand.toLowerCase().includes(searchBrand.toLowerCase())).map(brand => (
+                <div className="flex justify-between items-center" key={brand}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      className="mr-2"
+                      onChange={() => handleBrandChange(brand)}
+                      checked={selectedBrands.includes(brand)}
+                    />
+                    <span className="font-medium text-md">{brand}</span>
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Rating filter */}
+          <div className="w-full flex flex-col gap-2 border-b-[1px] border-primary/30 py-6 px-4">
+            <div className="flex justify-between items-center">
+              <span className="font-semibold text-md">Rating</span>
+              <FaMinus className="text-md" />
+            </div>
+            <div className="flex flex-col gap-2 mt-4">
+              {[1, 2, 3, 4, 5].map(rating => (
+                <div className="flex justify-between items-center" key={rating}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="rating"
+                      className="mr-2"
+                      onChange={() => handleRatingChange(rating)}
+                      checked={selectedRating === rating}
+                    />
+                    <span className="font-medium text-md">
+                      {rating} <FaStar className="inline text-[10px]" />
+                    </span>
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -154,13 +279,21 @@ const CategoryComponent = () => {
             </div>
             <div className="flex flex-col gap-2 mt-4">
               <div className="flex justify-between items-center">
-                <label>
-                  <input type="checkbox" className="mr-2" />
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    onChange={handleInStockChange}
+                    checked={showInStock}
+                  />
                   <span className="font-medium text-md">Show in stock only</span>
                 </label>
               </div>
             </div>
           </div>
+
+
+
         </div>
 
         {/* Main Content */}
@@ -189,12 +322,15 @@ const CategoryComponent = () => {
             </div>
           </div>
 
+
+
+
           {/* Product Grid */}
           <div className="w-full bg-secondary rounded-[5px] p-4 border border-gray-700">
             <div className="relative flex overflow-x-auto space-x-4 pb-2">
               <ul className="flex space-x-4">
-                {products.map((product) => (
-                <li key={product.id} className="inline-block bg-white px-4 py-8 rounded-[5px] w-full max-w-xs">
+                {filteredProducts.map((product) => (
+                  <li key={product._id} className="inline-block bg-white px-4 py-8 rounded-[5px] w-full max-w-xs">
                     <div className="flex justify-start">
                       <a href="#">
                         <Image
@@ -236,9 +372,11 @@ const CategoryComponent = () => {
                       >
                         <FaCartPlus className="text-[25px]" />
                       </button>
-                      <Link href="/product"><button className="py-3 px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-red-500 hover:bg-white hover:text-red-500 transition ease-in duration-2000">
-                        BUY NOW
-                      </button></Link>
+                      <Link href="/product">
+                        <button className="py-3 px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-red-500 hover:bg-white hover:text-red-500 transition ease-in duration-2000">
+                          BUY NOW
+                        </button>
+                      </Link>
                     </div>
                   </li>
                 ))}
@@ -254,9 +392,21 @@ const CategoryComponent = () => {
 
 
         </div>
+
+
       </div>
     </div>
   );
 };
 
 export default CategoryComponent;
+
+
+
+
+
+
+
+
+
+

@@ -12,7 +12,7 @@ const backendUrl = "http://localhost:8080";
 interface Product {
   id: number;
   name: string;
-  price: number;
+    price: number;
   image: string;
   rating: number;
   reviewCount: number;
@@ -21,6 +21,8 @@ interface Product {
   originalPrice: number;
   discountPercentage: number;
   quantity: number;
+  category?: string;
+  stock?: number;
 }
 
 export default function ProductsPage() {

@@ -1,9 +1,11 @@
 "use client";
 import Image from 'next/image';
-import Link from 'next/link';
 import { useState } from 'react';
+import Link from 'next/link';
 import { AiOutlineStar } from 'react-icons/ai';
 import {FaRegStar,FaUserCircle,FaStarHalfAlt,FaThumbsDown,FaStar,FaCartPlus,FaBoxOpen, FaTruck, FaShare, FaBox, FaCreditCard, FaFile, FaHeadphones, FaQuestionCircle, FaTimesCircle, FaMoneyBill, FaHeart } from 'react-icons/fa';
+
+
 
 const ProductPage = () => {
 
@@ -46,6 +48,20 @@ const ProductPage = () => {
         }
     
         return stars;
+      };
+
+      const calculateGST = (price: number, gstRate: number = 18) => {
+        return price * (gstRate / 100);
+      };
+
+      const product = {
+        name: 'Vinspire 3HP Heavy Duty Chaff Cutter without Motor',
+        price: 15400,
+        originalPrice: 16000,
+        discountPercentage: 39,
+        rating: 4.5,
+        reviewCount: 5,
+        image: '/assets/images/product.jpg',
       };
 
     return (
@@ -96,9 +112,9 @@ const ProductPage = () => {
                                 <span className="text-3xl font-bold text-black mr-2">
                                     ₹ 16,000
                                 </span>
-                                <span className="text-sm font-normal text-lightText">
-                                    + ₹ 234 GST
-                                </span>
+                                <div className="text-md font-semibold text-gray-500">
+                      (GST: ${calculateGST(product.price).toFixed(2)})
+                    </div>
                             </div>
                             <p className="text-sm font-normal text-lightText">
                                 MRP <span className="line-through">₹ 15,400</span> <span className="font-semibold text-lg text-green ml-1">39% OFF</span>
@@ -446,9 +462,9 @@ const ProductPage = () => {
         <button className="py-3 px-9 rounded-[10px] bg-blue-500 text-white border-[1px] border-blue transition ease-in duration-2000 mt-6 lg:w-72 md:w-72 w-full flex items-center justify-center gap-2">
   <FaCartPlus className="text-[25px]" />
   <span>ADD TO CART</span>
-</button>
-       <Link href="/checkout">
-       <button className="py-3 px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-primary hover:text-primary transition ease-in duration-2000 mt-2 lg:w-72 md:w-72 w-full">
+</button> 
+        <Link href="/checkout">
+        <button className="py-3 px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-primary hover:text-primary transition ease-in duration-2000 mt-2 lg:w-72 md:w-72 w-full">
           BUY NOW
         </button>
         </Link>
