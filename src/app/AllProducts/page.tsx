@@ -13,7 +13,7 @@ interface Product {
   _id?: number;
   name: string;
     price: number;
-  image: string;
+  image: string; 
   rating: number;
   reviewCount: number;
   description: string;
@@ -61,9 +61,11 @@ export default function ProductsPage() {
     alert('Product added to cart!');
   };
 
+
+
   const handleBuyNow = (product: Product) => {
     const productQueryString = encodeURIComponent(JSON.stringify(product));
-    router.push(`/Buynowhomepage?product=${productQueryString}`);
+    router.push(`/product?product=${productQueryString}`);
   };
 
   if (loading) return <p>Loading...</p>;

@@ -16,7 +16,7 @@ interface Address {
     country: string;
     pin: string;
     phone: string;
-}
+} 
 
 interface Product {
     _id: string;

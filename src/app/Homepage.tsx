@@ -358,11 +358,16 @@ const Homepage = () => {
     alert("Product added to cart!");
   };
 
+  // const handleBuyNow = (product: Product) => {
+  //   const productQueryString = encodeURIComponent(JSON.stringify(product));
+  //   router.push(`/Buynowhomepage?product=${productQueryString}`);
+  // };
+
   const handleBuyNow = (product: Product) => {
     const productQueryString = encodeURIComponent(JSON.stringify(product));
-    router.push(`/Buynowhomepage?product=${productQueryString}`);
+    router.push(`/product?product=${productQueryString}`);
   };
-
+  
   return (
     <div className="w-full justify-center px-4 mt-6">
       <div className="ml-[60px] lg:w-[90%] md:w-[90%] w-full flex flex-col lg:flex-row gap-4 relative">
@@ -481,7 +486,7 @@ const Homepage = () => {
                 key={index}
                 className="inline-block bg-white px-4 py-9 rounded-[5px] w-full max-w-xs"
               >
-                <div className="h-24 w-24 rounded-full shadow-lg shadow-black/20 inline-block">
+                <div className="h-24 w-24 rounded-full border-[1px] border-black/20 text-black shadow-lg shadow-black/10 mt-6 inline-block">
                   <Image
                     className="h-24 w-24 rounded-full"
                     src={`/assets/images/image${index}.png`}
