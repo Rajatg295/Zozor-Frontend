@@ -73,7 +73,7 @@ const CategoryComponent = () => {
 
     const handleBuyNow = (product: Product) => {
       const productQueryString = encodeURIComponent(JSON.stringify(product));
-      router.push(`/Buynowhomepage?product=${productQueryString}`);
+      router.push(`/product?product=${productQueryString}`);
     };
 
   const handleCategoryChange = (category: string) => {

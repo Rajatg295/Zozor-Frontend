@@ -57,7 +57,7 @@ export default function ProductsPage() {
       cart.push({ ...product, quantity: 1 });
     }
 
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem('cart', JSON.stringify(cart)); 
     alert('Product added to cart!');
   };
 

@@ -1,9 +1,24 @@
-
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { FaTrash, FaPlus, FaMinus } from "react-icons/fa";
-import { useRouter } from 'next/navigation';
+import Reviews from '../components/Reviews';
+
+import {
+  FaTrash,
+  FaStar,
+  FaRegStar,
+  FaStarHalfAlt,
+  FaFile,
+  FaCreditCard,
+  FaHeadphones,
+  FaQuestionCircle,
+  FaTimesCircle,
+  FaBoxOpen,
+  FaThumbsDown,
+  FaPlus,
+  FaMinus,
+} from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 interface Product {
   _id: string;
@@ -27,10 +42,16 @@ const CartPage = () => {
   const [discount, setDiscount] = useState<number>(0);
   const [shipping, setShipping] = useState<number>(0);
   const router = useRouter();
+  const [showSizes, setShowSizes] = useState(false);
+  const [showColors, setShowColors] = useState(false);
+  const [showSavings, setShowSavings] = useState(false);
+  const [showBenefits, setShowBenefits] = useState(false);
+  const [showPolicy, setShowPolicy] = useState(false);
+  const [showReviews, setShowReviews] = useState(false);
 
   const coupons: { [key: string]: number } = {
-    "DISCOUNT100": 100,
-    "DISCOUNT150": 150,
+    DISCOUNT100: 100,
+    DISCOUNT150: 150,
   };
 
   useEffect(() => {
@@ -46,40 +67,42 @@ const CartPage = () => {
   }, [cart]);
 
   const handleCheckout = () => {
-
     const cartString = JSON.stringify(cart);
     const encodedCart = encodeURIComponent(cartString);
     console.log("Encoded Cart: ", encodedCart);
-    const couponQuery = coupon ? `&coupon=${coupon}` : '';
+    const couponQuery = coupon ? `&coupon=${coupon}` : "";
     router.push(`/checkout?cart=${encodedCart}${couponQuery}`);
-
   };
 
-  const handleQuantityChange = (productId: string, action: 'increase' | 'decrease') => {
+  const handleQuantityChange = (
+    productId: string,
+    action: "increase" | "decrease"
+  ) => {
     const updatedCart = cart.map((item) => {
       if (item._id === productId) {
         return {
           ...item,
-          quantity: action === 'increase' ? item.quantity + 1 : Math.max(item.quantity - 1, 1),
+          quantity:
+            action === "increase"
+              ? item.quantity + 1
+              : Math.max(item.quantity - 1, 1),
         };
       }
       return item;
     });
     setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const handleRemoveFromCart = (productId: string) => {
     const updatedCart = cart.filter((item) => item._id !== productId);
     setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const handleApplyCoupon = () => {
     if (coupons[coupon]) {
       setDiscount(coupons[coupon]);
-      const encodedCart = encodeURIComponent(JSON.stringify(cart));
-      router.push(`/checkout?cart=${encodedCart}&coupon=${coupon}`);
     } else {
       alert("Invalid coupon code");
       setDiscount(0);
@@ -97,96 +120,338 @@ const CartPage = () => {
     const totalWithGst = totalPrice + gstAmount;
     const totalWithShipping = totalWithGst + shipping;
     const totalWithDiscount = totalWithShipping - discount;
-    return { totalPrice, gstAmount, totalWithGst, totalWithShipping, totalWithDiscount };
+    return {
+      totalPrice,
+      gstAmount,
+      totalWithGst,
+      totalWithShipping,
+      totalWithDiscount,
+    };
   };
 
-  const { totalPrice, gstAmount, totalWithGst, totalWithShipping, totalWithDiscount } = getTotalPrice();
+  const handleSelectSizeClick = () => {
+    setShowSizes(!showSizes);
+  };
+  const handleSelectColorClick = () => {
+    setShowColors(!showColors);
+  };
+
+  const handleSelectSavingsClick = () => {
+    setShowSavings(!showSavings);
+  };
+
+  
+  const handleReviewsClick = () => setShowReviews(!showReviews);
+  const handleBenefitsClick = () => setShowBenefits(!showBenefits);
+  const handlePolicyClick = () => setShowPolicy(!showPolicy);
+
+
+  
+  
+
+ 
+  const {
+    totalPrice,
+    gstAmount,
+    totalWithGst,
+    totalWithShipping,
+    totalWithDiscount,
+  } = getTotalPrice();
 
   return (
     <div className="w-full flex justify-center px-4 mt-6">
-    <div className="lg:w-[90%] md:w-[90%] w-full flex lg:flex-row md:flex-row flex-col gap-4 relative">
-      <div className="w-full lg:w-[calc(100%-400px)] bg-white p-4 rounded-[10px] flex flex-col">
-        <div className="flex justify-between items-center">
-          <span className="font-semibold text-md">Your Cart</span>
-        </div>
-        {cart.length === 0 ? (
-          <p>Your cart is empty.</p>
-        ) : (
-          <div className="relative flex flex-col space-y-4 mr-5">
-            {cart.map((item) => (
-              <div
-                key={item._id}
-                className="flex bg-white p-4 rounded-[5px] border border-gray-700"
-              >
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  width={80}
-                  height={80}
-                  className="w-auto h-32 object-cover rounded-[5px]"
-                />
-                <div className="ml-4 flex-1">
-                  <h2 className="text-lg font-semibold text-black">{item.name}</h2>
-                  <p className="text-gray-500">₹ {item.price.toLocaleString()}</p>
-                  <p className="text-sm text-black/70">
-                    {item.reviewCount ? `${item.reviewCount} Reviews` : "No Reviews"}
-                  </p>
-                  <p className="text-sm text-black/50">By: {item.brand || "Unknown"}</p>
-                  <p className="text-xs text-black/50 line-through">
-                    ₹ {item.originalPrice ? item.originalPrice.toLocaleString() : "N/A"}
-                  </p>
-                  <p className="text-sm font-bold text-green">
-                    {item.discountPercentage ? `${item.discountPercentage}% OFF` : "No Discount"}
-                  </p>
-                  <p className="text-sm text-black mt-2">{item.description || "No Description"}</p>
-                  <div className="flex items-center mt-2">
-                    <span className="text-sm text-yellow-500 font-bold">
-                      {item.rating ? `${item.rating} ★` : "No Rating"}
-                    </span>
+      <div className="lg:w-[90%] md:w-[90%] w-full flex lg:flex-row md:flex-row flex-col gap-4 relative">
+        <div className="w-full lg:w-[calc(100%-400px)] bg-white p-4 rounded-[10px] flex flex-col">
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-md">Your Cart</span>
+          </div>
+          {cart.length === 0 ? (
+            <p>Your cart is empty.</p>
+          ) : (
+            <div className="relative flex flex-col space-y-4 mr-5">
+              {cart.map((item) => (
+                <div
+                  key={item._id}
+                  className="flex bg-white p-4 rounded-[5px] border border-gray-700"
+                >
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    width={80}
+                    height={80}
+                    className="w-auto h-32 object-cover rounded-[5px]"
+                  />
+                  <div className="ml-4 flex-1">
+                    <h2 className="text-lg font-semibold text-black">
+                      {item.name}
+                    </h2>
+                    <p className="text-gray-500">
+                      ₹ {item.price.toLocaleString()}
+                    </p>
+                    <p className="text-sm text-black/70">
+                      {item.reviewCount
+                        ? `${item.reviewCount} Reviews`
+                        : "No Reviews"}
+                    </p>
+                    <p className="text-sm text-black/50">
+                      By: {item.brand || "Unknown"}
+                    </p>
+                    <p className="text-xs text-black/50 line-through">
+                      ₹{" "}
+                      {item.originalPrice
+                        ? item.originalPrice.toLocaleString()
+                        : "N/A"}
+                    </p>
+                    <p className="text-sm font-bold text-green">
+                      {item.discountPercentage
+                        ? `${item.discountPercentage}% OFF`
+                        : "No Discount"}
+                    </p>
+                    <p className="text-sm text-black mt-2">
+                      {item.description || "No Description"}
+                    </p>
+                    <div className="flex items-center mt-2">
+                      <span className="text-sm text-yellow-500 font-bold">
+                        {item.rating ? `${item.rating} ★` : "No Rating"}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2 mt-2">
+                      <button
+                        onClick={() =>
+                          handleQuantityChange(item._id, "decrease")
+                        }
+                        className="bg-gray-200 p-2 rounded"
+                      >
+                        <FaMinus />
+                      </button>
+                      <span className="px-4">{item.quantity}</span>
+                      <button
+                        onClick={() =>
+                          handleQuantityChange(item._id, "increase")
+                        }
+                        className="bg-gray-200 p-2 rounded"
+                      >
+                        <FaPlus />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2 mt-2">
+                  <div>
                     <button
-                      onClick={() => handleQuantityChange(item._id, 'decrease')}
-                      className="bg-gray-200 p-2 rounded"
+                      onClick={() => handleRemoveFromCart(item._id)}
+                      className="bg-red-500 text-white p-2 rounded"
                     >
-                      <FaMinus />
-                    </button>
-                    <span className="px-4">{item.quantity}</span>
-                    <button
-                      onClick={() => handleQuantityChange(item._id, 'increase')}
-                      className="bg-gray-200 p-2 rounded"
-                    >
-                      <FaPlus />
+                      <FaTrash />
                     </button>
                   </div>
                 </div>
-                <div>
-                  <button
-                    onClick={() => handleRemoveFromCart(item._id)}
-                    className="bg-red-500 text-white p-2 rounded"
-                  >
-                    <FaTrash />
+              ))}
+            </div>
+          )}
+
+         
+          <div>
+            <button
+              onClick={handleSelectSizeClick}
+              className="border-[1px] border-primary/80 text-primary bg-primary/20 py-0.5 px-2 rounded-[5px] font-semibold text-md"
+            >
+              Select Size
+            </button>
+
+            {showSizes && (
+              <div>
+                <div className="flex mt-2 gap-2 mt-6">
+                  <span className="text-md font-semibold">Normal Size</span>
+                </div>
+                <div className="flex flex-wrap gap-4 mt-2">
+                  <button className="border-[1px] border-primary/80 text-primary bg-primary/20 py-0.5 px-2 rounded-[5px] font-semibold text-md">
+                    2.5 Sqmm
+                  </button>
+                  <button className="border-[1px] border-black/60 text-black/60 py-0.5 px-2 rounded-[5px] font-semibold text-md">
+                    0.7 Sqmm
+                  </button>
+                  <button className="border-[1px] border-black/60 text-black/60 py-0.5 px-2 rounded-[5px] font-semibold text-md">
+                    1.5 Sqmm
+                  </button>
+                  <button className="border-[1px] border-black/60 text-black/60 py-0.5 px-2 rounded-[5px] font-semibold text-md">
+                    2.5 Sqmm
+                  </button>
+                  <button className="border-[1px] border-black/60 text-black/60 py-0.5 px-2 rounded-[5px] font-semibold text-md">
+                    4.5 Sqmm
+                  </button>
+                  <button className="border-[1px] border-black/60 text-black/60 py-0.5 px-2 rounded-[5px] font-semibold text-md">
+                    6.5 Sqmm
                   </button>
                 </div>
               </div>
-            ))}
-            <div className="mt-6">
-              <h2 className="text-lg font-semibold">Total ₹ {totalWithDiscount.toLocaleString()}</h2>
-              <button
-                className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-                onClick={handleCheckout}
-              >
-                Proceed to Checkout
-              </button>
-            </div>
+            )}
           </div>
-        )}
+
+          <div>
+            <button
+              onClick={handleSelectColorClick}
+              className="border-[1px] border-primary/80 text-primary bg-primary/20 py-0.5 px-2 rounded-[5px] font-semibold text-md"
+            >
+              Select Color
+            </button>
+            {showColors && (
+              <div>
+                <div className="flex mt-2 gap-2">
+                  <span className="text-md font-semibold">Color</span>
+                </div>
+                <div className="flex flex-wrap gap-4 mt-2">
+                  <button className="border-[1px] border-primary/80 text-primary bg-primary/20 py-0.5 px-2 rounded-[5px] font-semibold text-md">
+                    Black
+                  </button>
+                  <button className="border-[1px] border-black/60 text-black/60 py-0.5 px-2 rounded-[5px] font-semibold text-md">
+                    Red
+                  </button>
+                  <button className="border-[1px] border-black/60 text-black/60 py-0.5 px-2 rounded-[5px] font-semibold text-md">
+                    Blue
+                  </button>
+                  <button className="border-[1px] border-black/60 text-black/60 py-0.5 px-2 rounded-[5px] font-semibold text-md">
+                    Green
+                  </button>
+                  <button className="border-[1px] border-black/60 text-black/60 py-0.5 px-2 rounded-[5px] font-semibold text-md">
+                    Yellow
+                  </button>
+                  <button className="border-[1px] border-black/60 text-black/60 py-0.5 px-2 rounded-[5px] font-semibold text-md">
+                    White
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <button
+              onClick={handleSelectSavingsClick}
+              className="border-[1px] border-primary/80 text-primary bg-primary/20 py-0.5 px-2 rounded-[5px] font-semibold text-md"
+            >
+              Buy More & Save More
+            </button>
+            {showSavings && (
+              <div>
+                <div className="flex mt-2 gap-2 mt-6">
+                  <span className="text-md font-semibold">
+                    Buy More & Save More
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-4 mt-2">
+                  <button className="border-[1px] border-black/20 text-black py-4 px-6 shadow-lg shadow-black/10 rounded-[5px] font-semibold text-md flex gap-2 flex-col items-center">
+                    <span>Qty 2-4</span>
+                    <span>
+                      ₹1,663 <span className="font-normal text-xs">/pc</span>
+                    </span>
+                    <span className="text-green font-bold">77% OFF</span>
+                  </button>
+                  <button className="border-[1px] border-black/20 text-black py-4 px-6 shadow-lg shadow-black/10 rounded-[5px] font-semibold text-md flex gap-2 flex-col items-center">
+                    <span>Qty 5-10</span>
+                    <span>
+                      ₹1,663 <span className="font-normal text-xs">/pc</span>
+                    </span>
+                    <span className="text-green font-bold">77% OFF</span>
+                  </button>
+                  <button className="border-[1px] border-black/20 text-black py-4 px-6 shadow-lg shadow-black/10 rounded-[5px] font-semibold text-md flex gap-2 flex-col items-center">
+                    <span>Qty 11-20</span>
+                    <span>
+                      ₹1,663 <span className="font-normal text-xs">/pc</span>
+                    </span>
+                    <span className="text-green font-bold">77% OFF</span>
+                  </button>
+                  <button className="border-[1px] border-black/20 text-black py-4 px-6 shadow-lg shadow-black/10 rounded-[5px] font-semibold text-md flex gap-2 flex-col items-center">
+                    <span>Qty 21-50</span>
+                    <span>
+                      ₹1,663 <span className="font-normal text-xs">/pc</span>
+                    </span>
+                    <span className="text-green font-bold">77% OFF</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <button
+              onClick={handleBenefitsClick}
+              className="border-[1px] border-primary/80 text-primary bg-primary/20 py-0.5 px-2 rounded-[5px] font-semibold text-md"
+            >
+              {showBenefits ? "Hide Zoroz Benefits" : "Show Zoroz Benefits"}
+            </button>
+            {showBenefits && (
+              <div className="border-[1px] border-black/20 text-black p-4 shadow-lg shadow-black/10 mt-6">
+                <div className="flex mt-2 gap-2">
+                  <span className="text-md font-semibold">Zoroz Benefits</span>
+                </div>
+                <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-3 grid-cols-1 gap-4 mt-2 border-b-[1px] border-black/20 pb-4">
+                  <button className="border-[1px] border-black/20 text-black py-4 px-6 shadow-lg shadow-black/10 rounded-[5px] font-medium text-md flex gap-2 items-center">
+                    <FaFile className="text-primary text-lg" />
+                    <span>GST Invoice available</span>
+                  </button>
+                  <button className="border-[1px] border-black/20 text-black py-4 px-6 shadow-lg shadow-black/10 rounded-[5px] font-medium text-md flex gap-2 items-center">
+                    <FaCreditCard className="text-primary text-lg" />
+                    <span>Secure Payment</span>
+                  </button>
+                  <button className="border-[1px] border-black/20 text-black py-4 px-6 shadow-lg shadow-black/10 rounded-[5px] font-medium text-md flex gap-2 items-center">
+                    <FaHeadphones className="text-primary text-lg" />
+                    <span>365 Days Help Desk</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={handlePolicyClick}
+              className="border-[1px] border-primary/80 text-primary bg-primary/20 py-0.5 px-2 rounded-[5px] font-semibold text-md"
+            >
+              {showPolicy
+                ? "Hide Return & Warranty Policy"
+                : "Show Return & Warranty Policy"}
+            </button>
+            {showPolicy && (
+              <div className="border-[1px] border-black/20 text-black p-4 shadow-lg shadow-black/10 mt-6">
+                <div className="flex mt-2 gap-2">
+                  <span className="text-md font-semibold">
+                    Return & Warranty Policy
+                  </span>
+                </div>
+                <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-3 grid-cols-1 gap-4 mt-2 border-b-[1px] border-black/20 pb-4">
+                  <button className="border-[1px] border-black/20 text-black py-4 px-6 shadow-lg shadow-black/10 rounded-[5px] font-medium text-md flex gap-2 items-center">
+                    <FaFile className="text-primary text-lg" />
+                    <span>Up to 7 Days Returnable</span>
+                  </button>
+                  <button className="border-[1px] border-black/20 text-black py-4 px-6 shadow-lg shadow-black/10 rounded-[5px] font-medium text-md flex gap-2 items-center">
+                    <FaQuestionCircle className="text-primary text-lg" />
+                    <span>Missing Products</span>
+                  </button>
+                  <button className="border-[1px] border-black/20 text-black py-4 px-6 shadow-lg shadow-black/10 rounded-[5px] font-medium text-md flex gap-2 items-center">
+                    <FaTimesCircle className="text-primary text-lg" />
+                    <span>Wrong Product</span>
+                  </button>
+                  <button className="border-[1px] border-black/20 text-black py-4 px-6 shadow-lg shadow-black/10 rounded-[5px] font-medium text-md flex gap-2 items-center">
+                    <FaBoxOpen className="text-primary text-lg" />
+                    <span>Damaged Product</span>
+                  </button>
+                  <button className="border-[1px] border-black/20 text-black py-4 px-6 shadow-lg shadow-black/10 rounded-[5px] font-medium text-md flex gap-2 items-center">
+                    <FaThumbsDown className="text-primary text-lg" />
+                    <span>Defective Product</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+        <div><Reviews/></div>
+
+
+        </div>
       </div>
-  
+
       <div className="w-full mt-9 lg:w-96 md:w-96 flex-none flex flex-col rounded-[5px] z-40">
         <div className="border-[1px] border-primary/30 bg-white">
           <div className="bg-green/10 text-green p-2">
-            <span className="font-semibold text-sm">Save instantly ₹ 150.00 with online payment</span>
+            <span className="font-semibold text-sm">
+              Save instantly ₹ 150.00 with online payment
+            </span>
           </div>
           <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
             <span className="font-semibold text-md">Payment Summary</span>
@@ -214,7 +479,8 @@ const CartPage = () => {
             <span>₹ {totalWithDiscount.toLocaleString()}</span>
           </div>
         </div>
-  
+        <div></div>
+
         <div className="border-[1px] border-primary/30 bg-white mt-6">
           <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
             <span className="font-semibold text-md">Apply Coupon</span>
@@ -250,13 +516,25 @@ const CartPage = () => {
               </div>
             </div>
           </div>
+          <div className="flex justify-center text-md text-primary font-semibold px-2 py-3">
+            <span>View All Coupons</span>
+          </div>
         </div>
-        <div className="flex justify-center text-md text-primary font-semibold px-2 py-3">
-          <span>View All Coupons</span>
+
+        <div className="mt-6 ml-[190px]">
+          <h2 className="text-lg font-semibold">
+            Total ₹ {totalWithDiscount.toLocaleString()}
+          </h2>
+          <button
+            className=" bg-blue-500 text-white py-2 px-4 rounded"
+            onClick={handleCheckout}
+          >
+            Proceed to Checkout
+          </button>
         </div>
       </div>
+      
     </div>
-  </div>
   );
 };
 

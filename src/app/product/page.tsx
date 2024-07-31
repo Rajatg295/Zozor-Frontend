@@ -43,17 +43,15 @@ interface Product {
 
 const ProductPage = () => {
   const [quantity, setQuantity] = useState<number>(1);
-  const router = useRouter();
-  const [quantityx, setQuantityx] = useState<number>(1);
   const [product, setProduct] = useState<Product | null>(null);
+  const [cart, setCart] = useState<Product[]>([]);
+  const router = useRouter();
 
   const handleQuantityChange = (newQuantity: number) => {
     setQuantity(newQuantity);
   };
 
-  const handleQuantityChanged = (delta: number): void => {
-    setQuantity((prevQuantity) => Math.max(prevQuantity + delta, 1));
-  };
+
 
   const reviews = [
     { id: 1, name: "Alice", rating: 4.5, comment: "Great product! Loved it." },
@@ -109,8 +107,13 @@ const ProductPage = () => {
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const productData = query.get("product");
+    const cartData = query.get("cart");
+
     if (productData) {
       setProduct(JSON.parse(decodeURIComponent(productData)));
+    }
+    if (cartData) {
+      setCart(JSON.parse(decodeURIComponent(cartData)));
     }
   }, []);
 
@@ -122,17 +125,39 @@ const ProductPage = () => {
     setProduct(null);
   };
 
+  const handleAddToCart = (product: Product) => {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const existingProductIndex = cart.findIndex(
+      (item: Product) => item._id === product._id
+    );
+
+    if (existingProductIndex > -1) {
+      cart[existingProductIndex].quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Product added to cart!");
+  };
+
+
   const handleBuyNow = (product: Product) => {
     const productQueryString = encodeURIComponent(JSON.stringify(product));
     router.push(`/Buynowhomepage?product=${productQueryString}`);
   };
+
+
 
   return (
     <div className="w-full flex justify-center px-4 mt-6">
       <div className="lg:w-[90%] md:w-[90%] w-full flex lg:flex-row md:flex-row flex-col gap-4 relative">
         <div className="w-full grow">
           <div className="grid lg:grid-cols-2 gap-2">
+            
+            
             <div className="w-full flex flex-col bg-white p-4 rounded-[5px]">
+
               <div className="w-full relative flex items-center justify-center">
                 <div className="absolute top-0 right-0 h-8 w-8 border-[1px] flex justify-center items-center border-primary/30 shadow-lg shadow-black/10">
                   <FaShare className="text-blue-500 text-lg" />
@@ -215,7 +240,7 @@ const ProductPage = () => {
               </div>
               <div className="flex items-end mt-2">
                 <span className="text-3xl font-bold text-black mr-2">
-                  ₹ 16,000
+                  ₹ {product.originalPrice.toLocaleString()}  
                 </span>
                 <div className="text-md font-semibold text-gray-500">
                   (GST: ${calculateGST(product.price).toFixed(2)})
@@ -638,14 +663,14 @@ const ProductPage = () => {
               </p>
               <div className="flex items-end mt-2">
                 <span className="text-3xl font-bold text-black mr-2">
-                  ₹ 16,000
+                  ₹ {product.originalPrice.toLocaleString()}
                 </span>
                 <span className="text-sm font-normal text-lightText">
                 (GST: ${calculateGST(product.price).toFixed(2)})
                 </span>
               </div>
               <p className="text-sm font-normal text-lightText">
-                MRP <span className="line-through">₹ 15,400</span>{" "}
+                MRP <span className="line-through">₹ {product.originalPrice.toLocaleString()}</span>{" "}
                 <span className="font-semibold text-lg text-green ml-1">
                 {product.discountPercentage}% OFF
                 </span>
@@ -682,7 +707,7 @@ const ProductPage = () => {
                 </div>
               </div>
 
-              <button className="py-3 px-9 rounded-[10px] bg-blue-500 text-white border-[1px] border-blue transition ease-in duration-2000 mt-6 lg:w-72 md:w-72 w-full flex items-center justify-center gap-2">
+              <button onClick={() => handleAddToCart(product)} className="py-3 px-9 rounded-[10px] bg-blue-500 text-white border-[1px] border-blue transition ease-in duration-2000 mt-6 lg:w-72 md:w-72 w-full flex items-center justify-center gap-2">
                 <FaCartPlus className="text-[25px]" />
                 <span>ADD TO CART</span>
               </button>
@@ -755,4 +780,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default ProductPage; 
