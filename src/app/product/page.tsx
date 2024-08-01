@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { AiOutlineStar } from "react-icons/ai";
 import { useRouter } from "next/navigation";
-import axios from 'axios';
+import axios from "axios";
 
 import {
   FaRegStar,
@@ -42,7 +42,6 @@ interface Product {
   stock?: number;
 }
 
-// new insertion
 interface Review {
   id: number;
   name: string;
@@ -50,88 +49,27 @@ interface Review {
   comment: string;
 }
 
-
 const ProductPage = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [product, setProduct] = useState<Product | null>(null);
   const [cart, setCart] = useState<Product[]>([]);
   const router = useRouter();
 
-  // new insertion
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [newReview, setNewReview] = useState({ name: '', rating: 0, comment: '' });
+  const [newReview, setNewReview] = useState({
+    name: "",
+    rating: 0,
+    comment: "",
+  });
   const [showReviews, setShowReviews] = useState(false);
 
   const handleQuantityChange = (newQuantity: number) => {
     setQuantity(newQuantity);
   };
 
-  // const reviews = [
-  //   { id: 1, name: "Alice", rating: 4.5, comment: "Great product! Loved it." },
-  //   {
-  //     id: 2,
-  //     name: "Bob",
-  //     rating: 3.0,
-  //     comment: "It’s okay, but could be better.",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Charlie",
-  //     rating: 5.0,
-  //     comment: "Excellent! Exceeded my expectations.",
-  //   },
-  // ];
-
-  // const [newReview, setNewReview] = useState({
-  //   name: "",
-  //   rating: 0,
-  //   comment: "",
-  // });
-
-  // const handleReviewSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   console.log("Review submitted:", newReview);
-  //   setNewReview({ name: "", rating: 0, comment: "" });
-  // };
-
-  // const renderStars = (rating: number) => {
-  //   const fullStars = Math.floor(rating);
-  //   const halfStar = rating - fullStars >= 0.5;
-  //   const stars = [];
-
-  //   for (let i = 0; i < fullStars; i++) {
-  //     stars.push(<FaStar key={i} className="text-yellow-500" />);
-  //   }
-  //   if (halfStar) {
-  //     stars.push(<FaStarHalfAlt key={fullStars} className="text-yellow-500" />);
-  //   }
-  //   while (stars.length < 5) {
-  //     stars.push(<FaRegStar key={stars.length} className="text-yellow-500" />);
-  //   }
-
-  //   return stars;
-  // };
-
   const calculateGST = (price: number, gstRate: number = 18) => {
     return price * (gstRate / 100);
   };
-
-  // useEffect(() => {
-  //   const query = new URLSearchParams(window.location.search);
-  //   const productData = query.get("product");
-
-  //   if (productData) {
-  //     setProduct(JSON.parse(decodeURIComponent(productData)));
-  //   }
-   
-  // }, []);
-
-  // if (!product) {
-  //   return <div>Loading...</div>;
-  // }
-
-
-  // new insertion
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
@@ -144,10 +82,11 @@ const ProductPage = () => {
 
   useEffect(() => {
     if (product) {
-      // Fetch reviews for the product
-      axios.get(`http://localhost:8080/api/reviews?productId=${product._id}`).then(response => {
-        setReviews(response.data);
-      });
+      axios
+        .get(`http://localhost:8080/api/reviews?productId=${product._id}`)
+        .then((response) => {
+          setReviews(response.data);
+        });
     }
   }, [product]);
 
@@ -163,7 +102,6 @@ const ProductPage = () => {
           ...newReview,
           productId: product._id,
         });
-        // Update reviews state with the new review
         setReviews([...reviews, response.data]);
         setNewReview({ name: "", rating: 0, comment: "" });
       } catch (error) {
@@ -189,9 +127,6 @@ const ProductPage = () => {
 
     return stars;
   };
-
-
-
 
   const handleRemoveProduct = () => {
     setProduct(null);
@@ -223,109 +158,112 @@ const ProductPage = () => {
       <div className="lg:w-[90%] md:w-[90%] w-full flex lg:flex-row md:flex-row flex-col gap-4 relative">
         <div className="w-full grow">
           <div className="grid lg:grid-cols-2 gap-2">
-              <div className="w-full flex flex-col bg-white p-4 rounded-[5px]">
-                <div className="w-full relative flex items-center justify-center">
-                  <div className="absolute top-0 right-0 h-8 w-8 border-[1px] flex justify-center items-center border-primary/30 shadow-lg shadow-black/10">
-                    <FaShare className="text-blue-500 text-lg" />
-                  </div>
-                  <div className="absolute top-10 right-0 h-8 w-8 border-[1px] flex justify-center items-center border-primary/30 shadow-lg shadow-black/10">
-                    <FaHeart className="text-red-500 text-lg" />
-                  </div>
-
-                  <Image
-                    className="w-auto h-64"
-                    src={product.image}
-                    alt={product.name}
-                    width={500}
-                    height={400}
-                  />
+            <div className="w-full flex flex-col bg-white p-4 rounded-[5px]">
+              <div className="w-full relative flex items-center justify-center">
+                <div className="absolute top-0 right-0 h-8 w-8 border-[1px] flex justify-center items-center border-primary/30 shadow-lg shadow-black/10">
+                  <FaShare className="text-blue-500 text-lg" />
+                </div>
+                <div className="absolute top-10 right-0 h-8 w-8 border-[1px] flex justify-center items-center border-primary/30 shadow-lg shadow-black/10">
+                  <FaHeart className="text-red-500 text-lg" />
                 </div>
 
-                <div className="w-full flex overflow-x-auto justify-center gap-6 mt-4">
-                  <Image
-                    className="h-24 w-24 rounded-[5px] shadow-lg shadow-black/20"
-                    src={product.image}
-                    alt="Product Thumbnail"
-                    width={100}
-                    height={100}
-                  />
-                  <Image
-                    className="h-24 w-24 rounded-[5px] shadow-lg shadow-black/20"
-                    src={product.image}
-                    alt="Product Thumbnail"
-                    width={100}
-                    height={100}
-                  />
-                  <Image
-                    className="h-24 w-24 rounded-[5px] shadow-lg shadow-black/20"
-                    src={product.image}
-                    alt="Product Thumbnail"
-                    width={100}
-                    height={100}
-                  />
-                  <Image
-                    className="h-24 w-24 rounded-[5px] shadow-lg shadow-black/20"
-                    src={product.image}
-                    alt="Product Thumbnail"
-                    width={100}
-                    height={100}
-                  />
-                </div>
+                <Image
+                  className="w-auto h-64"
+                  src={product.image}
+                  alt={product.name}
+                  width={500}
+                  height={400}
+                />
               </div>
 
-              <div className="w-full flex flex-col bg-white p-4 rounded-[5px]">
-                <div className="px-2 py-2 border-[1px] border-primary/80 bg-primary/5 text-primary font-semibold text-sm rounded-[5px]">
-                  <span>
-                    The same product has been ordered by you on 9 July 2024 at
-                    00:18 AM
-                  </span>
-                </div>
+              <div className="w-full flex overflow-x-auto justify-center gap-6 mt-4">
+                <Image
+                  className="h-24 w-24 rounded-[5px] shadow-lg shadow-black/20"
+                  src={product.image}
+                  alt="Product Thumbnail"
+                  width={100}
+                  height={100}
+                />
+                <Image
+                  className="h-24 w-24 rounded-[5px] shadow-lg shadow-black/20"
+                  src={product.image}
+                  alt="Product Thumbnail"
+                  width={100}
+                  height={100}
+                />
+                <Image
+                  className="h-24 w-24 rounded-[5px] shadow-lg shadow-black/20"
+                  src={product.image}
+                  alt="Product Thumbnail"
+                  width={100}
+                  height={100}
+                />
+                <Image
+                  className="h-24 w-24 rounded-[5px] shadow-lg shadow-black/20"
+                  src={product.image}
+                  alt="Product Thumbnail"
+                  width={100}
+                  height={100}
+                />
+              </div>
+            </div>
 
-                <div className="flex mt-2 gap-2 mt-4">
-                  <a href={`/product?id=${product._id}`}className="text-3xl font-bold text-black hover:underline">
-                    <span className="text-3xl font-bold">{product.name}</span>
-                  </a>
-                  <p className="text-gray-500">{product.description}</p>
-                </div>
-                <div className="flex mt-2 gap-2 mt-4">
-                  <button className="bg-green-500 text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
-                    {product.rating} <FaStar className="text-[10px]" />
-                  </button>
-                  <button className="bg-green text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
-                    4.5 <i className="fa fa-star text-[10px]"></i>{" "}
-                  </button>
-                  <span className="text-[13px] text-black/70">
-                    ({product.reviewCount} Reviews)
-                  </span>
-                </div>
+            <div className="w-full flex flex-col bg-white p-4 rounded-[5px]">
+              <div className="px-2 py-2 border-[1px] border-primary/80 bg-primary/5 text-primary font-semibold text-sm rounded-[5px]">
+                <span>
+                  The same product has been ordered by you on 9 July 2024 at
+                  00:18 AM
+                </span>
+              </div>
 
-                <div className="flex mt-1 gap-2 mt-4">
-                  <p className="text-sm font-normal text-lightText">
-                    ₹ {product.price.toLocaleString()} ( Inclusive of all taxes )
-                  </p>
-                </div>
-                <div className="flex items-end mt-2">
-                  <span className="text-3xl font-bold text-black mr-2">
-                    ₹ {product.originalPrice.toLocaleString()}
-                  </span>
-                  <div className="text-md font-semibold text-gray-500">
-                    (GST: ${calculateGST(product.price).toFixed(2)})
-                  </div>
-                </div>
+              <div className="flex mt-2 gap-2 mt-4">
+                <a
+                  href={`/product?id=${product._id}`}
+                  className="text-3xl font-bold text-black hover:underline"
+                >
+                  <span className="text-3xl font-bold">{product.name}</span>
+                </a>
+                <p className="text-gray-500">{product.description}</p>
+              </div>
+              <div className="flex mt-2 gap-2 mt-4">
+                <button className="bg-green-500 text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
+                  {product.rating} <FaStar className="text-[10px]" />
+                </button>
+                <button className="bg-green text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
+                  4.5 <i className="fa fa-star text-[10px]"></i>{" "}
+                </button>
+                <span className="text-[13px] text-black/70">
+                  ({product.reviewCount} Reviews)
+                </span>
+              </div>
+
+              <div className="flex mt-1 gap-2 mt-4">
                 <p className="text-sm font-normal text-lightText">
-                  MRP{" "}
-                  <span className="line-through">
-                    ₹ {product.price.toLocaleString()}
-                  </span>{" "}
-                  <span className="font-semibold text-lg text-green ml-1">
-                    {product.discountPercentage}% OFF
-                  </span>
+                  ₹ {product.price.toLocaleString()} ( Inclusive of all taxes )
                 </p>
+              </div>
+              <div className="flex items-end mt-2">
+                <span className="text-3xl font-bold text-black mr-2">
+                  ₹ {product.originalPrice.toLocaleString()}
+                </span>
+                <div className="text-md font-semibold text-gray-500">
+                  (GST: ${calculateGST(product.price).toFixed(2)})
+                </div>
+              </div>
+              <p className="text-sm font-normal text-lightText">
+                MRP{" "}
+                <span className="line-through">
+                  ₹ {product.price.toLocaleString()}
+                </span>{" "}
+                <span className="font-semibold text-lg text-green ml-1">
+                  {product.discountPercentage}% OFF
+                </span>
+              </p>
 
-                <div className="mt-1 gap-2">
-                  <span className="text-[14px] font-semibold text-black/50">
-                    By: {product.brand}
-                  </span>
+              <div className="mt-1 gap-2">
+                <span className="text-[14px] font-semibold text-black/50">
+                  By: {product.brand}
+                </span>
 
                 <div className="items-center gap-2">
                   <div className="flex mt-2 gap-2 mt-6">
@@ -464,110 +402,7 @@ const ProductPage = () => {
                 </div>
               </div>
             </div>
-
           </div>
-
-          {/* <div className="mt-[100px] p-6 max-w-4xl   bg-blue-100 shadow-md rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">Reviews</h2>
-            <div className="mb-6">
-              <h3 className="text-xl font-semibold mb-2">
-                Average Rating: 4.2
-              </h3>
-              {renderStars(4.2)}
-            </div>
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Customer Reviews</h3>
-              <ul>
-                {reviews.map((review) => (
-                  <li
-                    key={review.id}
-                    className="mb-4 p-4 border-b border-gray-200"
-                  >
-                    <div className="flex items-center mb-2">
-                      {renderStars(review.rating)}
-                      <span className="ml-2 font-semibold">{review.name}</span>
-                    </div>
-                    <p className="text-gray-700">{review.comment}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Add Your Review</h3>
-              <form onSubmit={handleReviewSubmit} className="space-y-4">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium mb-1"
-                  >
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    value={newReview.name}
-                    onChange={(e) =>
-                      setNewReview({ ...newReview, name: e.target.value })
-                    }
-                    className="w-full border border-gray-300 p-2 rounded"
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="rating"
-                    className="block text-sm font-medium mb-1"
-                  >
-                    Rating
-                  </label>
-                  <select
-                    id="rating"
-                    value={newReview.rating}
-                    onChange={(e) =>
-                      setNewReview({
-                        ...newReview,
-                        rating: parseFloat(e.target.value),
-                      })
-                    }
-                    className="w-full border border-gray-300 p-2 rounded"
-                    required
-                  >
-                    <option value="0">Select rating</option>
-                    <option value="1">1 Star</option>
-                    <option value="2">2 Stars</option>
-                    <option value="3">3 Stars</option>
-                    <option value="4">4 Stars</option>
-                    <option value="5">5 Stars</option>
-                  </select>
-                </div>
-                <div>
-                  <label
-                    htmlFor="comment"
-                    className="block text-sm font-medium mb-1"
-                  >
-                    Your Review
-                  </label>
-                  <textarea
-                    id="comment"
-                    value={newReview.comment}
-                    onChange={(e) =>
-                      setNewReview({ ...newReview, comment: e.target.value })
-                    }
-                    className="w-full border border-gray-300 p-2 rounded"
-                    rows={4}
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-                >
-                  Submit Review
-                </button>
-              </form>
-            </div>
-          </div> */}
-
         </div>
 
         <div className="h-max lg:w-80 md:w-80 w-full bg-whitelg:gap-4 md:gap-4 gap-2 rounded-[5px] z-40">
@@ -696,47 +531,110 @@ const ProductPage = () => {
               </div>
             </div>
           </div>
-          <div>
-        {reviews.map((review) => (
-          <div key={review.id}>
-            <h4>{review.name}</h4>
-            <div>{renderStars(review.rating)}</div>
-            <p>{review.comment}</p>
+
+          <div className="p-6 max-w-4xl bg-blue-100 shadow-md rounded-lg">
+            <h2 className="text-2xl font-bold mb-4">Reviews</h2>
+            <div className="mb-6">
+              <h3 className="text-xl font-semibold mb-2">
+                Average Rating: 4.2
+              </h3>
+              {renderStars(4.2)}
+            </div>
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Customer Reviews</h3>
+              <ul>
+                {reviews.map((review) => (
+                  <li key={review.id}
+                    className="mb-4 p-4 border-b border-gray-200">
+                    <div className="flex items-center mb-2">
+                      {renderStars(review.rating)}
+                      <span className="ml-2 font-semibold">{review.name}</span>
+                    </div>
+                    <p className="text-gray-700">{review.comment}</p>
+                    
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Add Your Review</h3>
+              <form onSubmit={handleReviewSubmit} className="space-y-4">
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium mb-1"
+                  >
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    value={newReview.name}
+                    onChange={(e) =>
+                      setNewReview({ ...newReview, name: e.target.value })
+                    }
+                    className="w-full border border-gray-300 p-2 rounded"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="rating"
+                    className="block text-sm font-medium mb-1"
+                  >
+                    Rating
+                  </label>
+                  <select
+                    type="number"
+                    value={newReview.rating}
+                    onChange={(e) =>
+                      setNewReview({
+                        ...newReview,
+                        rating: parseFloat(e.target.value),
+                      })
+                    }
+                    className="w-full border border-gray-300 p-2 rounded"
+                    required
+                  >
+                    <option value="0">Select rating</option>
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5">5 Stars</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    htmlFor="comment"
+                    className="block text-sm font-medium mb-1"
+                  >
+                    Your Review
+                  </label>
+                  <textarea
+                    id="comment"
+                    value={newReview.comment}
+                    onChange={(e) =>
+                      setNewReview({ ...newReview, comment: e.target.value })
+                    }
+                    className="w-full border border-gray-300 p-2 rounded"
+                    rows={4}
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                >
+                  Submit Review
+                </button>
+              </form>
+            </div>
           </div>
-        ))}
-          </div>
-          <form onSubmit={handleReviewSubmit}>
-        <input
-          type="text"
-          value={newReview.name}
-          onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
-          placeholder="Your name"
-          required
-        />
-        <input
-          type="number"
-          value={newReview.rating}
-          onChange={(e) => setNewReview({ ...newReview, rating: Number(e.target.value) })}
-          placeholder="Rating (0-5)"
-          min="0"
-          max="5"
-          step="0.5"
-          required
-        />
-        <textarea
-          value={newReview.comment}
-          onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
-          placeholder="Your review"
-          required
-        />
-        <button type="submit">Submit Review</button>
-      </form>
         </div>
-
-
       </div>
     </div>
   );
 };
 
-  export default ProductPage;
+export default ProductPage;
