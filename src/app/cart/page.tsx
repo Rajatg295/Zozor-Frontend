@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Reviews from '../components/Reviews';
+import axios from "axios";
 
 import {
   FaTrash,
@@ -18,6 +18,7 @@ import {
   FaPlus,
   FaMinus,
 } from "react-icons/fa";
+
 import { useRouter } from "next/navigation";
 
 interface Product {
@@ -36,6 +37,19 @@ interface Product {
   stock?: number;
 }
 
+interface Review {
+  _id: string;
+  name: string;
+  rating: number;
+  comment: string;
+}
+
+interface NewReview {
+  name: string;
+  rating: number;
+  comment: string;
+}
+
 const CartPage = () => {
   const [cart, setCart] = useState<Product[]>([]);
   const [coupon, setCoupon] = useState<string>("");
@@ -48,7 +62,13 @@ const CartPage = () => {
   const [showBenefits, setShowBenefits] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
-
+  const [reviews, setReviews] = useState<{ [productId: string]: Review[] }>({});
+  const [newReview, setNewReview] = useState<NewReview>({
+    name: "",
+    rating: 0,
+    comment: "",
+  });
+  const [currentProductId, setCurrentProductId] = useState<string | null>(null);
   const coupons: { [key: string]: number } = {
     DISCOUNT100: 100,
     DISCOUNT150: 150,
@@ -140,16 +160,63 @@ const CartPage = () => {
     setShowSavings(!showSavings);
   };
 
-  
   const handleReviewsClick = () => setShowReviews(!showReviews);
   const handleBenefitsClick = () => setShowBenefits(!showBenefits);
   const handlePolicyClick = () => setShowPolicy(!showPolicy);
 
+  const renderStars = (rating: number) => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating - fullStars >= 0.5;
+    const stars = [];
 
-  
-  
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<FaStar key={i} className="text-yellow-500" />);
+    }
+    if (halfStar) {
+      stars.push(<FaStarHalfAlt key={fullStars} className="text-yellow-500" />);
+    }
+    while (stars.length < 5) {
+      stars.push(<FaRegStar key={stars.length} className="text-yellow-500" />);
+    }
 
- 
+    return stars;
+  };
+
+  useEffect(() => {
+    const fetchReviews = async (productId: string) => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/reviews/${productId}`);
+        setReviews((prev) => ({ ...prev, [productId]: response.data }));
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
+    cart.forEach((item) => fetchReviews(item._id));
+  }, [cart]);
+
+  const handleReviewSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (currentProductId) {
+      try {
+        const response = await axios.post(
+          `http://localhost:8080/api/reviews/${currentProductId}`,
+          newReview
+        );
+        setReviews((prev) => ({
+          ...prev,
+          [currentProductId]: [
+            ...(prev[currentProductId] || []),
+            response.data,
+          ],
+        }));
+        setNewReview({ name: "", rating: 0, comment: "" });
+      } catch (error) {
+        console.error("Error submitting review:", error);
+      }
+    }
+  };
+
   const {
     totalPrice,
     gstAmount,
@@ -243,12 +310,106 @@ const CartPage = () => {
                       <FaTrash />
                     </button>
                   </div>
+
+
+                  <div>
+                    <button
+                      onClick={() => setShowReviews(!showReviews)}
+                      className="border-[1px] border-primary/80 text-primary bg-primary/20 py-0.5 px-2 rounded-[5px] font-semibold text-md"
+                    >
+                      {showReviews ? "Hide Reviews" : "Show Reviews"}
+                    </button>
+                    {showReviews && (
+                      <div className="mt-[100px] p-6 max-w-4xl bg-blue-100 shadow-md rounded-lg">
+                        <h2 className="text-2xl font-bold mb-4">Reviews</h2>
+                        <div className="mb-6"></div>
+                        <div>
+                          {reviews[item._id] ? (
+                            reviews[item._id].map((review) => (
+                              <div
+                                key={review._id}
+                                className="bg-gray-100 p-2 rounded mt-2"
+                              >
+                                <p className="font-semibold">{review.name}</p>
+                                <div className="flex">
+                                  {renderStars(review.rating)}
+                                </div>
+                                <p>{review.comment}</p>
+                              </div>
+                            ))
+                          ) : (
+                            <p>No reviews yet.</p>
+                          )}
+                        </div>
+
+                        <div>
+                          <h3 className="text-lg font-semibold mb-2">
+                            Add Your Review
+                          </h3>
+                          <form
+                            onSubmit={(e) => {
+                              setCurrentProductId(item._id);
+                              handleReviewSubmit(e);
+                            }}
+                            className="mt-4"
+                          >
+                            <input
+                              type="text"
+                              placeholder="Your Name"
+                              value={newReview.name}
+                              onChange={(e) =>
+                                setNewReview({
+                                  ...newReview,
+                                  name: e.target.value,
+                                })
+                              }
+                              className="w-full border p-2 rounded mb-2"
+                              required
+                            />
+                            <input
+                              type="number"
+                              placeholder="Rating (0-5)"
+                              value={newReview.rating}
+                              onChange={(e) =>
+                                setNewReview({
+                                  ...newReview,
+                                  rating: parseInt(e.target.value, 10),
+                                })
+                              }
+                              className="w-full border p-2 rounded mb-2"
+                              min="0"
+                              max="5"
+                              required
+                            />
+                            <textarea
+                              placeholder="Your Review"
+                              value={newReview.comment}
+                              onChange={(e) =>
+                                setNewReview({
+                                  ...newReview,
+                                  comment: e.target.value,
+                                })
+                              }
+                              className="w-full border p-2 rounded mb-2"
+                              required
+                            />
+                            <button
+                              type="submit"
+                              className="bg-blue-500 text-white p-2 rounded"
+                            >
+                              Submit Review
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
                 </div>
               ))}
             </div>
           )}
 
-         
           <div>
             <button
               onClick={handleSelectSizeClick}
@@ -439,10 +600,6 @@ const CartPage = () => {
               </div>
             )}
           </div>
-
-        <div><Reviews/></div>
-
-
         </div>
       </div>
 
@@ -533,7 +690,6 @@ const CartPage = () => {
           </button>
         </div>
       </div>
-      
     </div>
   );
 };
