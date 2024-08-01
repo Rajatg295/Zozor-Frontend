@@ -62,6 +62,7 @@ const CartPage = () => {
   const [showBenefits, setShowBenefits] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [reviews, setReviews] = useState<{ [productId: string]: Review[] }>({});
   const [newReview, setNewReview] = useState<NewReview>({
     name: "",
@@ -161,6 +162,11 @@ const CartPage = () => {
   };
 
   const handleReviewsClick = () => setShowReviews(!showReviews);
+  const handleShowReviews = (productId: string) => {
+    setSelectedProductId(productId);
+    setShowReviews(!showReviews);
+  };
+
   const handleBenefitsClick = () => setShowBenefits(!showBenefits);
   const handlePolicyClick = () => setShowPolicy(!showPolicy);
 
@@ -311,104 +317,22 @@ const CartPage = () => {
                     </button>
                   </div>
 
+                  <button
+            onClick={() => handleShowReviews(item._id)}
+            className="border-[1px] border-primary/80 text-primary bg-primary/20 w-[100px] h-[50px] flex items-center justify-center rounded-[5px] font-semibold text-md mt-2"
+            >
+            {showReviews && selectedProductId === item._id ? "Hide Reviews" : "Show Reviews"}
+          </button>
 
-                  <div>
-                    <button
-                      onClick={() => setShowReviews(!showReviews)}
-                      className="border-[1px] border-primary/80 text-primary bg-primary/20 py-0.5 px-2 rounded-[5px] font-semibold text-md"
-                    >
-                      {showReviews ? "Hide Reviews" : "Show Reviews"}
-                    </button>
-                    {showReviews && (
-                      <div className="mt-[100px] p-6 max-w-4xl bg-blue-100 shadow-md rounded-lg">
-                        <h2 className="text-2xl font-bold mb-4">Reviews</h2>
-                        <div className="mb-6"></div>
-                        <div>
-                          {reviews[item._id] ? (
-                            reviews[item._id].map((review) => (
-                              <div
-                                key={review._id}
-                                className="bg-gray-100 p-2 rounded mt-2"
-                              >
-                                <p className="font-semibold">{review.name}</p>
-                                <div className="flex">
-                                  {renderStars(review.rating)}
-                                </div>
-                                <p>{review.comment}</p>
-                              </div>
-                            ))
-                          ) : (
-                            <p>No reviews yet.</p>
-                          )}
-                        </div>
 
-                        <div>
-                          <h3 className="text-lg font-semibold mb-2">
-                            Add Your Review
-                          </h3>
-                          <form
-                            onSubmit={(e) => {
-                              setCurrentProductId(item._id);
-                              handleReviewSubmit(e);
-                            }}
-                            className="mt-4"
-                          >
-                            <input
-                              type="text"
-                              placeholder="Your Name"
-                              value={newReview.name}
-                              onChange={(e) =>
-                                setNewReview({
-                                  ...newReview,
-                                  name: e.target.value,
-                                })
-                              }
-                              className="w-full border p-2 rounded mb-2"
-                              required
-                            />
-                            <input
-                              type="number"
-                              placeholder="Rating (0-5)"
-                              value={newReview.rating}
-                              onChange={(e) =>
-                                setNewReview({
-                                  ...newReview,
-                                  rating: parseInt(e.target.value, 10),
-                                })
-                              }
-                              className="w-full border p-2 rounded mb-2"
-                              min="0"
-                              max="5"
-                              required
-                            />
-                            <textarea
-                              placeholder="Your Review"
-                              value={newReview.comment}
-                              onChange={(e) =>
-                                setNewReview({
-                                  ...newReview,
-                                  comment: e.target.value,
-                                })
-                              }
-                              className="w-full border p-2 rounded mb-2"
-                              required
-                            />
-                            <button
-                              type="submit"
-                              className="bg-blue-500 text-white p-2 rounded"
-                            >
-                              Submit Review
-                            </button>
-                          </form>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                
                   
                 </div>
               ))}
             </div>
           )}
+
+
 
           <div>
             <button
@@ -600,6 +524,94 @@ const CartPage = () => {
               </div>
             )}
           </div>
+
+          <div>
+                    
+                    {showReviews && selectedProductId && (
+                      <div className="mt-[100px] p-6 max-w-4xl bg-blue-100 shadow-md rounded-lg">
+                        <h2 className="text-2xl font-bold mb-4">Reviews</h2>
+                        <div className="mb-6"></div>
+                        <div>
+                          {reviews[selectedProductId] ? (
+                            reviews[selectedProductId].map((review) => (
+                              <div
+                                key={review._id}
+                                className="bg-gray-100 p-2 rounded mt-2"
+                              >
+                                <p className="font-semibold">{review.name}</p>
+                                <div className="flex">
+                                  {renderStars(review.rating)}
+                                </div>
+                                <p>{review.comment}</p>
+                              </div>
+                            ))
+                          ) : (
+                            <p>No reviews yet.</p>
+                          )}
+                        </div>
+
+                        <div>
+                          <h3 className="text-lg font-semibold mb-2">
+                            Add Your Review
+                          </h3>
+                          <form
+                            onSubmit={(e) => {
+                              
+                              handleReviewSubmit(e);
+                            }}
+                            className="mt-4"
+                          >
+                            <input
+                              type="text"
+                              placeholder="Your Name"
+                              value={newReview.name}
+                              onChange={(e) =>
+                                setNewReview({
+                                  ...newReview,
+                                  name: e.target.value,
+                                })
+                              }
+                              className="w-full border p-2 rounded mb-2"
+                              required
+                            />
+                            <input
+                              type="number"
+                              placeholder="Rating (0-5)"
+                              value={newReview.rating}
+                              onChange={(e) =>
+                                setNewReview({
+                                  ...newReview,
+                                  rating: parseInt(e.target.value, 10),
+                                })
+                              }
+                              className="w-full border p-2 rounded mb-2"
+                              min="0"
+                              max="5"
+                              required
+                            />
+                            <textarea
+                              placeholder="Your Review"
+                              value={newReview.comment}
+                              onChange={(e) =>
+                                setNewReview({
+                                  ...newReview,
+                                  comment: e.target.value,
+                                })
+                              }
+                              className="w-full border p-2 rounded mb-2"
+                              required
+                            />
+                            <button
+                              type="submit"
+                              className="bg-blue-500 text-white p-2 rounded"
+                            >
+                              Submit Review
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    )}
+                  </div>
         </div>
       </div>
 
