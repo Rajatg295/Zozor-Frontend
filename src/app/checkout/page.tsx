@@ -3,8 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from 'next/navigation';
-
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Address {
   _id?: string;
@@ -17,7 +16,6 @@ interface Address {
   pin: string;
   phone: string;
 }
-
 
 interface Product {
   _id: string;
@@ -36,6 +34,7 @@ interface Product {
 }
 
 const Checkout = () => {
+  const router = useRouter();
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [editAddressId, setEditAddressId] = useState<string | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -44,6 +43,7 @@ const Checkout = () => {
   const [coupon, setCoupon] = useState<string>("");
   const [discount, setDiscount] = useState<number>(0);
   const [shipping, setShipping] = useState<number>(0);
+  const[formdata,setformdata]=useState()
   const [newAddress, setNewAddress] = useState<Address>({
     name: "",
     room: "",
@@ -55,12 +55,9 @@ const Checkout = () => {
     phone: "",
   });
 
-
-
-
   const coupons: { [key: string]: number } = {
-    "DISCOUNT100": 100,
-    "DISCOUNT150": 150,
+    DISCOUNT100: 100,
+    DISCOUNT150: 150,
   };
 
   const handleApplyCoupon = () => {
@@ -84,12 +81,11 @@ const Checkout = () => {
 
   useEffect(() => {
     fetchAddresses();
-
   }, []);
 
   useEffect(() => {
-    const cartData = searchParams.get('cart');
-    const couponData = searchParams.get('coupon');
+    const cartData = searchParams.get("cart");
+    const couponData = searchParams.get("coupon");
     if (cartData) {
       console.log("Cart data received: ", cartData);
       setCart(JSON.parse(decodeURIComponent(cartData)));
@@ -102,8 +98,6 @@ const Checkout = () => {
     }
   }, [searchParams]);
 
-
-
   useEffect(() => {
     const totalPrice = getTotalPriceWithoutExtras();
     setShipping(totalPrice * 0.02);
@@ -113,7 +107,9 @@ const Checkout = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setNewAddress({ ...newAddress, [name]: value });
   };
@@ -122,11 +118,15 @@ const Checkout = () => {
     e.preventDefault();
     try {
       if (editAddressId) {
-        await axios.put(`http://localhost:8080/address/${editAddressId}`, newAddress, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        await axios.put(
+          `http://localhost:8080/address/${editAddressId}`,
+          newAddress,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         alert("Address updated successfully!");
       } else {
         await axios.post("http://localhost:8080/address", newAddress, {
@@ -191,12 +191,18 @@ const Checkout = () => {
     setIsFormVisible(false);
   };
 
-  const handleCartQuantityChange = (productId: string, action: 'increase' | 'decrease') => {
+  const handleCartQuantityChange = (
+    productId: string,
+    action: "increase" | "decrease"
+  ) => {
     const updatedCart = cart.map((item) => {
       if (item._id === productId) {
         return {
           ...item,
-          quantity: action === 'increase' ? item.quantity + 1 : Math.max(item.quantity - 1, 1),
+          quantity:
+            action === "increase"
+              ? item.quantity + 1
+              : Math.max(item.quantity - 1, 1),
         };
       }
       return item;
@@ -216,10 +222,33 @@ const Checkout = () => {
     const totalWithGst = totalPrice + gstAmount;
     const totalWithShipping = totalWithGst + shipping;
     const totalWithDiscount = totalWithShipping - discount;
-    return { totalPrice, gstAmount, totalWithGst, totalWithShipping, totalWithDiscount };
+    return {
+      totalPrice,
+      gstAmount,
+      totalWithGst,
+      totalWithShipping,
+      totalWithDiscount,
+    };
   };
 
-  const { totalPrice, gstAmount, totalWithGst, totalWithShipping, totalWithDiscount } = getTotalPrice();
+  const {
+    totalPrice,
+    gstAmount,
+    totalWithGst,
+    totalWithShipping,
+    totalWithDiscount,
+  } = getTotalPrice();
+
+  const handlePlaceOrder = () => {
+    // try{
+    //   const response = await axios.get("http://localhost:8080/orderconfirmation",);
+    //   if(addresses&&cart)
+    // }
+    // catch{
+
+    // }
+    router.push('/confirmation');
+  };
 
 
   return (
@@ -235,10 +264,15 @@ const Checkout = () => {
                     <span className="font-semibold">{address.name}</span>
                   </div>
                   <div className="mb-2">
-                    <span>{address.room} | {address.address}</span>
+                    <span>
+                      {address.room} | {address.address}
+                    </span>
                   </div>
                   <div className="mb-2">
-                    <span>{address.city}, {address.state}, {address.country} - {address.pin}</span>
+                    <span>
+                      {address.city}, {address.state}, {address.country} -{" "}
+                      {address.pin}
+                    </span>
                   </div>
                   <div className="mb-2">
                     <span>Mobile Number: {address.phone}</span>
@@ -251,16 +285,14 @@ const Checkout = () => {
                       Change Address
                     </button>
                   </div>
-
                 </div>
               ))
             ) : (
               <p>No addresses available.</p>
             )}
           </div>
-          
-          <div className="flex justify-end mt-4">
 
+          <div className="flex justify-end mt-4">
             <button
               onClick={handleAddNewAddress}
               className="py-3 px-5 rounded-[10px] bg-blue-500 font-semibold text-white border-[1px] border-primary hover:text-primary transition ease-in duration-2000"
@@ -268,12 +300,7 @@ const Checkout = () => {
               ADD NEW ADDRESS
             </button>
           </div>
-          
         </div>
-
-        
-
-
 
         {isFormVisible && (
           <form onSubmit={handleSubmit} className="w-full">
@@ -361,147 +388,157 @@ const Checkout = () => {
           </form>
         )}
 
-<div className="mb-8 mt-5 ml-9">
-  <h2 className="text-lg font-semibold">Product Summary</h2>
-  {cart.length > 0 ? (
-    cart.map((product) => (
-      <div key={product._id} className="flex items-center mb-4">
-        <Image src={product.image} alt={product.name} width={50} height={50} />
-        <div className="flex-1 ml-4 flex items-center">
-          <h2 className="text-lg font-semibold flex-1">{product.name}</h2>
-          <div className="flex-1 justify-center items-center">
-            <button
-              onClick={() => handleCartQuantityChange(product._id, 'decrease')}
-              className="py-1 px-2 rounded-[5px] bg-yellow-500 text-white"
-            >
-              -
-            </button>
-            <button
-              onClick={() => handleCartRemove(product._id)}
-              className="ml-2 py-1 px-2 rounded-[5px] bg-red-500 text-white"
-            >
-              Remove
-            </button>
-            <button
-              onClick={() => handleCartQuantityChange(product._id, 'increase')}
-              className="py-1 px-2 ml-2 rounded-[5px] bg-blue-500 text-white"
-            >
-              +
-            </button>
-
-          </div>
-          <div className="text-lg">
-          <p className="mx-2 ml-9">${product.price} x {product.quantity}</p>
-          
-
-          </div>
-          <div><p>Price details</p></div>
+        <div className="mb-8 mt-5 ml-9">
+          <h2 className="text-lg font-semibold">Product Summary</h2>
+          {cart.length > 0 ? (
+            cart.map((product) => (
+              <div key={product._id} className="flex items-center mb-4">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  width={50}
+                  height={50}
+                />
+                <div className="flex-1 ml-4 flex items-center">
+                  <h2 className="text-lg font-semibold flex-1">
+                    {product.name}
+                  </h2>
+                  <div className="flex-1 justify-center items-center">
+                    <button
+                      onClick={() =>
+                        handleCartQuantityChange(product._id, "decrease")
+                      }
+                      className="py-1 px-2 rounded-[5px] bg-yellow-500 text-white"
+                    >
+                      -
+                    </button>
+                    <button
+                      onClick={() => handleCartRemove(product._id)}
+                      className="ml-2 py-1 px-2 rounded-[5px] bg-red-500 text-white"
+                    >
+                      Remove
+                    </button>
+                    <button
+                      onClick={() =>
+                        handleCartQuantityChange(product._id, "increase")
+                      }
+                      className="py-1 px-2 ml-2 rounded-[5px] bg-blue-500 text-white"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <div className="text-lg">
+                    <p className="mx-2 ml-9">
+                      ${product.price} x {product.quantity}
+                    </p>
+                  </div>
+                  <div>
+                    <p>Price details</p>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No items in the cart.</p>
+          )}
         </div>
-      </div>
-    ))
-  ) : (
-    <p>No items in the cart.</p>
-  )}
-</div>
 
-<div className="w-full bg-green-100 flex justify-between px-4 py-1">
-          <span className="text-xs">Spend 1,000 or more <span className="text-green-800 text-sm">get 5,000 OFF with online payment</span></span>
+        <div className="w-full bg-green-100 flex justify-between px-4 py-1">
+          <span className="text-xs">
+            Spend 1,000 or more{" "}
+            <span className="text-green-800 text-sm">
+              get 5,000 OFF with online payment
+            </span>
+          </span>
           <button className="w-max rounded-[10px] text-sm font-semibold text-blue-500 px-2">
             <i className="fa fa-plus mr-2"></i> Add Products
           </button>
         </div>
 
         <div className="flex mt-5 w-full h-[70px] bg-gray-100 justify-end">
-          <button className="bg-blue-500 text-white mt-4 py-2 px-4 h-[40px] rounded-md w-half mr-2 max-w-xs">
-            Pay Online
+          <button  onClick={handlePlaceOrder} className="bg-blue-500 text-white mt-4 py-2 px-4 h-[40px] rounded-md w-half mr-2 max-w-xs">
+            Place Order
           </button>
         </div>
-
-
       </div>
       <div className="h-max lg:w-96 md:w-96 w-full flex-none flex flex-col rounded-[5px] z-40">
-          <div className="border-[1px] border-primary/30 bg-white">
-            <div className="bg-green/10 text-green p-2">
-              <span className="font-semibold text-sm">Save instantly ₹ 150.00 with online payment</span>
+        <div className="border-[1px] border-primary/30 bg-white">
+          <div className="bg-green/10 text-green p-2">
+            <span className="font-semibold text-sm">
+              Save instantly ₹ 150.00 with online payment
+            </span>
+          </div>
+          <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
+            <span className="font-semibold text-md">Payment Summary</span>
+          </div>
+          <div className="flex flex-col py-4 border-b-[1px] border-primary/30">
+            <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
+              <span>Total Amount </span>
+              <span>₹ {totalPrice.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
-              <span className="font-semibold text-md">Payment Summary</span>
+            <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
+              <span>Total GST(18%)</span>
+              <span>₹ {gstAmount.toLocaleString()}</span>
             </div>
-            <div className="flex flex-col py-4 border-b-[1px] border-primary/30">
-              <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
-                <span>Total Amount </span>
-                <span>₹ {totalPrice.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
-                <span>Total GST(18%)</span>
-                <span>₹ {gstAmount.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
-                <span>Total Shipping (2%)</span>
-                <span>₹ {shipping.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
-                <span>Total Coupon Discount</span>
-                <span>₹ {discount.toLocaleString()}</span>
-              </div>
+            <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
+              <span>Total Shipping (2%)</span>
+              <span>₹ {shipping.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between text-md font-semibold px-2 py-3">
-              <span>Amount Payable</span>
-              <span>₹ {totalWithDiscount.toLocaleString()}</span>
+            <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
+              <span>Total Coupon Discount</span>
+              <span>₹ {discount.toLocaleString()}</span>
             </div>
           </div>
-
-          <div className="border-[1px] border-primary/30 bg-white mt-6">
-            <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
-              <span className="font-semibold text-md">Apply Coupon</span>
-            </div>
-            <div className="flex flex-col py-4 px-3 border-b-[1px] border-primary/30">
-              <div className="flex lg:flex-row md:flex-row flex-col gap-2">
-                <input
-                  type="text"
-                  placeholder="Enter Coupon Code"
-                  value={coupon}
-                  onChange={(e) => setCoupon(e.target.value)}
-                  className="p-2 border-[1px] border-black/30 rounded-[5px] text-primary"
-                />
-                <button
-                  onClick={handleApplyCoupon}
-                  className="py-2 px-4 rounded-[5px] bg-black/10 text-black font-semibold text-sm"
-                >
-                  Apply
-                </button>
-              </div>
-              <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
-                <i className="fa fa-money-bill text-lg text-green"></i>
-                <div className="flex flex-col gap-1">
-                  <span className="font-semibold text-md">DISCOUNT100</span>
-                  <span className="font-normal text-sm">Flat Rs. 100 Off</span>
-                </div>
-              </div>
-              <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
-                <i className="fa fa-money-bill text-lg text-green"></i>
-                <div className="flex flex-col gap-1">
-                  <span className="font-semibold text-md">DISCOUNT150</span>
-                  <span className="font-normal text-sm">Flat Rs. 150 Off</span>
-                </div>
-              </div>
-              <div className="mt-6 ml-9">
-            <h2 className="text-lg font-semibold">Total ₹ {totalWithDiscount.toLocaleString()}</h2>
-
+          <div className="flex justify-between text-md font-semibold px-2 py-3">
+            <span>Amount Payable</span>
+            <span>₹ {totalWithDiscount.toLocaleString()}</span>
           </div>
-            </div>
-          </div>
-
-         
-
-
-
-
-
         </div>
+
+        <div className="border-[1px] border-primary/30 bg-white mt-6">
+          <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
+            <span className="font-semibold text-md">Apply Coupon</span>
+          </div>
+          <div className="flex flex-col py-4 px-3 border-b-[1px] border-primary/30">
+            <div className="flex lg:flex-row md:flex-row flex-col gap-2">
+              <input
+                type="text"
+                placeholder="Enter Coupon Code"
+                value={coupon}
+                onChange={(e) => setCoupon(e.target.value)}
+                className="p-2 border-[1px] border-black/30 rounded-[5px] text-primary"
+              />
+              <button
+                onClick={handleApplyCoupon}
+                className="py-2 px-4 rounded-[5px] bg-black/10 text-black font-semibold text-sm"
+              >
+                Apply
+              </button>
+            </div>
+            <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
+              <i className="fa fa-money-bill text-lg text-green"></i>
+              <div className="flex flex-col gap-1">
+                <span className="font-semibold text-md">DISCOUNT100</span>
+                <span className="font-normal text-sm">Flat Rs. 100 Off</span>
+              </div>
+            </div>
+            <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
+              <i className="fa fa-money-bill text-lg text-green"></i>
+              <div className="flex flex-col gap-1">
+                <span className="font-semibold text-md">DISCOUNT150</span>
+                <span className="font-normal text-sm">Flat Rs. 150 Off</span>
+              </div>
+            </div>
+            <div className="mt-6 ml-9">
+              <h2 className="text-lg font-semibold">
+                Total ₹ {totalWithDiscount.toLocaleString()}
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
-
 
 export default Checkout;

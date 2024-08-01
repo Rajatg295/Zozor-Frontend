@@ -367,7 +367,7 @@ const Homepage = () => {
     const productQueryString = encodeURIComponent(JSON.stringify(product));
     router.push(`/product?product=${productQueryString}`);
   };
-  
+
   return (
     <div className="w-full justify-center px-4 mt-6">
       <div className="ml-[60px] lg:w-[90%] md:w-[90%] w-full flex flex-col lg:flex-row gap-4 relative">
