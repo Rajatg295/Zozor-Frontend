@@ -162,6 +162,7 @@ const CartPage = () => {
   };
 
   const handleReviewsClick = () => setShowReviews(!showReviews);
+
   const handleShowReviews = (productId: string) => {
     setSelectedProductId(productId);
     setShowReviews(!showReviews);
@@ -261,6 +262,11 @@ const CartPage = () => {
                     <p className="text-gray-500">
                       ₹ {item.price.toLocaleString()}
                     </p>
+                    <div className="flex items-center mt-2">
+                      <span className="text-sm text-yellow-500 font-bold">
+                        {item.rating ? `${item.rating} ★` : "No Rating"}
+                      </span>
+                    </div>
                     <p className="text-sm text-black/70">
                       {item.reviewCount
                         ? `${item.reviewCount} Reviews`
@@ -283,11 +289,7 @@ const CartPage = () => {
                     <p className="text-sm text-black mt-2">
                       {item.description || "No Description"}
                     </p>
-                    <div className="flex items-center mt-2">
-                      <span className="text-sm text-yellow-500 font-bold">
-                        {item.rating ? `${item.rating} ★` : "No Rating"}
-                      </span>
-                    </div>
+                    
                     <div className="flex items-center space-x-2 mt-2">
                       <button
                         onClick={() =>
