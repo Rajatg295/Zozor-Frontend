@@ -183,6 +183,44 @@ const Payment = () => {
     }
   };
 
+  // const handleConfirmOrder = async () => {
+  //   if (!orderData || !Array.isArray(orderData.cart)) {
+  //     console.error("Invalid orderData or cart is not an array:", orderData);
+  //     return;
+  //   }
+  
+  //   try {
+  //     const formData = new FormData();
+  
+  //     orderData.cart.forEach((item: Product, index: number) => {
+  //       formData.append(`products[${index}]`, JSON.stringify(item));
+  //     });
+  //     formData.append('addresses', JSON.stringify(orderData.addresses));
+  //     formData.append('discount', orderData.discount.toString());
+  //     formData.append('total', orderData.total.toString());
+  //     formData.append('coupon', orderData.coupon);
+  //     formData.append('paymentMethod', paymentMethod);
+  
+  //     for (const item of orderData.cart) {
+  //       if (item.image) {
+  //         const imageBlob = await fetch(item.image).then(res => res.blob());
+  //         formData.append('images[]', imageBlob, `${item.name}.jpg`);
+  //       }
+  //     }
+  
+  //     await axios.post("http://localhost:8080/api/orders", formData, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data"
+  //       }
+  //     });
+  
+  //     router.push('/order-success');
+  //   } catch (error) {
+  //     console.error("Error placing order:", error);
+  //   }
+  // };
+  
+
   const handleConfirmOrder = async () => {
     if (!orderData || !Array.isArray(orderData.cart)) {
       console.error("Invalid orderData or cart is not an array:", orderData);
@@ -192,9 +230,7 @@ const Payment = () => {
     try {
       const formData = new FormData();
   
-      orderData.cart.forEach((item: Product, index: number) => {
-        formData.append(`products[${index}]`, JSON.stringify(item));
-      });
+      formData.append('products', JSON.stringify(orderData.cart));
       formData.append('addresses', JSON.stringify(orderData.addresses));
       formData.append('discount', orderData.discount.toString());
       formData.append('total', orderData.total.toString());
@@ -219,6 +255,10 @@ const Payment = () => {
       console.error("Error placing order:", error);
     }
   };
+
+  
+
+
   
   if (!orderData) {
     return <div>Loading...</div>;

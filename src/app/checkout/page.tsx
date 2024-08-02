@@ -242,23 +242,23 @@ const Checkout = () => {
     totalWithDiscount,
   } = getTotalPrice();
 
-  const handlePlaceOrder = () => {
-    const cartData = JSON.stringify(cart);
-    const addressData = JSON.stringify(addresses);
-    const discount = discountValue;
-    const total = totalValue;
-    const coupon = couponCode;
+    const handlePlaceOrder = () => {
+      const cartData = JSON.stringify(cart);
+      const addressData = JSON.stringify(addresses);
+      const discount = discountValue;
+      const total = totalValue;
+      const coupon = couponCode;
 
-    const queryString = `?data=${encodeURIComponent(JSON.stringify({
-      cart: cartData,
-      addresses: addressData,
-      discount,
-      total,
-      coupon
-    }))}`;
+      const queryString = `?data=${encodeURIComponent(JSON.stringify({
+        cart: cartData,
+        addresses: addressData,
+        discount,
+        total,
+        coupon
+      }))}`;
 
-    router.push(`/confirmation${queryString}`);
-  };
+      router.push(`/confirmation${queryString}`);
+    };
 
 
   return (
