@@ -43,7 +43,9 @@ const Checkout = () => {
   const [coupon, setCoupon] = useState<string>("");
   const [discount, setDiscount] = useState<number>(0);
   const [shipping, setShipping] = useState<number>(0);
-  const[formdata,setformdata]=useState()
+  const [discountValue, setDiscountValue] = useState<number>(0);
+  const [totalValue, setTotalValue] = useState<number>(0);
+  const [couponCode, setCouponCode] = useState<string>("");
   const [newAddress, setNewAddress] = useState<Address>({
     name: "",
     room: "",
@@ -54,6 +56,7 @@ const Checkout = () => {
     pin: "",
     phone: "",
   });
+
 
   const coupons: { [key: string]: number } = {
     DISCOUNT100: 100,
@@ -240,14 +243,21 @@ const Checkout = () => {
   } = getTotalPrice();
 
   const handlePlaceOrder = () => {
-    // try{
-    //   const response = await axios.get("http://localhost:8080/orderconfirmation",);
-    //   if(addresses&&cart)
-    // }
-    // catch{
+    const cartData = JSON.stringify(cart);
+    const addressData = JSON.stringify(addresses);
+    const discount = discountValue;
+    const total = totalValue;
+    const coupon = couponCode;
 
-    // }
-    router.push('/confirmation');
+    const queryString = `?data=${encodeURIComponent(JSON.stringify({
+      cart: cartData,
+      addresses: addressData,
+      discount,
+      total,
+      coupon
+    }))}`;
+
+    router.push(`/confirmation${queryString}`);
   };
 
 
