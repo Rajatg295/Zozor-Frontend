@@ -1,52 +1,106 @@
-import React from 'react';
-import Image from 'next/image';
+"use client";
 
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import axios from "axios";
 
-const CheckoutPage: React.FC = () => {
+interface Product {
+  _id: string;
+  name: string;
+  price: number;
+  image: string;
+  originalPrice: number;
+  discountPercentage: number;
+  quantity: number;
+}
+
+interface Address {
+  name: string;
+  room: string;
+  address:"string",
+  city: string;
+  state: string;
+  country: string;
+  pin: string;
+  phone: string;
+}
+
+interface ProgressStage {
+  status: string;
+  date?: string;
+}
+
+interface OrderDetails {
+  products?: Product[];
+  addresses?: Address[];
+  progress?: ProgressStage[];
+}
+
+const Orderstatus = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("orderId");
+
+  const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
+
+  useEffect(() => {
+    const fetchOrderDetails = async () => {
+      if (!orderId) {
+        console.error("Order ID is missing");
+        return;
+      }
+
+      try {
+        const response = await axios.get(`http://localhost:8080/api/orders/${orderId}`);
+        console.log('Order Details:', response.data);
+        setOrderDetails(response.data);
+      } catch (error) {
+        console.error("Error fetching order details:", error);
+      }
+    };
+
+    fetchOrderDetails();
+  }, [orderId]);
+
+  if (!orderDetails) {
+    return <div>Loading wait...</div>;
+  }
+
+  const { products = [], addresses = [], progress = [] } = orderDetails;
+
   return (
     <div className="w-full flex justify-center px-4 mt-6">
       <div className="lg:w-[90%] md:w-[90%] w-full flex lg:flex-row md:flex-row flex-col gap-4 relative">
         <div className="w-full gap-4 relative bg-secondary p-4 mt-4">
-          
           <div className="flex flex-col">
             <div className="w-full bg-white p-4 rounded-[5px]">
               <div className="w-full overflow-x-auto bg-white p-4 rounded-[5px] grid lg:grid-cols-4 grid-cols-1 lg:gap-4 gap-12">
-                <div className="mt-2 flex gap-4">
-                  <Image
-                    className="h-24 w-24"
-                    src="/assets/images/product.jpg"
-                    alt="Product"
-                    width={96}
-                    height={96}
-                  />
-                  <div className="flex flex-col gap-2 grow">
-                    <span className="font-medium text-md">
-                      Volume Side Button Outer for Oppo
-                    </span>
-                    <span className="font-bold text-md">
-                      <span className="text-sm font-normal line-through">₹ 3,200 </span>₹ 3,200
-                    </span>
-                    <span className="font-medium text-sm text-green">
-                      Save 150 with online payment
-                    </span>
-                  </div>
-                </div>
+                {products.length > 0 ? (
+                  products.map((product, index) => (
+                    <div key={index} className="mt-2 flex gap-4">
+                      <img className="h-24 w-24" src={product.image} alt={product.name} />
+                      <div className="flex flex-col gap-2 grow">
+                        <span className="font-medium text-md">{product.name}</span>
+                        <span className="font-bold text-md">
+                          <span className="text-sm font-normal line-through">₹ {product.originalPrice}</span> ₹ {product.price}
+                        </span>
+                        <span className="font-medium text-sm text-green">{product.discountPercentage}% off</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div>No products found</div>
+                )}
                 <div className="flex gap-2 items-center justify-center lg:col-span-2 col-span-1">
-                  {/* Progress Tracking */}
                   <div className="flex">
-                    {/* Stage components here */}
-                    <StageComponent status="Accepted" date="09 Jul 2023" />
-                    <StageComponent status="Processing" date="09 Jul 2023" />
-                    <StageComponent status="Packed" />
-                    <StageComponent status="Shipped" />
-                    <StageComponent status="Delivered" date="09 Jul 2023" />
+                    {progress.length > 0 ? (
+                      progress.map((stage, index) => (
+                        <StageComponent key={index} status={stage.status} date={stage.date} />
+                      ))
+                    ) : (
+                      <div>No progress stages</div>
+                    )}
                   </div>
-                </div>
-                <div className="flex flex-col items-end justify-center">
-                  <span className="font-semibold text-2xl">₹ 3,200.00</span>
-                  <span className="font-normal text-sm text-green">
-                    Free Shipping <i className="fa fa-truck"></i>
-                  </span>
                 </div>
               </div>
             </div>
@@ -54,31 +108,17 @@ const CheckoutPage: React.FC = () => {
             <div className="w-full bg-white flex lg:flex-row md:flex-row sm:flex-row flex-col justify-between rounded-[5px] mt-4">
               <div className="flex flex-col w-full p-4 rounded-[5px]">
                 <span className="font-semibold text-md">Delivery Address</span>
-                <span className="font-semibold text-sm">User Name</span>
-                <span className="font-normal text-sm">
-                  Room Number | Address, City, State, INDIA, - 00000
-                </span>
-                <span className="font-normal text-sm">Mobile : +91 8888888888</span>
-              </div>
-
-              <div className="flex flex-col lg:w-96 md:w-96 sm:w-96 w-full p-4 rounded-[5px]">
-                <span className="font-semibold text-md">Order Summary</span>
-                <div className="flex justify-between mt-6">
-                  <span className="font-normal text-md">Amount </span>
-                  <span className="font-normal text-sm">2,800.00</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-normal text-md">GST </span>
-                  <span className="font-normal text-sm">2,800.00</span>
-                </div>
-                <div className="flex justify-between mt-4">
-                  <span className="font-semibold text-md">Amount Payable </span>
-                  <span className="font-semibold text-sm">2,800.00</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-semibold text-md">Payment Method</span>
-                  <span className="font-semibold text-sm">UPIs</span>
-                </div>
+                {addresses.length > 0 ? (
+                  <>
+                    <span className="font-semibold text-sm">{addresses[0].name}</span>
+                    <span className="font-normal text-sm">
+                    {addresses[0].room} {addresses[0].address}, {addresses[0].city}, {addresses[0].state}, {addresses[0].country}, {addresses[0].pin}
+                    </span>
+                    <span className="font-normal text-sm">Mobile : {addresses[0].phone}</span>
+                  </>
+                ) : (
+                  <div>No address found</div>
+                )}
               </div>
             </div>
           </div>
@@ -89,7 +129,7 @@ const CheckoutPage: React.FC = () => {
 };
 
 // Component for Progress Tracking
-const StageComponent: React.FC<{ status: string; date?: string }> = ({ status, date }) => {
+const StageComponent = ({ status, date }: { status: string; date?: string }) => {
   return (
     <div className="w-20 h-2 border-t-[1px] border-green relative">
       <i className="fa fa-circle text-sm text-green absolute top-0 left-0 translate-x-[-50%] translate-y-[-50%]"></i>
@@ -101,4 +141,9 @@ const StageComponent: React.FC<{ status: string; date?: string }> = ({ status, d
   );
 };
 
-export default CheckoutPage;
+export default Orderstatus;
+
+
+
+
+
