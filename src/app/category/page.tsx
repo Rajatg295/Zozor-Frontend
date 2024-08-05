@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaChevronRight, FaLocationArrow, FaMinus, FaStar, FaCartPlus } from "react-icons/fa";
+import { FaHeart,FaChevronRight, FaLocationArrow, FaMinus, FaStar, FaCartPlus } from "react-icons/fa";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 
@@ -141,7 +141,22 @@ const CategoryComponent = () => {
     return isValid;
   });
 
+  const handleAddToWishlist = (product: Product) => {
+    const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    const existingProduct = wishlist.find(
+      (item: Product) => item._id === product._id
+    );
 
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+      alert("Product already exists in wishlist. Quantity updated!");
+    } else {
+      wishlist.push({ ...product, quantity: 1 });
+      alert("Product added to wishlist!");
+    }
+
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  };
 
   return (
     <div className="w-full flex justify-center px-4 mt-6">
@@ -354,6 +369,13 @@ const CategoryComponent = () => {
                         {product.rating} <FaStar className="text-[10px]" />
                       </button>
                       <span className="text-[13px] text-black/70">({product.reviewCount} Reviews)</span>
+                      <button
+                        onClick={() => handleAddToWishlist(product)}
+                        className="top-10 right-0 h-8 w-8 border-[1px] flex justify-center items-center border-primary/30 shadow-lg shadow-black/10"
+
+                      >
+                        <FaHeart className="text-red-500 text-lg" />
+                      </button>
                     </div>
                     <div className="flex mt-2 gap-2">
                       <a href="#">

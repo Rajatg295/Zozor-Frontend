@@ -153,6 +153,23 @@ const ProductPage = () => {
     router.push(`/Buynowhomepage?product=${productQueryString}`);
   };
 
+  const handleAddToWishlist = (product: Product) => {
+    const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    const existingProduct = wishlist.find(
+      (item: Product) => item._id === product._id
+    );
+
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+      alert("Product already exists in wishlist. Quantity updated!");
+    } else {
+      wishlist.push({ ...product, quantity: 1 });
+      alert("Product added to wishlist!");
+    }
+
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  };
+
   return (
     <div className="w-full flex justify-center px-4 mt-6">
       <div className="lg:w-[90%] md:w-[90%] w-full flex lg:flex-row md:flex-row flex-col gap-4 relative">
@@ -229,12 +246,16 @@ const ProductPage = () => {
                 <button className="bg-green-500 text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
                   {product.rating} <FaStar className="text-[10px]" />
                 </button>
-                <button className="bg-green text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
-                  4.5 <i className="fa fa-star text-[10px]"></i>{" "}
-                </button>
+
                 <span className="text-[13px] text-black/70">
                   ({product.reviewCount} Reviews)
                 </span>
+                <button
+                  onClick={() => handleAddToWishlist(product)}
+                  className="top-10 right-0 h-8 w-8 border-[1px] flex justify-center items-center border-primary/30 shadow-lg shadow-black/10"
+                >
+                  <FaHeart className="text-red-500 text-lg" />
+                </button>
               </div>
 
               <div className="flex mt-1 gap-2 mt-4">
@@ -432,7 +453,7 @@ const ProductPage = () => {
               <p className="text-md font-semibold">Update Qty.</p>
               <div className="flex gap-2">
                 <button
-                  className="px-3 py-1 rounded-[5px] border-[1px] border-blue bg-blue/20 font-semibold"
+                  className="px-3 py-1 rounded-[5px] border-[1px] border-blue bg-blue-100 font-semibold"
                   onClick={() => handleQuantityChange(quantity - 1)}
                   disabled={quantity <= 1}
                 >
@@ -440,12 +461,13 @@ const ProductPage = () => {
                 </button>
                 <input
                   type="number"
-                  className="px-3 py-1 w-12 border-[2px] border-black/30 focus:outline-none rounded-[5px]"
+                  className="px-2 py-1 w-12 border-2 border-gray-300 focus:outline-none rounded-5 bg-white text-black text-center"
                   value={quantity}
                   readOnly
                 />
+
                 <button
-                  className="px-3 py-1 rounded-[5px] border-[1px] border-blue bg-blue/20 font-semibold"
+                  className="px-3 py-1 rounded-[5px] border-[1px] border-blue bg-blue-100 font-semibold"
                   onClick={() => handleQuantityChange(quantity + 1)}
                 >
                   +
@@ -544,14 +566,15 @@ const ProductPage = () => {
               <h3 className="text-lg font-semibold mb-2">Customer Reviews</h3>
               <ul>
                 {reviews.map((review) => (
-                  <li key={review.id}
-                    className="mb-4 p-4 border-b border-gray-200">
+                  <li
+                    key={review.id}
+                    className="mb-4 p-4 border-b border-gray-200"
+                  >
                     <div className="flex items-center mb-2">
                       {renderStars(review.rating)}
                       <span className="ml-2 font-semibold">{review.name}</span>
                     </div>
                     <p className="text-gray-700">{review.comment}</p>
-                    
                   </li>
                 ))}
               </ul>
