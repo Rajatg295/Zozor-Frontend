@@ -50,7 +50,7 @@ const Header: React.FC = () => {
               <i className="fa fa-chevron-down text-md"></i>
             </div>
             </a>
-          <a href="/order">
+        <a href="/Order">
             <div className="lg:flex md:flex hidden items-center gap-2 border-b-[1px] border-white hover:border-primary transition ease-in duration-2000">
               <FaTruck className="text-lg text-primary" />
               <span className="text-sm font-semibold">Track Orders</span>

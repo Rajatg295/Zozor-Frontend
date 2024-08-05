@@ -259,7 +259,7 @@ const Checkout = () => {
 
       router.push(`/confirmation${queryString}`);
     };
-
+ 
 
   return (
     <div className="w-full flex justify-center px-4 mt-6 bg-white">
