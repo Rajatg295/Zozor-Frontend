@@ -57,18 +57,45 @@ const Buynowhomepage = () => {
         phone: "",
     });
  
-    const fetchAddresses = async () => {
-        try {
-            const response = await axios.get("http://localhost:8080/address");
-            setAddresses(response.data);
-        } catch (error) {
-            console.error("Error fetching addresses:", error);
-        }
-    };
+    // const fetchAddresses = async () => {
+    //     try {
+    //         const response = await axios.get("http://localhost:8080/address");
+    //         setAddresses(response.data);
+    //     } catch (error) {
+    //         console.error("Error fetching addresses:", error);
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     fetchAddresses();
+    // }, []);
+
+
 
     useEffect(() => {
+        const fetchAddresses = async () => {
+          try {
+            const response = await axios.get('http://localhost:8080/address');
+            setAddresses(response.data);
+            if (response.data.length > 0) {
+              setSelectedAddress(response.data[0]);
+            }
+          } catch (error) {
+            console.error('Error fetching addresses:', error);
+          }
+        };
+    
         fetchAddresses();
-    }, []);
+      }, []);
+
+
+
+      const handleAddressChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selected = addresses.find((address) => address._id === event.target.value);
+        setSelectedAddress(selected || null); // Handle possible undefined case
+      };
+
+
 
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
@@ -140,40 +167,73 @@ const Buynowhomepage = () => {
     const totalWithDiscount = totalPrice - discount;
 
 
-    const handlePlaceOrder = () => {
-        const orderData = {
-          cart: [product],
-          addresses: selectedAddress ? [selectedAddress] : [],
-          discount,
-          total: finalPrice,
-          coupon
-        };
+    // const handlePlaceOrder = () => {
+    //     const orderData = {
+    //       cart: [product],
+    //       addresses: selectedAddress ? [selectedAddress] : [],
+    //       discount,
+    //       total: finalPrice,
+    //       coupon
+    //     };
     
-        const encodedData = encodeURIComponent(JSON.stringify(orderData));
-        router.push(`/BUYNOWconfirmation?data=${encodedData}`);
-      };
+    //     const encodedData = encodeURIComponent(JSON.stringify(orderData));
+    //     router.push(`/BUYNOWconfirmation?data=${encodedData}`);
+    //   };
 
-    return (
+
+
+
+
+
+    const handlePlaceOrder = () => {
+        if (selectedAddress) {
+          console.log('Proceeding with address:', selectedAddress);
+          const orderData = {
+            cart: [product],
+            addresses: [selectedAddress],
+            discount,
+            total: finalPrice,
+            coupon
+          };
+    
+          const encodedData = encodeURIComponent(JSON.stringify(orderData));
+          router.push(`/BUYNOWconfirmation?data=${encodedData}`);
+        } else {
+          console.log('No address selected.');
+        }
+      };
+      
+      
+      
+      
+      
+      
+      
+      return (
         <div className="w-full flex justify-center px-4 mt-6 bg-white">
             <div className="lg:w-[65%] md:w-[70%] w-full flex flex-col gap-4 relative bg-white-100 p-4 rounded-[5px] shadow-lg">
                 <h2 className="text-lg font-bold mb-4">Checkout</h2>
 
-
+ 
 
                 <div className="mt-4">
                     <h3 className="text-md font-bold mb-2">Delivery Addresses</h3>
                     <div className="flex flex-col gap-2">
                         {addresses.map((address) => (
-                            <div key={address._id} className="border p-2 rounded flex justify-between items-center">
-                                <div>
+                            <div
+              key={address._id}
+              className={`border p-2 rounded flex justify-between items-center ${selectedAddress?._id === address._id ? 'bg-gray-100' : ''}`}
+            >                                <div>
                                     <p>{address.name}</p>
                                     <p>{address.room}, {address.address}</p>
                                     <p>{address.city}, {address.state}, {address.country}, {address.pin}</p>
                                     <p>{address.phone}</p>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button onClick={() => setSelectedAddress(address)} className="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-600">
-                                        Select
+                                <button
+                  onClick={() => setSelectedAddress(address)}
+                  className={`py-1 px-4 rounded hover:bg-blue-600 ${selectedAddress?._id === address._id ? 'bg-blue-700' : 'bg-blue-500'} text-white`}
+                >                                        Select
                                     </button>
                                     <button onClick={() => handleEditAddress(address)} className="bg-yellow-500 text-white py-1 px-4 rounded hover:bg-yellow-600">
                                         Edit

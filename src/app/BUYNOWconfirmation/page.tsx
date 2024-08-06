@@ -35,6 +35,7 @@ const Payment = () => {
         const decodedData = decodeURIComponent(data);
         const parsedData = JSON.parse(decodedData);
         setOrderData(parsedData);
+
       } catch (error) {
         console.error("Error parsing JSON:", error);
       }
