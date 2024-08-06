@@ -4,6 +4,7 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { FaPlus } from "react-icons/fa";
 
 interface Address {
   _id?: string;
@@ -59,7 +60,6 @@ const Checkout = () => {
     pin: "",
     phone: "",
   });
-
 
   const coupons: { [key: string]: number } = {
     DISCOUNT100: 100,
@@ -289,21 +289,18 @@ const Checkout = () => {
     <div className="w-full flex justify-center px-4 mt-6 bg-gray-100">
       <div className="lg:w-[90%] bg-gray-100 md:w-[90%] w-full flex flex-col gap-4 relative bg-white-100 p-4 rounded-[5px]">
         <div className="mt-4">
-
-
-        <div className="w-full bg-white h-[70px] rounded-[10px] flex items-center gap-2 mt-4">
-        <input
-          type="checkbox"
-          id="requestGST"
-          checked={requestGST}
-          onChange={() => setRequestGST(!requestGST)}
-          className="ml-5 cursor-pointer"
-        />
-        <label htmlFor="requestGST" className="text-md font-medium">
-          Get GST Invoice
-        </label>
-      </div>
-
+          <div className="w-full bg-white h-[70px] rounded-[10px] flex items-center gap-2 mt-4">
+            <input
+              type="checkbox"
+              id="requestGST"
+              checked={requestGST}
+              onChange={() => setRequestGST(!requestGST)}
+              className="ml-5 cursor-pointer"
+            />
+            <label htmlFor="requestGST" className="text-md font-medium">
+              Get GST Invoice
+            </label>
+          </div>
 
           <h2 className="text-lg font-bold mb-4 mt-5">Delivery Address</h2>
           {/* <div className="bg-white p-4 rounded-[10px] shadow-md">
@@ -371,9 +368,9 @@ const Checkout = () => {
                   <div className="flex justify-between items-center mt-2">
                     <button
                       onClick={() => handleEdit(address)}
-                      className="py-1 px-3 rounded-[5px] bg-red-200 font-semibold text-red-500"
+                      className="py-2 px-3 rounded-[5px] mt-3 bg-red-200 font-semibold text-red-500"
                     >
-                      Change Address
+                      CHANGE DELIVERY ADDRESS
                     </button>
                   </div>
                 </div>
@@ -386,9 +383,10 @@ const Checkout = () => {
           <div className="flex justify-end mt-4">
             <button
               onClick={handleAddNewAddress}
-              className="py-3 px-5 rounded-[10px] bg-red-200 font-semibold text-red-500 border-[1px] border-primary hover:text-primary transition ease-in duration-2000"
+              className="py-3 px-5 rounded-[10px] bg-red-200 font-semibold text-red-500 border-[1px] border-primary hover:text-primary transition ease-in duration-200"
             >
-              ADD NEW ADDRESS
+              <i className="fa fa-plus mr-2 text-red-500"></i>
+              ADD NEW DELIVERY ADDRESS
             </button>
           </div>
         </div>
@@ -583,7 +581,7 @@ const Checkout = () => {
               <span>Total GST(18%)</span>
               <span>₹ {gstAmount.toLocaleString()}</span>
             </div>
-            
+
             <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
               <span>Total Shipping (2%)</span>
               <span>₹ {shipping.toLocaleString()}</span>
@@ -619,7 +617,7 @@ const Checkout = () => {
                 Apply
               </button>
             </div>
-          
+
             <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
               <i className="fa fa-money-bill text-lg text-green"></i>
               <div className="flex flex-col gap-1">
@@ -634,10 +632,8 @@ const Checkout = () => {
                 <span className="font-normal text-sm">Flat Rs. 150 Off</span>
               </div>
             </div>
-            
           </div>
         </div>
-
       </div>
     </div>
   );

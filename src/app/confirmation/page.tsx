@@ -19,6 +19,26 @@ interface Product {
   category?: string;
   stock?: number;
 }
+
+interface Address {
+  name: string;
+  room: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  pin: string;
+  phone: string;
+  email: string;
+}
+
+interface OrderData {
+  cart: Product[];
+  addresses: Address[];
+  discount: number;
+  total: number;
+  coupon: string;
+}
   
 const Payment = () => {
   const router = useRouter();
