@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 interface Address {
   _id?: string;
   name: string;
-  email:string,
+  email: string;
   room: string;
   address: string;
   city: string;
@@ -17,7 +17,7 @@ interface Address {
   pin: string;
   phone: string;
 }
- 
+
 interface Product {
   _id: string;
   name: string;
@@ -47,9 +47,10 @@ const Checkout = () => {
   const [discountValue, setDiscountValue] = useState<number>(0);
   const [totalValue, setTotalValue] = useState<number>(0);
   const [couponCode, setCouponCode] = useState<string>("");
+  const [requestGST, setRequestGST] = useState(false);
   const [newAddress, setNewAddress] = useState<Address>({
     name: "",
-    email:'',
+    email: "",
     room: "",
     address: "",
     city: "",
@@ -73,7 +74,6 @@ const Checkout = () => {
       setDiscount(0);
     }
   };
-
 
   const fetchAddresses = async () => {
     try {
@@ -144,7 +144,7 @@ const Checkout = () => {
 
       setNewAddress({
         name: "",
-        email:'',
+        email: "",
         room: "",
         address: "",
         city: "",
@@ -170,7 +170,7 @@ const Checkout = () => {
   const handleAddNewAddress = () => {
     setNewAddress({
       name: "",
-      email:'',
+      email: "",
       room: "",
       address: "",
       city: "",
@@ -186,7 +186,7 @@ const Checkout = () => {
   const handleDiscard = () => {
     setNewAddress({
       name: "",
-      email:'',
+      email: "",
       room: "",
       address: "",
       city: "",
@@ -247,51 +247,66 @@ const Checkout = () => {
     totalWithDiscount,
   } = getTotalPrice();
 
-    // const handlePlaceOrder = () => {
-    //   const cartData = JSON.stringify(cart);
-    //   const addressData = JSON.stringify(addresses);
-    //   const discount = discountValue;
-    //   const total = totalValue;
-    //   const coupon = couponCode;
+  // const handlePlaceOrder = () => {
+  //   const cartData = JSON.stringify(cart);
+  //   const addressData = JSON.stringify(addresses);
+  //   const discount = discountValue;
+  //   const total = totalValue;
+  //   const coupon = couponCode;
 
-    //   const queryString = `?data=${encodeURIComponent(JSON.stringify({
-    //     cart: cartData,
-    //     addresses: addressData,
-    //     discount,
-    //     total,
-    //     coupon
-    //   }))}`;
+  //   const queryString = `?data=${encodeURIComponent(JSON.stringify({
+  //     cart: cartData,
+  //     addresses: addressData,
+  //     discount,
+  //     total,
+  //     coupon
+  //   }))}`;
 
-    //   router.push(`/confirmation${queryString}`);
-    // };
+  //   router.push(`/confirmation${queryString}`);
+  // };
 
+  // new
 
-    // new
+  const handlePlaceOrder = () => {
+    const cartData = JSON.stringify(cart);
+    const addressData = JSON.stringify(addresses);
+    const totalData = getTotalPrice();
 
-    const handlePlaceOrder = () => {
-      const cartData = JSON.stringify(cart);
-      const addressData = JSON.stringify(addresses);
-      const totalData = getTotalPrice();
-    
-      const queryString = `?data=${encodeURIComponent(JSON.stringify({
+    const queryString = `?data=${encodeURIComponent(
+      JSON.stringify({
         cart: cartData,
         addresses: addressData,
         discount: discount,
         total: totalData.totalWithDiscount,
-        coupon: coupon
-      }))}`;
-    
-      router.push(`/confirmation${queryString}`);
-    };
-    
- 
+        coupon: coupon,
+      })
+    )}`;
+
+    router.push(`/confirmation${queryString}`);
+  };
 
   return (
-    <div className="w-full flex justify-center px-4 mt-6 bg-white">
-      <div className="lg:w-[90%] md:w-[90%] w-full flex flex-col gap-4 relative bg-white-100 p-4 rounded-[5px] shadow-lg">
+    <div className="w-full flex justify-center px-4 mt-6 bg-gray-100">
+      <div className="lg:w-[90%] bg-gray-100 md:w-[90%] w-full flex flex-col gap-4 relative bg-white-100 p-4 rounded-[5px]">
         <div className="mt-4">
-          <h2 className="text-lg font-bold mb-4">Delivery Address</h2>
-          <div className="bg-white p-4 rounded-[10px] shadow-md">
+
+
+        <div className="w-full bg-white h-[70px] rounded-[10px] flex items-center gap-2 mt-4">
+        <input
+          type="checkbox"
+          id="requestGST"
+          checked={requestGST}
+          onChange={() => setRequestGST(!requestGST)}
+          className="ml-5 cursor-pointer"
+        />
+        <label htmlFor="requestGST" className="text-md font-medium">
+          Get GST Invoice
+        </label>
+      </div>
+
+
+          <h2 className="text-lg font-bold mb-4 mt-5">Delivery Address</h2>
+          {/* <div className="bg-white p-4 rounded-[10px] shadow-md">
             {addresses.length > 0 ? (
               addresses.map((address, index) => (
                 <div key={index} className="mb-4">
@@ -318,7 +333,45 @@ const Checkout = () => {
                   <div className="flex justify-between items-center mt-2">
                     <button
                       onClick={() => handleEdit(address)}
-                      className="py-1 px-3 rounded-[5px] bg-green-500 font-semibold text-white"
+                      className="py-1 px-3 rounded-[5px] bg-red-200 font-semibold text-red-500"
+                    >
+                      Change Address
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No addresses available.</p>
+            )}
+          </div> */}
+          <div className="bg-white p-4 rounded-[10px] shadow-md max-h-60 overflow-y-auto">
+            {addresses.length > 0 ? (
+              addresses.map((address, index) => (
+                <div key={index} className="mb-4">
+                  <div className="mb-2">
+                    <span className="font-semibold">{address.name}</span>
+                  </div>
+                  <div className="mb-2">
+                    <span>
+                      {address.room} | {address.address}
+                    </span>
+                  </div>
+                  <div className="mb-2">
+                    <span>
+                      {address.city}, {address.state}, {address.country} -{" "}
+                      {address.pin}
+                    </span>
+                  </div>
+                  <div className="mb-2">
+                    <span>Mobile Number: {address.phone}</span>
+                  </div>
+                  <div className="mb-2">
+                    <span>Email Id: {address.email}</span>
+                  </div>
+                  <div className="flex justify-between items-center mt-2">
+                    <button
+                      onClick={() => handleEdit(address)}
+                      className="py-1 px-3 rounded-[5px] bg-red-200 font-semibold text-red-500"
                     >
                       Change Address
                     </button>
@@ -333,7 +386,7 @@ const Checkout = () => {
           <div className="flex justify-end mt-4">
             <button
               onClick={handleAddNewAddress}
-              className="py-3 px-5 rounded-[10px] bg-blue-500 font-semibold text-white border-[1px] border-primary hover:text-primary transition ease-in duration-2000"
+              className="py-3 px-5 rounded-[10px] bg-red-200 font-semibold text-red-500 border-[1px] border-primary hover:text-primary transition ease-in duration-2000"
             >
               ADD NEW ADDRESS
             </button>
@@ -433,82 +486,86 @@ const Checkout = () => {
             </div>
           </form>
         )}
-
-        <div className="mb-8 mt-5 ml-9">
-          <h2 className="text-lg font-semibold">Product Summary</h2>
-          {cart.length > 0 ? (
-            cart.map((product) => (
-              <div key={product._id} className="flex items-center mb-4">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  width={50}
-                  height={50}
-                />
-                <div className="flex-1 ml-4 flex items-center">
-                  <h2 className="text-lg font-semibold flex-1">
-                    {product.name}
-                  </h2>
-                  <div className="flex-1 justify-center items-center">
-                    <button
-                      onClick={() =>
-                        handleCartQuantityChange(product._id, "decrease")
-                      }
-                      className="py-1 px-2 rounded-[5px] bg-yellow-500 text-white"
-                    >
-                      -
-                    </button>
-                    <button
-                      onClick={() => handleCartRemove(product._id)}
-                      className="ml-2 py-1 px-2 rounded-[5px] bg-red-500 text-white"
-                    >
-                      Remove
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleCartQuantityChange(product._id, "increase")
-                      }
-                      className="py-1 px-2 ml-2 rounded-[5px] bg-blue-500 text-white"
-                    >
-                      +
-                    </button>
-                  </div>
-                  <div className="text-lg">
-                    <p className="mx-2 ml-9">
-                      ${product.price} x {product.quantity}
-                    </p>
-                  </div>
-                  <div>
-                   
+        <h2 className="text-lg font-semibold">Product Summary</h2>
+        <div className="bg-white rounded-[10px] shadow-md h-full">
+          <div className="mb-8 mt-5 ml-9">
+            {cart.length > 0 ? (
+              cart.map((product) => (
+                <div key={product._id} className="flex items-center mb-4">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    width={50}
+                    height={50}
+                  />
+                  <div className="flex-1 ml-4 flex items-center">
+                    <h2 className="text-lg font-semibold flex-1">
+                      {product.name}
+                    </h2>
+                    <div className="flex-1 justify-center items-center">
+                      <button
+                        onClick={() =>
+                          handleCartQuantityChange(product._id, "decrease")
+                        }
+                        className="py-1 px-2 rounded-[5px] bg-blue-100 border border-blue-500 text-black"
+                      >
+                        -
+                      </button>
+                      <button
+                        onClick={() => handleCartRemove(product._id)}
+                        className="ml-2 py-1 px-2 rounded-[5px] bg-red-500 text-white"
+                      >
+                        Remove
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleCartQuantityChange(product._id, "increase")
+                        }
+                        className="py-1 px-2 ml-2 rounded-[5px] border border-blue-500 bg-blue-100 text-black"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div className="text-lg">
+                      <p className="mx-2 ml-9">
+                        ₹{product.price} x {product.quantity}
+                      </p>
+                    </div>
+                    <div></div>
                   </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <p>No items in the cart.</p>
-          )}
-        </div>
+              ))
+            ) : (
+              <p>No items in the cart.</p>
+            )}
+          </div>
 
-        <div className="w-full bg-green-100 flex justify-between px-4 py-1">
-          <span className="text-xs">
-            Spend 1,000 or more{" "}
-            <span className="text-green-800 text-sm">
-              get 5,000 OFF with online payment
-            </span>
-          </span>
-          <button className="w-max rounded-[10px] text-sm font-semibold text-blue-500 px-2">
-            <i className="fa fa-plus mr-2"></i> Add Products
-          </button>
+          <div className="w-full flex rounded-[10px] justify-center">
+            <div className="bg-green-100 rounded-[7px] flex justify-between px-4 py-1 w-full mx-5">
+              <span className="text-xs">
+                Spend 1,000 or more{" "}
+                <span className="text-green-800 text-sm">
+                  get 5,000 OFF with online payment
+                </span>
+              </span>
+              <button className="w-max rounded-[10px] text-sm font-semibold text-blue-500 px-2">
+                <i className="fa fa-plus mr-2"></i> Add Products
+              </button>
+            </div>
+          </div>
         </div>
-
-        <div className="flex mt-5 w-full h-[70px] bg-gray-100 justify-end">
-          <button  onClick={handlePlaceOrder} className="bg-blue-500 text-white mt-4 py-2 px-4 h-[40px] rounded-md w-half mr-2 max-w-xs">
-            Place Order
+        <div className="flex w-full h-[70px] rounded-[10px] bg-gray-100 justify-end">
+          <button
+            onClick={handlePlaceOrder}
+            className="bg-blue-500 text-white mt-4 py-2 px-4 h-[40px] rounded-md w-half mr-2 max-w-xs"
+          >
+            Place Order ₹ {totalWithDiscount.toLocaleString()}
           </button>
         </div>
       </div>
-      <div className="h-max lg:w-96 md:w-96 w-full flex-none flex flex-col rounded-[5px] z-40">
-        <div className="border-[1px] border-primary/30 bg-white">
+
+      <div className="h-max lg:w-96 md:w-96 w-full flex-none flex flex-col mt-3 bg-gray-100 rounded-[5px] z-40">
+        <div className="border-[1px] border-primary/30 rounded-[10px] bg-white">
           <div className="bg-green/10 text-green p-2">
             <span className="font-semibold text-sm">
               Save instantly ₹ 150.00 with online payment
@@ -526,6 +583,7 @@ const Checkout = () => {
               <span>Total GST(18%)</span>
               <span>₹ {gstAmount.toLocaleString()}</span>
             </div>
+            
             <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
               <span>Total Shipping (2%)</span>
               <span>₹ {shipping.toLocaleString()}</span>
@@ -556,11 +614,12 @@ const Checkout = () => {
               />
               <button
                 onClick={handleApplyCoupon}
-                className="py-2 px-4 rounded-[5px] bg-black/10 text-black font-semibold text-sm"
+                className="py-2 px-4 rounded-[5px] bg-green-500 text-white font-semibold text-sm"
               >
                 Apply
               </button>
             </div>
+          
             <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
               <i className="fa fa-money-bill text-lg text-green"></i>
               <div className="flex flex-col gap-1">
@@ -575,15 +634,11 @@ const Checkout = () => {
                 <span className="font-normal text-sm">Flat Rs. 150 Off</span>
               </div>
             </div>
-            <div className="mt-6 ml-9">
-              <h2 className="text-lg font-semibold">
-                Total ₹ {totalWithDiscount.toLocaleString()}
-              </h2>
-            </div>
+            
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
   );
 };
