@@ -14,13 +14,71 @@ import Image from "next/image";
 import OrderList from "../Orderlist/page";
 import CartPage from "../CartPage";
 import MyWishlist from "../Mywishlist/page";
+import axios from "axios";
+
+interface Address {
+  _id?: string;
+  name: string;
+  email: string;
+  room: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  pin: string;
+  phone: string;
+}
 
 const Profile: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("wishlist");
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
+  const [newAddress, setNewAddress] = useState<Address>({
+    name: "",
+    email: "",
+    room: "",
+    address: "",
+    city: "",
+    state: "",
+    country: "",
+    pin: "",
+    phone: "",
+  });
   const handleSectionClick = (section: string) => {
     setActiveSection(section);
   };
+
+  const handleAddressFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isEditing) {
+        const response = await axios.put(`http://localhost:8080/address/${newAddress._id}`, newAddress);
+        setAddresses(addresses.map(addr => addr._id === response.data._id ? response.data : addr));
+    } else {
+        const response = await axios.post("http://localhost:8080/address", newAddress);
+        setAddresses([...addresses, response.data]);
+    }
+    // setShowAddressForm(false);
+    setIsEditing(false);
+    setNewAddress({
+        name: "",
+        email: '',
+        room: "",
+        address: "",
+        city: "",
+        state: "",
+        country: "",
+        pin: "",
+        phone: "",
+    });
+};
+
+const handleEditAddress = (address: Address) => {
+    setNewAddress(address);
+    // setShowAddressForm(true);
+    setIsEditing(true);
+};
+
 
   return (
     <div className="w-full bg-gray-100 flex justify-center px-4 mt-6">
@@ -92,7 +150,7 @@ const Profile: React.FC = () => {
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-md">My Wishlist</span>
               </div>
-              <MyWishlist/>
+              <MyWishlist />
             </div>
           )}
 
@@ -111,6 +169,109 @@ const Profile: React.FC = () => {
                 <span className="font-semibold text-md">My Address</span>
               </div>
               {/* Additional content for address can go here */}
+              <form
+                onSubmit={handleAddressFormSubmit}
+                className="mt-4 p-4 border rounded"
+              >
+                <div className="flex flex-col gap-2">
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    value={newAddress.name}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, name: e.target.value })
+                    }
+                    required
+                    className="border p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Email Id"
+                    value={newAddress.email}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, email: e.target.value })
+                    }
+                    required
+                    className="border p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Room"
+                    value={newAddress.room}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, room: e.target.value })
+                    }
+                    required
+                    className="border p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Address"
+                    value={newAddress.address}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, address: e.target.value })
+                    }
+                    required
+                    className="border p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    placeholder="City"
+                    value={newAddress.city}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, city: e.target.value })
+                    }
+                    required
+                    className="border p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    placeholder="State"
+                    value={newAddress.state}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, state: e.target.value })
+                    }
+                    required
+                    className="border p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Country"
+                    value={newAddress.country}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, country: e.target.value })
+                    }
+                    required
+                    className="border p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    placeholder="PIN"
+                    value={newAddress.pin}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, pin: e.target.value })
+                    }
+                    required
+                    className="border p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Phone"
+                    value={newAddress.phone}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, phone: e.target.value })
+                    }
+                    required
+                    className="border p-2 rounded"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-600"
+                  >
+                    {isEditing ? "Update Address" : "Add Address"}
+                  </button>
+                </div>
+              </form>
             </div>
           )}
 

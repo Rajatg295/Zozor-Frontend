@@ -94,7 +94,7 @@ const Buynowhomepage = () => {
 
       const handleAddressChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selected = addresses.find((address) => address._id === event.target.value);
-        setSelectedAddress(selected || null); // Handle possible undefined case
+        setSelectedAddress(selected || null);
       };
 
 
