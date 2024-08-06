@@ -10,6 +10,7 @@ import { FaStar } from "react-icons/fa";
 interface Address {
     _id?: string;
     name: string;
+    email:string,
     room: string;
     address: string;
     city: string;
@@ -48,6 +49,7 @@ const Buynowhomepage = () => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [newAddress, setNewAddress] = useState<Address>({
         name: "",
+        email:'',
         room: "",
         address: "",
         city: "",
@@ -144,6 +146,7 @@ const Buynowhomepage = () => {
         setIsEditing(false);
         setNewAddress({
             name: "",
+            email: '',
             room: "",
             address: "",
             city: "",
@@ -225,9 +228,11 @@ const Buynowhomepage = () => {
               className={`border p-2 rounded flex justify-between items-center ${selectedAddress?._id === address._id ? 'bg-gray-100' : ''}`}
             >                                <div>
                                     <p>{address.name}</p>
+                                    
                                     <p>{address.room}, {address.address}</p>
                                     <p>{address.city}, {address.state}, {address.country}, {address.pin}</p>
                                     <p>{address.phone}</p>
+                                    <p>{address.email}</p>
                                 </div>
                                 <div className="flex gap-2">
                                 <button
@@ -253,6 +258,14 @@ const Buynowhomepage = () => {
                                     placeholder="Name"
                                     value={newAddress.name}
                                     onChange={(e) => setNewAddress({ ...newAddress, name: e.target.value })}
+                                    required
+                                    className="border p-2 rounded"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Email Id"
+                                    value={newAddress.email}
+                                    onChange={(e) => setNewAddress({ ...newAddress, email: e.target.value })}
                                     required
                                     className="border p-2 rounded"
                                 />

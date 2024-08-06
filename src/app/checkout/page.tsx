@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 interface Address {
   _id?: string;
   name: string;
+  email:string,
   room: string;
   address: string;
   city: string;
@@ -48,6 +49,7 @@ const Checkout = () => {
   const [couponCode, setCouponCode] = useState<string>("");
   const [newAddress, setNewAddress] = useState<Address>({
     name: "",
+    email:'',
     room: "",
     address: "",
     city: "",
@@ -142,6 +144,7 @@ const Checkout = () => {
 
       setNewAddress({
         name: "",
+        email:'',
         room: "",
         address: "",
         city: "",
@@ -167,6 +170,7 @@ const Checkout = () => {
   const handleAddNewAddress = () => {
     setNewAddress({
       name: "",
+      email:'',
       room: "",
       address: "",
       city: "",
@@ -182,6 +186,7 @@ const Checkout = () => {
   const handleDiscard = () => {
     setNewAddress({
       name: "",
+      email:'',
       room: "",
       address: "",
       city: "",
@@ -307,6 +312,9 @@ const Checkout = () => {
                   <div className="mb-2">
                     <span>Mobile Number: {address.phone}</span>
                   </div>
+                  <div className="mb-2">
+                    <span>Email Id: {address.email}</span>
+                  </div>
                   <div className="flex justify-between items-center mt-2">
                     <button
                       onClick={() => handleEdit(address)}
@@ -340,6 +348,14 @@ const Checkout = () => {
                 name="name"
                 placeholder="Name"
                 value={newAddress.name}
+                onChange={handleChange}
+                className="rounded-[5px] focus:outline-none border-[1px] border-primary/30 w-full py-2 px-4 text-primary"
+              />
+              <input
+                type="text"
+                name="email"
+                placeholder="Email Id"
+                value={newAddress.email}
                 onChange={handleChange}
                 className="rounded-[5px] focus:outline-none border-[1px] border-primary/30 w-full py-2 px-4 text-primary"
               />
