@@ -16,7 +16,7 @@ interface Address {
   pin: string;
   phone: string;
 }
-
+ 
 interface Product {
   _id: string;
   name: string;
@@ -242,23 +242,43 @@ const Checkout = () => {
     totalWithDiscount,
   } = getTotalPrice();
 
+    // const handlePlaceOrder = () => {
+    //   const cartData = JSON.stringify(cart);
+    //   const addressData = JSON.stringify(addresses);
+    //   const discount = discountValue;
+    //   const total = totalValue;
+    //   const coupon = couponCode;
+
+    //   const queryString = `?data=${encodeURIComponent(JSON.stringify({
+    //     cart: cartData,
+    //     addresses: addressData,
+    //     discount,
+    //     total,
+    //     coupon
+    //   }))}`;
+
+    //   router.push(`/confirmation${queryString}`);
+    // };
+
+
+    // new
+
     const handlePlaceOrder = () => {
       const cartData = JSON.stringify(cart);
       const addressData = JSON.stringify(addresses);
-      const discount = discountValue;
-      const total = totalValue;
-      const coupon = couponCode;
-
+      const totalData = getTotalPrice();
+    
       const queryString = `?data=${encodeURIComponent(JSON.stringify({
         cart: cartData,
         addresses: addressData,
-        discount,
-        total,
-        coupon
+        discount: discount,
+        total: totalData.totalWithDiscount,
+        coupon: coupon
       }))}`;
-
+    
       router.push(`/confirmation${queryString}`);
     };
+    
  
 
   return (
@@ -443,7 +463,7 @@ const Checkout = () => {
                     </p>
                   </div>
                   <div>
-                    <p>Price details</p>
+                   
                   </div>
                 </div>
               </div>
@@ -547,6 +567,7 @@ const Checkout = () => {
           </div>
         </div>
       </div>
+
     </div>
   );
 };

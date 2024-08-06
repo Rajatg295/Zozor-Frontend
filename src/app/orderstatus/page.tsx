@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import Link from 'next/link';
-import Image from 'next/image';  // Import the Image component from Next.js
+import Image from 'next/image';  
 
 interface Product {
   _id: string;
@@ -40,6 +40,7 @@ interface OrderDetails {
   paymentMethod?: string;
   _id?: string;
 }
+
 
 const Orderstatus = () => {
   const router = useRouter();

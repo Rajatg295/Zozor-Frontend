@@ -186,6 +186,7 @@ const OrderList = () => {
                       <span className="font-semibold text-md">Discount: ₹ {order.discount}</span>
                       <span className="font-semibold text-md">Total: ₹ {order.total}</span>
                       <span className="font-semibold text-md">Coupon: {order.coupon}</span>
+                       
                       <span className="font-semibold text-md">Payment Method: {order.paymentMethod}</span>
                       
                     </div>

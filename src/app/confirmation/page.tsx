@@ -19,7 +19,7 @@ interface Product {
   category?: string;
   stock?: number;
 }
- 
+  
 const Payment = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
