@@ -1,0 +1,739 @@
+slider
+
+ <div className="slider-container overflow-hidden relative">
+      <div
+        className="slider-wrapper flex transition-transform duration-500"
+        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+      >
+        {slides.map((src, index) => (
+          <div className="slider-slide w-full flex-shrink-0" key={index}>
+            <Image className="w-full lg:h-80 md:h-80 sm:h-64 h-40 lg:rounded-t-[20px] md:rounded-t-[20px] rounded-[5px]" src={src} alt={`Banner ${index + 1}`} width={800} height={320} />
+          </div>
+        ))}
+      </div>
+      <button
+        type="button"
+        className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md"
+        onClick={goToPrevSlide}
+      >
+        <FaChevronRight className="text-gray-600" />
+      </button>
+      <button
+        type="button"
+        className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md"
+        onClick={goToNextSlide}
+      >
+        <FaChevronRight className="text-gray-600 rotate-180" />
+      </button>
+    </div>
+
+
+
+
+
+
+
+
+
+ <div className="w-full flex justify-center px-4 mt-4">
+        <div className="lg:w-[90%] md:w-[90%] w-full flex flex-col bg-white p-4 rounded-[5px] gap-4 relative">
+          <div className="w-full flex items-center justify-between">
+            <span className="text-md font-semibold text-primary">MOBILE DISPLAY SCREENS</span>
+            <Link href="/AllProducts">
+              <button className="bg-primary/20 border-[1px] border-primary/20 text-primary font-bold text-sm px-4 py-1 rounded-[3px] bg-orange-500 transition ease-in duration-2000">
+                View All
+              </button>
+            </Link>
+          </div>
+
+          <div className="w-full bg-secondary rounded-[5px] p-4 border shadow-lg">
+            <div className="relative flex overflow-x-auto space-x-4 pb-2">
+              <ul className="flex space-x-4">
+                {products.map((product) => (
+                  <li key={product.id} className="inline-block bg-white px-4 py-8 rounded-[5px] w-full max-w-xs">
+                    <div className="flex justify-start">
+                      <a href="#">
+                        <Image
+                          className="w-auto h-40 object-cover"
+                          src={product.image}
+                          alt={product.name}
+                          width={300}
+                          height={160}
+                        />
+                      </a>
+                    </div>
+                    <div className="flex mt-2 gap-2">
+                      <button className="bg-green-500 text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
+                        {product.rating} <FaStar className="text-[10px]" />
+                      </button>
+                      <span className="text-[13px] text-black/70">({product.reviewCount} Reviews)</span>
+                    </div>
+                    <div className="flex mt-2 gap-2">
+                      <a href="#">
+                        <span className="text-[17px] font-medium text-black/70">
+                          {product.name}
+                        </span>
+                      </a>
+                    </div>
+                    <div className="flex mt-1 gap-2">
+                      <span className="text-[14px] font-semibold text-black/50">By: {product.brand}</span>
+                    </div>
+                    <div className="flex mt-3 gap-2">
+                      <span className="text-2xl font-bold text-black">₹ {product.price.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[14px] font-semibold text-black/50 line-through">₹ {product.originalPrice.toLocaleString()}</span>
+                      <span className="text-[16px] font-bold text-green">{product.discountPercentage}% OFF</span>
+                    </div>
+                    <div className="flex justify-between mt-3 gap-2">
+                      <button
+                        className="py-3 px-5 rounded-[10px] bg-blue-500 text-white border-[1px] border-blue-500 hover:bg-white hover:text-blue-500 transition ease-in duration-2000"
+                        onClick={() => handleAddToCart(product)}
+                      >
+                        <FaCartPlus className="text-[25px]" />
+                      </button>
+                      <Link href="/product"><button className="py-3 px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-red-500 hover:bg-white hover:text-red-500 transition ease-in duration-2000">
+                        BUY NOW
+                      </button></Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <button type="button" className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full">
+                &lt;
+              </button>
+              <button type="button" className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full">
+                &gt;
+              </button>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+      <div className="w-full flex justify-center px-4 mt-4">
+        <div className="lg:w-[90%] md:w-[90%] w-full flex flex-col bg-white p-4 rounded-[5px] gap-4 relative">
+          <div className="w-full flex items-center justify-between">
+            <span className="text-md font-semibold text-primary">    MOBILE ACCESSORIES          </span>
+            <Link href="/AllProducts">
+              <button className="bg-primary/20 border-[1px] border-primary/20 text-primary font-bold text-sm px-4 py-1 rounded-[3px] bg-orange-500 transition ease-in duration-2000">
+                View All
+              </button>
+            </Link>
+          </div>
+
+          <div className="w-full bg-secondary rounded-[5px] p-4 border shadow-lg">
+            <div className="relative flex overflow-x-auto space-x-4 pb-2">
+              <ul className="flex space-x-4">
+                {products.map((product) => (
+                  <li key={product.id} className="inline-block bg-white px-4 py-8 rounded-[5px] w-full max-w-xs">
+                    <div className="flex justify-start">
+                      <a href="#">
+                        <Image
+                          className="w-auto h-40 object-cover"
+                          src={product.image}
+                          alt={product.name}
+                          width={300}
+                          height={160}
+                        />
+                      </a>
+                    </div>
+                    <div className="flex mt-2 gap-2">
+                      <button className="bg-green-500 text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
+                        {product.rating} <FaStar className="text-[10px]" />
+                      </button>
+                      <span className="text-[13px] text-black/70">({product.reviewCount} Reviews)</span>
+                    </div>
+                    <div className="flex mt-2 gap-2">
+                      <a href="#">
+                        <span className="text-[17px] font-medium text-black/70">
+                          {product.name}
+                        </span>
+                      </a>
+                    </div>
+                    <div className="flex mt-1 gap-2">
+                      <span className="text-[14px] font-semibold text-black/50">By: {product.brand}</span>
+                    </div>
+                    <div className="flex mt-3 gap-2">
+                      <span className="text-2xl font-bold text-black">₹ {product.price.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[14px] font-semibold text-black/50 line-through">₹ {product.originalPrice.toLocaleString()}</span>
+                      <span className="text-[16px] font-bold text-green">{product.discountPercentage}% OFF</span>
+                    </div>
+                    <div className="flex justify-between mt-3 gap-2">
+                      <button
+                        className="py-3 px-5 rounded-[10px] bg-blue-500 text-white border-[1px] border-blue-500 hover:bg-white hover:text-blue-500 transition ease-in duration-2000"
+                        onClick={() => handleAddToCart(product)}
+                      >
+                        <FaCartPlus className="text-[25px]" />
+                      </button>
+                      <Link href="/product"><button className="py-3 px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-red-500 hover:bg-white hover:text-red-500 transition ease-in duration-2000">
+                        BUY NOW
+                      </button></Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <button type="button" className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full">
+                &lt;
+              </button>
+              <button type="button" className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full">
+                &gt;
+              </button>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+
+      <div className="w-full flex justify-center px-4 mt-4">
+        <div className="lg:w-[90%] md:w-[90%] w-full flex flex-col bg-white p-4 rounded-[5px] gap-4 relative">
+          <div className="w-full flex items-center justify-between">
+            <span className="text-md font-semibold text-primary">    MOBILE SPARE PARTS         </span>
+            <Link href="/AllProducts">
+              <button className="bg-primary/20 border-[1px] border-primary/20 text-primary font-bold text-sm px-4 py-1 rounded-[3px] bg-orange-500 transition ease-in duration-2000">
+                View All
+              </button>
+            </Link>
+          </div>
+
+          <div className="w-full bg-secondary rounded-[5px] p-4 border shadow-lg">
+            <div className="relative flex overflow-x-auto space-x-4 pb-2">
+              <ul className="flex space-x-4">
+                {products.map((product) => (
+                  <li key={product.id} className="inline-block bg-white px-4 py-8 rounded-[5px] w-full max-w-xs">
+                    <div className="flex justify-start">
+                      <a href="#">
+                        <Image
+                          className="w-auto h-40 object-cover"
+                          src={product.image}
+                          alt={product.name}
+                          width={300}
+                          height={160}
+                        />
+                      </a>
+                    </div>
+                    <div className="flex mt-2 gap-2">
+                      <button className="bg-green-500 text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
+                        {product.rating} <FaStar className="text-[10px]" />
+                      </button>
+                      <span className="text-[13px] text-black/70">({product.reviewCount} Reviews)</span>
+                    </div>
+                    <div className="flex mt-2 gap-2">
+                      <a href="#">
+                        <span className="text-[17px] font-medium text-black/70">
+                          {product.name}
+                        </span>
+                      </a>
+                    </div>
+                    <div className="flex mt-1 gap-2">
+                      <span className="text-[14px] font-semibold text-black/50">By: {product.brand}</span>
+                    </div>
+                    <div className="flex mt-3 gap-2">
+                      <span className="text-2xl font-bold text-black">₹ {product.price.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[14px] font-semibold text-black/50 line-through">₹ {product.originalPrice.toLocaleString()}</span>
+                      <span className="text-[16px] font-bold text-green">{product.discountPercentage}% OFF</span>
+                    </div>
+                    <div className="flex justify-between mt-3 gap-2">
+                      <button
+                        className="py-3 px-5 rounded-[10px] bg-blue-500 text-white border-[1px] border-blue-500 hover:bg-white hover:text-blue-500 transition ease-in duration-2000"
+                        onClick={() => handleAddToCart(product)}
+                      >
+                        <FaCartPlus className="text-[25px]" />
+                      </button>
+                      <Link href="/product"><button className="py-3 px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-red-500 hover:bg-white hover:text-red-500 transition ease-in duration-2000">
+                        BUY NOW
+                      </button></Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <button type="button" className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full">
+                &lt;
+              </button>
+              <button type="button" className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full">
+                &gt;
+              </button>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+
+      <div className="w-full flex justify-center px-4 mt-4">
+        <div className="lg:w-[90%] md:w-[90%] w-full flex flex-col bg-white p-4 rounded-[5px] gap-4 relative">
+          <div className="w-full flex items-center justify-between">
+            <span className="text-md font-semibold text-primary">MOBILE TOOL KITS</span>
+            <Link href="/AllProducts">
+              <button className="bg-primary/20 border-[1px] border-primary/20 text-primary font-bold text-sm px-4 py-1 rounded-[3px] bg-orange-500 transition ease-in duration-2000">
+                View All
+              </button>
+            </Link>
+          </div>
+
+          <div className="w-full bg-secondary rounded-[5px] p-4 border shadow-lg">
+            <div className="relative flex overflow-x-auto space-x-4 pb-2">
+              <ul className="flex space-x-4">
+                {products.map((product) => (
+                  <li key={product.id} className="inline-block bg-white px-4 py-8 rounded-[5px] w-full max-w-xs">
+                    <div className="flex justify-start">
+                      <a href="#">
+                        <Image
+                          className="w-auto h-40 object-cover"
+                          src={product.image}
+                          alt={product.name}
+                          width={300}
+                          height={160}
+                        />
+                      </a>
+                    </div>
+                    <div className="flex mt-2 gap-2">
+                      <button className="bg-green-500 text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
+                        {product.rating} <FaStar className="text-[10px]" />
+                      </button>
+                      <span className="text-[13px] text-black/70">({product.reviewCount} Reviews)</span>
+                    </div>
+                    <div className="flex mt-2 gap-2">
+                      <a href="#">
+                        <span className="text-[17px] font-medium text-black/70">
+                          {product.name}
+                        </span>
+                      </a>
+                    </div>
+                    <div className="flex mt-1 gap-2">
+                      <span className="text-[14px] font-semibold text-black/50">By: {product.brand}</span>
+                    </div>
+                    <div className="flex mt-3 gap-2">
+                      <span className="text-2xl font-bold text-black">₹ {product.price.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[14px] font-semibold text-black/50 line-through">₹ {product.originalPrice.toLocaleString()}</span>
+                      <span className="text-[16px] font-bold text-green">{product.discountPercentage}% OFF</span>
+                    </div>
+                    <div className="flex justify-between mt-3 gap-2">
+                      <button
+                        className="py-3 px-5 rounded-[10px] bg-blue-500 text-white border-[1px] border-blue-500 hover:bg-white hover:text-blue-500 transition ease-in duration-2000"
+                        onClick={() => handleAddToCart(product)}
+                      >
+                        <FaCartPlus className="text-[25px]" />
+                      </button>
+                      <Link href="/product"><button className="py-3 px-5 rounded-[10px] bg-red-500 font-semibold text-white border-[1px] border-red-500 hover:bg-white hover:text-red-500 transition ease-in duration-2000">
+                        BUY NOW
+                      </button></Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <button type="button" className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full">
+                &lt;
+              </button>
+              <button type="button" className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full">
+                &gt;
+              </button>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+
+      <div className="w-full flex justify-center px-4 mt-4">
+        <div className="lg:w-[90%] md:w-[90%] w-full flex flex-col shadow-lg bg-white p-4 rounded-[5px] relative">
+          <h3 className="font-bold text-lg text-black/80">
+            ZOROZ - Your Trusted B2B Partner for Mobile Products.
+          </h3>
+          <p className="font-medium text-sm text-black/80 mt-1">
+            ZOROZ is committed to streamlining the procurement of industrial products, ensuring a hassle-free online buying experience. Our platform aims to help you save on supplies, enhance inventory management efficiency, and sustain growth. We make B2B and B2C procurement smooth and time-saving.
+          </p>
+          <h3 className="font-bold text-lg text-black/80 mt-3">
+            Shop from Our Wide Range of Products.
+          </h3>
+          <p className="font-medium text-sm text-black/80 mt-3">
+            ZOROZ offers over 20,000 SKUs across four main categories:
+          </p>
+          <ol className="mt-4 flex flex-col gap-2 list-disc">
+            <li className="flex items-center">
+              <span className="font-bold text-lg text-black/80">
+                Mobile Accessories:
+                <span className="font-medium text-sm text-black/80 mt-3">
+                  From chargers to cases, find all essential mobile accessories to keep your devices running smoothly.
+                </span>
+              </span>
+            </li>
+            <li className="flex items-center">
+              <span className="font-bold text-lg text-black/80">
+                Mobile Tool Kits:
+                <span className="font-medium text-sm text-black/80 mt-3">
+                  Equip yourself with comprehensive tool kits designed specifically for mobile device repair and servicing.
+                </span>
+              </span>
+            </li>
+            <li className="flex items-center">
+              <span className="font-bold text-lg text-black/80">
+                Mobile Spare Parts:
+                <span className="font-medium text-sm text-black/80 mt-3">
+                  Source high-quality spare parts for mobile phones to ensure seamless repairs and maintenance.
+                </span>
+              </span>
+            </li>
+            <li className="flex items-center">
+              <span className="font-bold text-lg text-black/80">
+                Solar Lighting and Essentials:
+                <span className="font-medium text-sm text-black/80 mt-3">
+                  Explore a variety of solar products, lighting solutions, and essential utilities for both personal and business use.
+                </span>
+              </span>
+            </li>
+          </ol>
+
+          <h3 className="font-bold text-lg text-black/80 mt-6">
+            Purchase Online with Confidence
+          </h3>
+          <p className="font-medium text-sm text-black/80 mt-1">
+            Navigate our user-friendly site to find detailed information on our products. We ensure timely delivery across over 25,000 pin codes in India through our reliable logistics partners. All products undergo rigorous quality checks and comply with ISI standards. Experience seamless and efficient online procurement with ZOROZ. Choose from our extensive product range and find the perfect solutions for your needs.
+          </p>
+
+          <h3 className="font-bold text-lg text-black/80 mt-6">
+            Popular searches on Zoroz
+          </h3>
+          <div className="mt-4 grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-8">
+            <div className="w-full flex flex-col gap-2">
+              <div className="bg-black/10 py-0.5 px-2 w-max rounded-[5px]">
+                <span className="font-semibold text-sm">Mobile Display Screens</span>
+              </div>
+              <div className="w-full flex flex-wrap gap-1">
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Display Screens</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Touch Screen</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">LCD</span>
+              </div>
+            </div>
+            <div className="w-full flex flex-col gap-2">
+              <div className="bg-black/10 py-0.5 px-2 w-max rounded-[5px]">
+                <span className="font-semibold text-sm">Mobile Accessories</span>
+              </div>
+              <div className="w-full flex flex-wrap gap-1">
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Battery</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Charger</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Case & Covers</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Tempered Glass</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Power Bank</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Selfie Stick</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">IP Camera</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Data Card</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-8">
+            <div className="w-full flex flex-col gap-2">
+              <div className="bg-black/10 py-0.5 px-2 w-max rounded-[5px]">
+                <span className="font-semibold text-sm">Mobile Tool Kit</span>
+              </div>
+              <div className="w-full flex flex-wrap gap-1">
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Tape</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Opening Tool Set</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Sim Cutter</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">BGA Kit</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Glue</span>
+              </div>
+            </div>
+            <div className="w-full flex flex-col gap-2">
+              <div className="bg-black/10 py-0.5 px-2 w-max rounded-[5px]">
+                <span className="font-semibold text-sm">Solar Lighting and Essentials</span>
+              </div>
+              <div className="w-full flex flex-wrap gap-1">
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Face Mask</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Indoor LED Lighting</span>
+                <span className="font-normal text-xs border-r-[1px] border-black pr-2">Solar Panels</span>
+              </div>
+            </div>
+          </div>
+
+          <h3 className="font-bold text-lg text-black/80 mt-6">
+            Popular brands on Zoroz
+          </h3>
+          <div className="w-full flex flex-wrap gap-4 mt-2">
+            <div className="bg-black/10 py-1 px-8 w-max rounded-[5px]">
+              <span className="font-semibold text-sm">Samsung</span>
+            </div>
+            <div className="bg-black/10 py-1 px-8 w-max rounded-[5px]">
+              <span className="font-semibold text-sm">Realme</span>
+            </div>
+            <div className="bg-black/10 py-1 px-8 w-max rounded-[5px]">
+              <span className="font-semibold text-sm">LAVA</span>
+            </div>
+            <div className="bg-black/10 py-1 px-8 w-max rounded-[5px]">
+              <span className="font-semibold text-sm">I Ball</span>
+            </div>
+            <div className="bg-black/10 py-1 px-8 w-max rounded-[5px]">
+              <span className="font-semibold text-sm">Huawai</span>
+            </div>
+            <div className="bg-black/10 py-1 px-8 w-max rounded-[5px]">
+              <span className="font-semibold text-sm">ITEL</span>
+            </div>
+            <div className="bg-black/10 py-1 px-8 w-max rounded-[5px]">
+              <span className="font-semibold text-sm">ACER</span>
+            </div>
+            <div className="bg-black/10 py-1 px-8 w-max rounded-[5px]">
+              <span className="font-semibold text-sm">LG</span>
+            </div>
+            <div className="bg-black/10 py-1 px-8 w-max rounded-[5px]">
+              <span className="font-semibold text-sm">Apple</span>
+            </div>
+            <div className="bg-black/10 py-1 px-8 w-max rounded-[5px]">
+              <span className="font-semibold text-sm">Vivo</span>
+            </div>
+            <div className="bg-black/10 py-1 px-8 w-max rounded-[5px]">
+              <span className="font-semibold text-sm">Google</span>
+            </div>
+            <div className="bg-black/10 py-1 px-8 w-max rounded-[5px]">
+              <span className="font-semibold text-sm">Oppo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+      // "use client";
+// import React from "react";
+// import Image from "next/image";
+// import { useEffect, useState } from "react";
+// import Link from "next/link";
+
+// interface Product {
+//   id: number;
+//   name: string;
+//   price: number;
+//   image: string;
+//   rating: number;
+//   reviewCount: number;
+//   description: string;
+//   brand: string;
+//   originalPrice: number;
+//   discountPercentage: number;
+// }
+
+// const CartPage: React.FC = () => {
+//   const [cart, setCart] = useState<Product[]>([]);
+
+//   useEffect(() => {
+//     const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+
+//     const validCartItems = cartItems.filter(
+//       (item: any) =>
+//         item &&
+//         typeof item.price === "number" &&
+//         typeof item.originalPrice === "number" &&
+//         typeof item.name === "string" &&
+//         typeof item.image === "string"
+//     );
+
+//     setCart(validCartItems);
+//   }, []);
+
+//   return (
+//     <div className="w-full flex justify-center px-4 mt-6">
+//       <div className="lg:w-[90%] md:w-[90%] w-full flex lg:flex-row md:flex-row flex-col gap-4 relative">
+//         <div className="w-full bg-white p-4 rounded-[10px]">
+//           <div className="flex justify-between items-center">
+//             <span className="font-semibold text-md">Your Cart</span>
+//           </div>
+
+//           {cart.length === 0 ? (
+//             <p>Your cart is empty.</p>
+//           ) : (
+//             <div className="relative flex flex-col space-y-4">
+//               {cart.map((item) => (
+//                 <div
+//                   key={item.id}
+//                   className="flex bg-white p-4 rounded-[5px] border border-gray-700"
+//                 >
+//                   <Image
+//                     className="w-auto h-32 object-cover rounded-[5px]"
+//                     src={item.image}
+//                     alt={item.name}
+//                     width={120}
+//                     height={80}
+//                   />
+//                   <div className="ml-4 flex-1">
+//                     <h2 className="text-xl font-medium text-black">
+//                       {item.name}
+//                     </h2>
+//                     <p className="text-lg font-semibold text-black">
+//                       ₹ {item.price ? item.price.toLocaleString() : "N/A"}
+//                     </p>
+//                     <p className="text-sm text-black/70">
+//                       {item.reviewCount
+//                         ? `${item.reviewCount} Reviews`
+//                         : "No Reviews"}
+//                     </p>
+//                     <p className="text-sm text-black/50">
+//                       By: {item.brand || "Unknown"}
+//                     </p>
+//                     <p className="text-xs text-black/50 line-through">
+//                       ₹{" "}
+//                       {item.originalPrice
+//                         ? item.originalPrice.toLocaleString()
+//                         : "N/A"}
+//                     </p>
+//                     <p className="text-sm font-bold text-green">
+//                       {item.discountPercentage
+//                         ? `${item.discountPercentage}% OFF`
+//                         : "No Discount"}
+//                     </p>
+//                     <p className="text-sm text-black mt-2">
+//                     {item.description || "No Description"}
+//                     </p>
+//                     <div className="flex items-center mt-2">
+//                       <span className="text-sm text-yellow-500 font-bold">
+//                         {item.rating ? `${item.rating} ★` : "No Rating"}
+//                       </span>
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))}
+//             </div>
+//           )}
+//         </div>
+//       </div>
+
+//       <div className="mt-[45px] h-max lg:w-96 md:w-96 w-full flex-none flex flex-col rounded-[5px] z-40">
+//         <div className="border-[1px] border-primary/30 bg-white">
+//           <div className="bg-green/10 text-green p-2">
+//             <span className="font-semibold text-sm">
+//               Save instantly ₹ 150.00 with online payment
+//             </span>
+//           </div>
+//           <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
+//             <span className="font-semibold text-md">Payment Summary</span>
+//           </div>
+//           <div className="flex flex-col py-4 border-b-[1px] border-primary/30">
+//             <PaymentSummaryItem label="Total Amount" amount="₹ 150.00" />
+//             <PaymentSummaryItem label="Total GST" amount="₹ 150.00" />
+//             <PaymentSummaryItem label="Total Shipping" amount="₹ 150.00" />
+//             <PaymentSummaryItem
+//               label="Total Coupon Discount"
+//               amount="₹ 150.00"
+//             />
+//           </div>
+//           <div className="flex justify-between text-md font-semibold px-2 py-3">
+//             <span>Amount Payable</span>
+//             <span>₹ 150.00</span>
+//           </div>
+//         </div>
+
+//         <div className="border-[1px] border-primary/30 bg-white mt-6">
+//           <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
+//             <span className="font-semibold text-md">Apply Coupon</span>
+//           </div>
+//           <div className="flex flex-col py-4 px-3 border-b-[1px] border-primary/30">
+//             <div className="flex lg:flex-row md:flex-row flex-col gap-2">
+//               <input
+//                 type="text"
+//                 placeholder="Enter Coupon Code"
+//                 className="p-2 border-[1px] border-black/30 rounded-[5px] text-primary"
+//               />
+//               <button className="py-2 px-4 rounded-[5px] bg-black/10 text-black font-semibold text-sm">
+//                 Apply
+//               </button>
+//             </div>
+//             <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
+//               <i className="fa fa-money-bill text-lg text-green"></i>
+//               <div className="flex flex-col gap-1">
+//                 <span className="font-semibold text-md">WC1000</span>
+//                 <span className="font-normal text-sm">
+//                   Flat Rs. 1000 Off on Wires & Cables
+//                 </span>
+//               </div>
+//             </div>
+//           </div>
+//           <div className="flex justify-center text-md text-primary font-semibold px-2 py-3">
+//             <span>View All Coupons</span>
+            
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const CartItem: React.FC = () => (
+//   <div className="w-full bg-white p-4 rounded-[5px] grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 grid-cols-1 gap-4">
+//     <div className="mt-2 flex gap-4">
+//       <Image
+//         className="h-24 w-24"
+//         src="/assets/images/product.jpg"
+//         alt="Product"
+//         width={96}
+//         height={96}
+//       />
+//       <div className="flex flex-col gap-2 grow">
+//         <span className="font-medium text-md">
+//           Volume Side Button Outer for Oppo
+//         </span>
+//         <span className="font-bold text-md">
+//           <span className="text-sm font-normal line-through">₹ 3,200 </span>₹
+//           3,200
+//         </span>
+//         <span className="font-medium text-sm text-green">
+//           Save 150 with online payment
+//         </span>
+//       </div>
+//     </div>
+//     <div className="flex gap-2 items-center justify-center">
+//       <button className="px-3 py-1 h-max rounded-[5px] border-[1px] border-blue bg-blue/20 font-semibold">
+//         {" "}
+//         -{" "}
+//       </button>
+//       <input
+//         type="number"
+//         className="px-3 py-1 w-12 h-max border-[2px] border-black/30 focus:outline-none rounded-[5px]"
+//         value="1"
+//       />
+//       <button className="px-3 py-1 h-max rounded-[5px] border-[1px] border-blue bg-blue/20 font-semibold">
+//         {" "}
+//         +{" "}
+//       </button>
+//     </div>
+//     <div className="flex flex-col items-end justify-center">
+//       <span className="font-semibold text-2xl">₹ 3,200.00</span>
+//       <span className="font-normal text-sm text-green">
+//         Free Shipping <i className="fa fa-truck"></i>
+//       </span>
+//     </div>
+//   </div>
+// );
+
+// const PaymentSummaryItem: React.FC<{ label: string; amount: string }> = ({
+//   label,
+//   amount,
+// }) => (
+//   <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
+//     <span>{label}</span>
+//     <span>{amount}</span>
+//   </div>
+// );
+
+// export default CartPage;
+
+
+
+
+
+
