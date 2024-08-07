@@ -1,4 +1,3 @@
-// components/AddressForm.tsx
 import React from 'react';
 
 interface AddressFormProps {
@@ -138,8 +137,8 @@ const AddressForm: React.FC<AddressFormProps> = ({
         />
         <button
           type="submit"
-          className="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-600"
-        >
+          className="bg-blue-500 text-white w-32 py-1 px-4 rounded hover:bg-blue-600"
+          >
           {isEditing ? "Update Address" : "Add Address"}
         </button>
       </div>

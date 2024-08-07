@@ -24,6 +24,7 @@ import {
   FaTimesCircle,
   FaMoneyBill,
   FaHeart,
+  FaMapMarkerAlt
 } from "react-icons/fa";
 
 interface Product {
@@ -55,6 +56,8 @@ const ProductPage = () => {
   const [cart, setCart] = useState<Product[]>([]);
   const router = useRouter();
   const [showForm, setShowForm] = useState(false);
+  const [location, setLocation] = useState('');
+  const [showAllReviews, setShowAllReviews] = useState(false);
 
   const [reviews, setReviews] = useState<Review[]>([]);
   const [newReview, setNewReview] = useState({
@@ -173,10 +176,10 @@ const ProductPage = () => {
   };
 
   return (
-    <div className="mt-[90px] w-full flex justify-center px-4 mt-6">
+    <div className="mt-[90px] bg-gray-100 w-full flex justify-center px-4 mt-6">
       <div className="lg:w-[90%] md:w-[90%] w-full flex lg:flex-row md:flex-row flex-col gap-4 relative">
         <div className="w-full grow">
-          <div className="grid lg:grid-cols-2 gap-2">
+          <div className="grid mt-5 lg:grid-cols-2">
             <div className="w-full flex flex-col bg-white p-4 rounded-[5px]">
               <div className="w-full relative flex items-center justify-center">
                 <div className="absolute top-0 right-0 h-8 w-8 border-[1px] flex justify-center items-center border-primary/30 shadow-lg shadow-black/10">
@@ -424,121 +427,218 @@ const ProductPage = () => {
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
-          <div className="p-6 bg-blue-100 shadow-md rounded-lg">
-      <h3 className="text-xl font-semibold mb-2">Average Rating: 4.2</h3>
-      <h2 className="text-2xl font-bold mb-4">Reviews</h2>
+          <div className="p-6 mt-9 mb-5 bg-blue-100 shadow-md rounded-lg">
+            <h3 className="text-xl font-semibold mb-2">Average Rating: 4.2</h3>
+            <h2 className="text-2xl font-bold mb-4">Reviews</h2>
 
-      <div className="mb-6 flex justify-between items-start">
-        {renderStars(4.2)}
-        <div>
-          <button
-            className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-            onClick={() => setShowForm(!showForm)}
-          >
-            Write a Review
-          </button>
-          {showForm && (
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold mb-2">Add Your Review</h3>
-              <form onSubmit={handleReviewSubmit} className="space-y-4">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium mb-1">
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    value={newReview.name}
-                    onChange={(e) =>
-                      setNewReview({ ...newReview, name: e.target.value })
-                    }
-                    className="w-full border border-gray-300 p-2 rounded"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="rating" className="block text-sm font-medium mb-1">
-                    Rating
-                  </label>
-                  <select
-                    value={newReview.rating}
-                    onChange={(e) =>
-                      setNewReview({
-                        ...newReview,
-                        rating: parseFloat(e.target.value),
-                      })
-                    }
-                    className="w-full border border-gray-300 p-2 rounded"
-                    required
-                  >
-                    <option value="0">Select rating</option>
-                    <option value="1">1 Star</option>
-                    <option value="2">2 Stars</option>
-                    <option value="3">3 Stars</option>
-                    <option value="4">4 Stars</option>
-                    <option value="5">5 Stars</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="comment" className="block text-sm font-medium mb-1">
-                    Your Review
-                  </label>
-                  <textarea
-                    id="comment"
-                    value={newReview.comment}
-                    onChange={(e) =>
-                      setNewReview({ ...newReview, comment: e.target.value })
-                    }
-                    className="w-full border border-gray-300 p-2 rounded"
-                    rows={4}
-                    required
-                  />
-                </div>
+            {/* <div className="mb-6 flex">
+              {renderStars(4.2)}
+              <div>
                 <button
-                  type="submit"
                   className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                  onClick={() => setShowForm(!showForm)}
                 >
-                  Submit Review
+                  Write a Review
                 </button>
-              </form>
+                {showForm && (
+                  <div className="mt-4">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Add Your Review
+                    </h3>
+                    <form onSubmit={handleReviewSubmit} className="space-y-4">
+                      <div>
+                        <label
+                          htmlFor="name"
+                          className="block text-sm font-medium mb-1"
+                        >
+                          Your Name
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          value={newReview.name}
+                          onChange={(e) =>
+                            setNewReview({ ...newReview, name: e.target.value })
+                          }
+                          className="w-full border border-gray-300 p-2 rounded"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="rating"
+                          className="block text-sm font-medium mb-1"
+                        >
+                          Rating
+                        </label>
+                        <select
+                          value={newReview.rating}
+                          onChange={(e) =>
+                            setNewReview({
+                              ...newReview,
+                              rating: parseFloat(e.target.value),
+                            })
+                          }
+                          className="w-full border border-gray-300 p-2 rounded"
+                          required
+                        >
+                          <option value="0">Select rating</option>
+                          <option value="1">1 Star</option>
+                          <option value="2">2 Stars</option>
+                          <option value="3">3 Stars</option>
+                          <option value="4">4 Stars</option>
+                          <option value="5">5 Stars</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="comment"
+                          className="block text-sm font-medium mb-1"
+                        >
+                          Your Review
+                        </label>
+                        <textarea
+                          id="comment"
+                          value={newReview.comment}
+                          onChange={(e) =>
+                            setNewReview({
+                              ...newReview,
+                              comment: e.target.value,
+                            })
+                          }
+                          className="w-full border border-gray-300 p-2 rounded"
+                          rows={4}
+                          required
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                      >
+                        Submit Review
+                      </button>
+                    </form>
+                  </div>
+                )}
+              </div>
+            </div> */}
+
+            <div className="mb-6 flex">
+              {renderStars(4.2)}
+              <div className="relative flex-grow">
+                <button
+                  className="absolute top-0 right-0 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                  onClick={() => setShowForm(!showForm)}
+                >
+                  Write a Review
+                </button>
+                {showForm && (
+                  <div className="mt-4">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Add Your Review
+                    </h3>
+                    <form onSubmit={handleReviewSubmit} className="space-y-4">
+                      <div>
+                        <label
+                          htmlFor="name"
+                          className="block text-sm font-medium mb-1"
+                        >
+                          Your Name
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          value={newReview.name}
+                          onChange={(e) =>
+                            setNewReview({ ...newReview, name: e.target.value })
+                          }
+                          className="w-full border border-gray-300 p-2 rounded"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="rating"
+                          className="block text-sm font-medium mb-1"
+                        >
+                          Rating
+                        </label>
+                        <select
+                          value={newReview.rating}
+                          onChange={(e) =>
+                            setNewReview({
+                              ...newReview,
+                              rating: parseFloat(e.target.value),
+                            })
+                          }
+                          className="w-full border border-gray-300 p-2 rounded"
+                          required
+                        >
+                          <option value="0">Select rating</option>
+                          <option value="1">1 Star</option>
+                          <option value="2">2 Stars</option>
+                          <option value="3">3 Stars</option>
+                          <option value="4">4 Stars</option>
+                          <option value="5">5 Stars</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="comment"
+                          className="block text-sm font-medium mb-1"
+                        >
+                          Your Review
+                        </label>
+                        <textarea
+                          id="comment"
+                          value={newReview.comment}
+                          onChange={(e) =>
+                            setNewReview({
+                              ...newReview,
+                              comment: e.target.value,
+                            })
+                          }
+                          className="w-full border border-gray-300 p-2 rounded"
+                          rows={4}
+                          required
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                      >
+                        Submit Review
+                      </button>
+                    </form>
+                  </div>
+                )}
+              </div>
             </div>
-          )}
-        </div>
-      </div>
 
-      <div className="rating-dist mb-6">
-        <ul>
-          {[5, 4, 3, 2, 1].map((star) => (
-            <li key={star} className="flex items-center mb-2">
-              <span className="mdi-action-grade">{/* star icon here */}</span>
-              <div className="rating-star mx-2">
-                <label>
-                  <h6 className="rating-dist-val">{star}</h6>
-                </label>
-              </div>
-              <div className="w3-light-grey rating-dist-bar w-full mr-2">
-                <div
-                  className="w3-grey"
-                  style={{
-                    height: '10px',
-                    width: `${Math.random() * 100}%`, // replace with actual percentage logic
-                  }}
-                ></div>
-              </div>
-              <label>{Math.floor(Math.random() * 10)}</label> {/* replace with actual count */}
-            </li>
-          ))}
-        </ul>
-      </div>
-
+            {/* <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Customer Reviews</h3>
+              <ul>
+                {reviews.map((review) => (
+                  <li
+                    key={review.id}
+                    className="mb-4 p-4 border-b border-gray-200"
+                  >
+                    <div className="flex items-center mb-2">
+                      {renderStars(review.rating)}
+                      <span className="ml-2 font-semibold">{review.name}</span>
+                    </div>
+                    <p className="text-gray-700">{review.comment}</p>
+                  </li>
+                ))}
+              </ul>
+            </div> */}
+            
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2">Customer Reviews</h3>
         <ul>
-          {reviews.map((review) => (
+          {reviews.slice(0, showAllReviews ? reviews.length : 1).map((review) => (
             <li key={review.id} className="mb-4 p-4 border-b border-gray-200">
               <div className="flex items-center mb-2">
                 {renderStars(review.rating)}
@@ -548,12 +648,21 @@ const ProductPage = () => {
             </li>
           ))}
         </ul>
+        {reviews.length > 1 && (
+          <button
+            className="mt-4 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+            onClick={() => setShowAllReviews(!showAllReviews)}
+          >
+            {showAllReviews ? 'Show Less' : `View ${reviews.length - 1} More Helpful Reviews`}
+          </button>
+        )}
       </div>
-      
-    </div>
+
+          </div>
+
         </div>
 
-        <div className="h-max lg:w-80 md:w-80 w-full bg-whitelg:gap-4 md:gap-4 gap-2 rounded-[5px] z-40">
+        <div className="bg-white mt-5 mb-5 lg:w-80 md:w-80 w-full min-h-screen bg-whitelg:gap-4 md:gap-4 gap-2 rounded-[5px] z-40">
           <div className="flex flex-col p-4">
             <p className="text-sm font-normal text-lightText">
               ₹ {product.price.toLocaleString()} (Inclusive of all taxes)
@@ -599,13 +708,13 @@ const ProductPage = () => {
                 >
                   +
                 </button>
-                <button
+                
+              </div><button
                   onClick={handleRemoveProduct}
-                  className="ml-4 bg-red-500 text-white py-1 px-4 rounded hover:bg-red-600"
+                  className="ml-2 bg-red-500 text-white px-2 rounded hover:bg-red-600"
                 >
                   Remove
                 </button>
-              </div>
             </div>
 
             <button
@@ -623,23 +732,50 @@ const ProductPage = () => {
               BUY NOW
             </button>
 
-            <div className="flex flex-col mt-6">
+            {/* <div className="flex flex-col mt-6">
               <span className="font-semibold text-md">Delivery Details</span>
 
               <div className="lg:w-72 md:w-72 w-full border-[1px] border-secondary p-1 flex mt-2">
                 <input
                   type="text"
-                  value="100605"
+                  value=""
                   className="border-[0px] focus:outline-none px-4 w-58"
                 />
-                <button className="text-sm px-3 py-1.5 rounded-[10px] bg-primary/30 font-semibold text-primary border-[1px] border-primary/30 w-max">
+                <button className="text-sm px-3 py-1.5 rounded-[7px] bg-red-200 font-semibold text-red-500 w-max">
                   CHECK
                 </button>
               </div>
               <span className="font-normal text-xs">
                 Check serviceability at your location
               </span>
-            </div>
+            </div> */}
+
+
+
+<div className="flex flex-col mt-6">
+      <span className="font-semibold text-md">Delivery Details</span>
+
+      <div className="lg:w-72 md:w-72 w-full rounded-[7px] border-[1px] border-secondary p-1 flex mt-2">
+        <div className="flex items-center pl-2 pr-1">
+          <FaMapMarkerAlt className="text-red-500" />
+        </div>
+        <input
+          type="text"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="border-[0px]  focus:outline-none px-2 w-full"
+          placeholder="Enter your location"
+        />
+        <button className="text-sm px-3 py-1.5 rounded-[7px] bg-red-200 font-semibold text-red-500 w-max">
+          CHECK
+        </button>
+      </div>
+      <span className="font-normal text-xs">
+        Check serviceability at your location
+      </span>
+    </div>
+
+
 
             <div className="flex flex-col gap-4 mt-6">
               <div className="flex gap-2">
@@ -647,7 +783,7 @@ const ProductPage = () => {
                   <FaTruck className="text-lg text-primary" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-semibold text-sm text-green">
+                  <span className="font-semibold text-sm text-green-600">
                     Free Delivery
                   </span>
                   <span className="font-normal text-sm">
@@ -670,7 +806,7 @@ const ProductPage = () => {
                   <FaCreditCard className="text-lg text-primary" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-semibold text-sm text-green">
+                  <span className="font-semibold text-sm text-green-600">
                     Prepaid Payment Only
                   </span>
                   <span className="font-normal text-sm">
@@ -680,8 +816,6 @@ const ProductPage = () => {
               </div>
             </div>
           </div>
-
-
         </div>
       </div>
     </div>

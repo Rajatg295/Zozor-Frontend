@@ -10,6 +10,7 @@ import {
   FaShoppingBag,
   FaHeart,
   FaPlus,
+  FaChevronRight
 } from "react-icons/fa";
 
 import { FiMapPin } from "react-icons/fi";
@@ -39,6 +40,7 @@ const Profile: React.FC = () => {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [breadcrumb, setBreadcrumb] = useState<string>("Profile");
+  const [showForm, setShowForm] = useState(false);
 
   const [newAddress, setNewAddress] = useState<Address>({
     name: "",
@@ -53,8 +55,13 @@ const Profile: React.FC = () => {
   });
   const handleSectionClick = (section: string, breadcrumbText: string) => {
     setActiveSection(section);
-    setBreadcrumb(`Profile > ${breadcrumbText}`);
+    setBreadcrumb(`Profile ${breadcrumbText}`);
   };
+
+  const handleButtonClick = () => {
+    setShowForm(!showForm);
+  };
+
 
   const handleAddressFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,7 +134,7 @@ const Profile: React.FC = () => {
         <div className="h-max lg:w-64 md:w-64 w-full flex-none flex flex-col lg:gap-4 md:gap-4 gap-2 rounded-[5px] z-40">
           {/* Breadcrumb */}
           <div className="w-full px-4 bg-gray-100 rounded-[10px]">
-            <span className="text-md font-medium">{breadcrumb}</span>
+            <span className="text-md hover:text-red-400 font-medium">{breadcrumb}</span>
           </div>
           {/* User Info Section */}
 
@@ -208,18 +215,24 @@ const Profile: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col gap-4 mt-4">
-                  <div className="flex items-center gap-2">
+                  {/* Delivery Address Section */}
+                  <div className="flex justify-between items-center">
                     <span className="text-md font-medium">
                       Delivery Address
                     </span>
-                    <button className="bg-red-200 text-red-600 py-1 px-2 rounded flex items-center gap-1">
+                    <button
+                      onClick={handleButtonClick}
+                      className="bg-red-200 text-red-600 py-1 px-2 rounded flex items-center gap-1"
+                    >
                       <FaPlus />
                       <span>Add New Delivery Address</span>
                     </button>
                   </div>
-                  <div className="flex items-center gap-2">
+
+                  {/* Billing Address Section */}
+                  <div className="flex justify-between items-center">
                     <span className="text-md font-medium">Billing Address</span>
-                    <button className="bg-red-200 text-red-600 py-1 px-2 rounded flex items-center gap-1">
+                    <button onClick={handleButtonClick} className="bg-red-200 text-red-600 py-1 px-2 rounded flex items-center gap-1">
                       <FaPlus />
                       <span>Add New Billing Address</span>
                     </button>
@@ -234,6 +247,14 @@ const Profile: React.FC = () => {
                     Logout
                   </button>
                 </div>
+                {showForm && (
+                  <AddressForm
+                    newAddress={newAddress}
+                    setNewAddress={setNewAddress}
+                    handleAddressFormSubmit={handleAddressFormSubmit}
+                    isEditing={isEditing}
+                  />
+                )}
               </div>
             </div>
           )}

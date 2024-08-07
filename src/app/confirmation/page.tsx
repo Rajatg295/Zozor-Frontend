@@ -61,6 +61,8 @@ const Payment = () => {
   }, [searchParams]);
   
 
+ 
+
   const handlePaymentMethodChange = (method: string) => {
     setPaymentMethod(method);
     if (method === "Cash on Delivery") {
@@ -168,7 +170,7 @@ const Payment = () => {
     )}
   </div>
   
-  
+
   );
 };
 

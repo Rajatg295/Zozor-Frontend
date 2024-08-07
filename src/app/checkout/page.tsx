@@ -608,7 +608,7 @@ const Checkout = () => {
                 placeholder="Enter Coupon Code"
                 value={coupon}
                 onChange={(e) => setCoupon(e.target.value)}
-                className="p-2 border-[1px] border-black/30 rounded-[5px] text-primary"
+                className="p-2 border-[1px] border-black/30 rounded-[5px] text-green-500"
               />
               <button
                 onClick={handleApplyCoupon}
