@@ -18,7 +18,7 @@ import {
   FaPlus,
   FaMinus,
 } from "react-icons/fa";
- 
+
 import { useRouter } from "next/navigation";
 
 interface Product {
@@ -233,12 +233,27 @@ const CartPage = () => {
   } = getTotalPrice();
 
   return (
-    <div className="w-full flex justify-center px-4 mt-6">
-      <div className="lg:w-[90%] md:w-[90%] w-full flex lg:flex-row md:flex-row flex-col gap-4 relative">
-        <div className="w-full lg:w-[calc(100%-400px)] bg-white p-4 rounded-[10px] flex flex-col">
-          <div className="flex justify-between items-center">
-            <span className="font-semibold text-md">Your Cart</span>
+    <div className="w-full flex bg-gray-100 justify-center px-4 mt-6">
+      <div className="lg:w-[90%] md:w-[90%] w-full flex lg:flex-row mb-7 md:flex-row flex-col gap-4 relative">
+        <div className="w-full mt-5 p-4 rounded-[10px] flex flex-col">
+          <div className="flex flex-col justify-between h-[80px] mr-5 border border-green-500 rounded-[7px] bg-white mb-4 p-4">
+            <span className="font-semibold text-md text-green-600">
+              <span className="mr-1 ml-6">₹</span>WOW! You got EXTRA ₹150.00 OFF
+            </span>
+            <span className="ml-6 font-semibold text-md mt-2">
+              By paying online via UPI, EMI, Credit/Debit Card, Net Banking, Wallets
+            </span>
           </div>
+
+          <div className="flex justify-between h-[40px] mr-5 rounded-[7px] bg-white mb-4 items-center">
+            <span className="ml-4 font-semibold text-md">My Cart</span>
+          </div>
+          <div className="flex justify-between h-[40px] mr-5 rounded-[7px] bg-white mb-4 items-center">
+            <span className="ml-4 font-semibold text-md">
+              {cart.length} item{cart.length !== 1 ? 's' : ''} in your cart
+            </span>
+          </div>
+
           {cart.length === 0 ? (
             <p>Your cart is empty.</p>
           ) : (
@@ -246,91 +261,129 @@ const CartPage = () => {
               {cart.map((item) => (
                 <div
                   key={item._id}
-                  className="flex bg-white p-4 rounded-[5px] border border-gray-700"
+                  className="flex bg-white p-4 rounded-[5px]"
                 >
                   <Image
                     src={item.image}
                     alt={item.name}
                     width={80}
                     height={80}
-                    className="w-auto h-32 object-cover rounded-[5px]"
+                    className="w-auto h-auto object-cover rounded-[5px]"
                   />
                   <div className="ml-4 flex-1">
-                    <h2 className="text-lg font-semibold text-black">
-                      {item.name}
-                    </h2>
-                    <p className="text-gray-500">
-                      ₹ {item.price.toLocaleString()}
-                    </p>
-                    <div className="flex items-center mt-2">
-                      <span className="text-sm text-yellow-500 font-bold">
-                        {item.rating ? `${item.rating} ★` : "No Rating"}
-                      </span>
-                    </div>
-                    <p className="text-sm text-black/70">
-                      {item.reviewCount
-                        ? `${item.reviewCount} Reviews`
-                        : "No Reviews"}
-                    </p>
-                    <p className="text-sm text-black/50">
-                      By: {item.brand || "Unknown"}
-                    </p>
-                    <p className="text-xs text-black/50 line-through">
-                      ₹{" "}
-                      {item.originalPrice
-                        ? item.originalPrice.toLocaleString()
-                        : "N/A"}
-                    </p>
-                    <p className="text-sm font-bold text-green">
-                      {item.discountPercentage
-                        ? `${item.discountPercentage}% OFF`
-                        : "No Discount"}
-                    </p>
                     <p className="text-sm text-black mt-2">
                       {item.description || "No Description"}
                     </p>
+                    <h2 className="text-lg font-semibold text-black">
+                      {item.name}
+                    </h2>
+
+                    <div className="flex">
+                      <p className="text-gray-500">
+                        ₹ {item.price != null ? Number(item.price).toLocaleString() : '0'}
+
+                      </p>
+                      {/* <div className="flex items-center mt-2">
+                      <span className="text-sm text-yellow-500 font-bold">
+                        {item.rating ? `${item.rating} ★` : "No Rating"}
+                      </span>
+                    </div> */}
+                      {/* <p className="text-sm text-black/70">
+                      {item.reviewCount
+                        ? `${item.reviewCount} Reviews`
+                        : "No Reviews"}
+                    </p> */}
+                      {/* <p className="text-sm text-black/50">
+                      By: {item.brand || "Unknown"}
+                    </p> */}
+                      <p className="text-xs mt-1 ml-2 text-black/50 line-through">
+                        ₹{" "}
+                        {item.originalPrice
+                          ? item.originalPrice.toLocaleString()
+                          : "N/A"}
+                      </p> <button
+                    onClick={() => handleShowReviews(item._id)}
+                    className="ml-3 border-[1px] border-primary/80 text-primary bg-primary/20 w-[200px] h-[20px] flex items-center justify-center rounded-[5px] font-semibold text-md mt-2"
+                  >
+                    {showReviews && selectedProductId === item._id ? "Hide Reviews" : "Show Reviews"}
+                  </button>
+                  
+                      <div>
                     
-                    <div className="flex items-center space-x-2 mt-2">
-                      <button
-                        onClick={() =>
-                          handleQuantityChange(item._id, "decrease")
-                        }
-                        className="bg-gray-200 p-2 rounded"
-                      >
-                        <FaMinus />
-                      </button>
-                      <span className="px-4">{item.quantity}</span>
-                      <button
-                        onClick={() =>
-                          handleQuantityChange(item._id, "increase")
-                        }
-                        className="bg-gray-200 p-2 rounded"
-                      >
-                        <FaPlus />
-                      </button>
-                    </div>
                   </div>
-                  <div>
+                  
+                    </div>
                     <button
                       onClick={() => handleRemoveFromCart(item._id)}
-                      className="bg-red-500 text-white p-2 rounded"
+                      className="mt-3 bg-red-500 text-white p-2 rounded"
                     >
                       <FaTrash />
+                    </button> 
+
+                    {/* <p className="text-sm font-bold text-green">
+                      {item.discountPercentage
+                        ? `${item.discountPercentage}% OFF`
+                        : "No Discount"}
+                    </p> */}
+
+
+
+
+                  </div>
+
+
+                  <div className="mr-9  space-x-2 mt-2">
+                    <button
+                      onClick={() =>
+                        handleQuantityChange(item._id, "decrease")
+                      }
+                      className="bg-gray-200 p-2 rounded"
+                    >
+                      <FaMinus />
+                    </button>
+                    <span className="px-4">{item.quantity}</span>
+                    <button
+                      onClick={() =>
+                        handleQuantityChange(item._id, "increase")
+                      }
+                      className="bg-gray-200 p-2 rounded"
+                    >
+                      <FaPlus />
                     </button>
                   </div>
 
-                  <button
-            onClick={() => handleShowReviews(item._id)}
-            className="border-[1px] border-primary/80 text-primary bg-primary/20 w-[100px] h-[50px] flex items-center justify-center rounded-[5px] font-semibold text-md mt-2"
-            >
-            {showReviews && selectedProductId === item._id ? "Hide Reviews" : "Show Reviews"}
-          </button>
-
+                
 
                 
-                  
+
+                  <div className="flex justify-between text-md font-semibold px-2 py-3">
+                    <span className="flex flex-col">
+                      ₹ {totalWithDiscount.toLocaleString()}
+                      <span className="text-sm font-normal">Price Details</span>
+                    </span>
+                    <span className="flex items-center">
+                      <span>▼</span>
+                    </span> 
+                  </div>
+
+
+
+
                 </div>
+
               ))}
+              <div className="mt-6 bg-white flex justify-end items-center rounded-[7px] h-[90px]">
+
+                <button
+                  className="bg-red-600 mr-4 text-white py-2 px-4 rounded-[10px]"
+                  onClick={handleCheckout}
+                >
+                  Proceed to Checkout
+                  <h2 className="flex justify-start text-lg font-semibold">
+                    ₹ {totalWithDiscount.toLocaleString()}
+                  </h2>
+                </button>
+              </div>
             </div>
           )}
 
@@ -528,98 +581,100 @@ const CartPage = () => {
           </div>
 
           <div>
-                    
-                    {showReviews && selectedProductId && (
-                      <div className="mt-[100px] p-6 max-w-4xl bg-blue-100 shadow-md rounded-lg">
-                        <h2 className="text-2xl font-bold mb-4">Reviews</h2>
-                        <div className="mb-6"></div>
-                        <div>
-                          {reviews[selectedProductId] ? (
-                            reviews[selectedProductId].map((review) => (
-                              <div
-                                key={review._id}
-                                className="bg-gray-100 p-2 rounded mt-2"
-                              >
-                                <p className="font-semibold">{review.name}</p>
-                                <div className="flex">
-                                  {renderStars(review.rating)}
-                                </div>
-                                <p>{review.comment}</p>
-                              </div>
-                            ))
-                          ) : (
-                            <p>No reviews yet.</p>
-                          )}
-                        </div>
 
-                        <div>
-                          <h3 className="text-lg font-semibold mb-2">
-                            Add Your Review
-                          </h3>
-                          <form
-                            onSubmit={(e) => {
-                              
-                              handleReviewSubmit(e);
-                            }}
-                            className="mt-4"
-                          >
-                            <input
-                              type="text"
-                              placeholder="Your Name"
-                              value={newReview.name}
-                              onChange={(e) =>
-                                setNewReview({
-                                  ...newReview,
-                                  name: e.target.value,
-                                })
-                              }
-                              className="w-full border p-2 rounded mb-2"
-                              required
-                            />
-                            <input
-                              type="number"
-                              placeholder="Rating (0-5)"
-                              value={newReview.rating}
-                              onChange={(e) =>
-                                setNewReview({
-                                  ...newReview,
-                                  rating: parseInt(e.target.value, 10),
-                                })
-                              }
-                              className="w-full border p-2 rounded mb-2"
-                              min="0"
-                              max="5"
-                              required
-                            />
-                            <textarea
-                              placeholder="Your Review"
-                              value={newReview.comment}
-                              onChange={(e) =>
-                                setNewReview({
-                                  ...newReview,
-                                  comment: e.target.value,
-                                })
-                              }
-                              className="w-full border p-2 rounded mb-2"
-                              required
-                            />
-                            <button
-                              type="submit"
-                              className="bg-blue-500 text-white p-2 rounded"
-                            >
-                              Submit Review
-                            </button>
-                          </form>
+            {showReviews && selectedProductId && (
+              <div className="mt-[100px] p-6 max-w-4xl bg-blue-100 shadow-md rounded-lg">
+                <h2 className="text-2xl font-bold mb-4">Reviews</h2>
+                <div className="mb-6"></div>
+                <div>
+                  {reviews[selectedProductId] ? (
+                    reviews[selectedProductId].map((review) => (
+                      <div
+                        key={review._id}
+                        className="bg-gray-100 p-2 rounded mt-2"
+                      >
+                        <p className="font-semibold">{review.name}</p>
+                        <div className="flex">
+                          {renderStars(review.rating)}
                         </div>
+                        <p>{review.comment}</p>
                       </div>
-                    )}
-                  </div>
+                    ))
+                  ) : (
+                    <p>No reviews yet.</p>
+                  )}
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">
+                    Add Your Review
+                  </h3>
+                  <form
+                    onSubmit={(e) => {
+
+                      handleReviewSubmit(e);
+                    }}
+                    className="mt-4"
+                  >
+                    <input
+                      type="text"
+                      placeholder="Your Name"
+                      value={newReview.name}
+                      onChange={(e) =>
+                        setNewReview({
+                          ...newReview,
+                          name: e.target.value,
+                        })
+                      }
+                      className="w-full border p-2 rounded mb-2"
+                      required
+                    />
+                    <input
+                      type="number"
+                      placeholder="Rating (0-5)"
+                      value={newReview.rating}
+                      onChange={(e) =>
+                        setNewReview({
+                          ...newReview,
+                          rating: parseInt(e.target.value, 10),
+                        })
+                      }
+                      className="w-full border p-2 rounded mb-2"
+                      min="0"
+                      max="5"
+                      required
+                    />
+                    <textarea
+                      placeholder="Your Review"
+                      value={newReview.comment}
+                      onChange={(e) =>
+                        setNewReview({
+                          ...newReview,
+                          comment: e.target.value,
+                        })
+                      }
+                      className="w-full border p-2 rounded mb-2"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="bg-blue-500 text-white p-2 rounded"
+                    >
+                      Submit Review
+                    </button>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+
         </div>
+
       </div>
 
-      <div className="w-full mt-9 lg:w-96 md:w-96 flex-none flex flex-col rounded-[5px] z-40">
-        <div className="border-[1px] border-primary/30 bg-white">
-          <div className="bg-green/10 text-green p-2">
+      <div className="w-full mt-9 lg:w-96 md:w-96 flex-none flex flex-col mb-6 rounded-[10px] z-40">
+        <div className="border-[1px] border-primary/30 rounded-[10px] bg-white">
+          <div className="bg-green-100 rounded-[10px] text-green-500 p-2">
             <span className="font-semibold text-sm">
               Save instantly ₹ 150.00 with online payment
             </span>
@@ -652,18 +707,18 @@ const CartPage = () => {
         </div>
         <div></div>
 
-        <div className="border-[1px] border-primary/30 bg-white mt-6">
+        <div className="border-[1px] border-primary/30 bg-white rounded-[10px] mt-6">
           <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
             <span className="font-semibold text-md">Apply Coupon</span>
           </div>
-          <div className="flex flex-col py-4 px-3 border-b-[1px] border-primary/30">
-            <div className="flex lg:flex-row md:flex-row flex-col gap-2">
+          <div className="flex flex-col py-4 px-3 border-b-[1px] border-gray-300">
+            <div className="flex border-gray-300 lg:flex-row md:flex-row flex-col gap-2">
               <input
                 type="text"
                 placeholder="Enter Coupon Code"
                 value={coupon}
                 onChange={(e) => setCoupon(e.target.value)}
-                className="p-2 border-[1px] border-black/30 rounded-[5px] text-primary"
+                className="p-2 border-[1px] border-gray-400 rounded-[5px] text-primary"
               />
               <button
                 onClick={handleApplyCoupon}
@@ -672,14 +727,14 @@ const CartPage = () => {
                 Apply
               </button>
             </div>
-            <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
+            <div className="mt-9 border-[2px] p-8 mt-2 border-green-600 border-dashed rounded-[10px] flex gap-2">
               <i className="fa fa-money-bill text-lg text-green"></i>
               <div className="flex flex-col gap-1">
                 <span className="font-semibold text-md">DISCOUNT100</span>
                 <span className="font-normal text-sm">Flat Rs. 100 Off</span>
               </div>
             </div>
-            <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
+            <div className="border-[2px] p-8 mt-2 border-green-600 border-dashed rounded-[10px] flex gap-2">
               <i className="fa fa-money-bill text-lg text-green"></i>
               <div className="flex flex-col gap-1">
                 <span className="font-semibold text-md">DISCOUNT150</span>
@@ -692,18 +747,9 @@ const CartPage = () => {
           </div>
         </div>
 
-        <div className="mt-6 ml-[190px]">
-          <h2 className="text-lg font-semibold">
-            Total ₹ {totalWithDiscount.toLocaleString()}
-          </h2>
-          <button
-            className=" bg-blue-500 text-white py-2 px-4 rounded"
-            onClick={handleCheckout}
-          >
-            Proceed to Checkout
-          </button>
-        </div>
+
       </div>
+
     </div>
   );
 };
