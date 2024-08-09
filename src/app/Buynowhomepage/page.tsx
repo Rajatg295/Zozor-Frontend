@@ -10,7 +10,7 @@ import { FaStar } from "react-icons/fa";
 interface Address {
     _id?: string;
     name: string;
-    email:string,
+    email: string,
     room: string;
     address: string;
     city: string;
@@ -18,7 +18,7 @@ interface Address {
     country: string;
     pin: string;
     phone: string;
-} 
+}
 
 interface Product {
     _id: string;
@@ -33,12 +33,12 @@ interface Product {
     discountPercentage: number;
     quantity: number;
     category?: string;
-  stock?: number;
+    stock?: number;
 }
 
 const Buynowhomepage = () => {
     const router = useRouter();
-
+    const [requestGST, setRequestGST] = useState(false);
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [product, setProduct] = useState<Product | null>(null);
     const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
@@ -49,7 +49,7 @@ const Buynowhomepage = () => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [newAddress, setNewAddress] = useState<Address>({
         name: "",
-        email:'',
+        email: '',
         room: "",
         address: "",
         city: "",
@@ -58,7 +58,7 @@ const Buynowhomepage = () => {
         pin: "",
         phone: "",
     });
- 
+
     // const fetchAddresses = async () => {
     //     try {
     //         const response = await axios.get("http://localhost:8080/address");
@@ -76,26 +76,26 @@ const Buynowhomepage = () => {
 
     useEffect(() => {
         const fetchAddresses = async () => {
-          try {
-            const response = await axios.get('http://localhost:8080/address');
-            setAddresses(response.data);
-            if (response.data.length > 0) {
-              setSelectedAddress(response.data[0]);
+            try {
+                const response = await axios.get('http://localhost:8080/address');
+                setAddresses(response.data);
+                if (response.data.length > 0) {
+                    setSelectedAddress(response.data[0]);
+                }
+            } catch (error) {
+                console.error('Error fetching addresses:', error);
             }
-          } catch (error) {
-            console.error('Error fetching addresses:', error);
-          }
         };
-    
+
         fetchAddresses();
-      }, []);
+    }, []);
 
 
 
-      const handleAddressChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleAddressChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selected = addresses.find((address) => address._id === event.target.value);
         setSelectedAddress(selected || null);
-      };
+    };
 
 
 
@@ -178,7 +178,7 @@ const Buynowhomepage = () => {
     //       total: finalPrice,
     //       coupon
     //     };
-    
+
     //     const encodedData = encodeURIComponent(JSON.stringify(orderData));
     //     router.push(`/BUYNOWconfirmation?data=${encodedData}`);
     //   };
@@ -190,76 +190,112 @@ const Buynowhomepage = () => {
 
     const handlePlaceOrder = () => {
         if (selectedAddress) {
-          console.log('Proceeding with address:', selectedAddress);
-          const orderData = {
-            cart: [product],
-            addresses: [selectedAddress],
-            discount,
-            total: finalPrice,
-            coupon
-          };
-    
-          const encodedData = encodeURIComponent(JSON.stringify(orderData));
-          router.push(`/BUYNOWconfirmation?data=${encodedData}`);
+            console.log('Proceeding with address:', selectedAddress);
+            const orderData = {
+                cart: [product],
+                addresses: [selectedAddress],
+                discount,
+                total: finalPrice,
+                coupon
+            };
+
+            const encodedData = encodeURIComponent(JSON.stringify(orderData));
+            router.push(`/BUYNOWconfirmation?data=${encodedData}`);
         } else {
-          console.log('No address selected.');
+            console.log('No address selected.');
         }
-      };
-      
-      
-      
-      
-      
-      
-      
-      return (
-        <div className="w-full flex justify-center px-4 mt-6 bg-white">
-            <div className="lg:w-[65%] md:w-[70%] w-full flex flex-col gap-4 relative bg-white-100 p-4 rounded-[5px] shadow-lg">
-                <h2 className="text-lg font-bold mb-4">Checkout</h2>
+    };
 
- 
 
+
+
+
+
+
+    return (
+        <div className="w-full flex justify-center px-4 mt-6 bg-gray-100">
+            <div className="lg:w-[90%] md:w-[90%] w-full flex flex-col gap-4 relative bg-white-100 p-4 rounded-[5px]">
                 <div className="mt-4">
-                    <h3 className="text-md font-bold mb-2">Delivery Addresses</h3>
-                    <div className="flex flex-col gap-2">
-                        {addresses.map((address) => (
-                            <div
-              key={address._id}
-              className={`border p-2 rounded flex justify-between items-center ${selectedAddress?._id === address._id ? 'bg-gray-100' : ''}`}
-            >                                <div>
-                                    <p>{address.name}</p>
-                                    
-                                    <p>{address.room}, {address.address}</p>
-                                    <p>{address.city}, {address.state}, {address.country}, {address.pin}</p>
-                                    <p>{address.phone}</p>
-                                    <p>{address.email}</p>
-                                </div>
-                                <div className="flex gap-2">
-                                <button
-                  onClick={() => setSelectedAddress(address)}
-                  className={`py-1 px-4 rounded hover:bg-blue-600 ${selectedAddress?._id === address._id ? 'bg-blue-700' : 'bg-blue-500'} text-white`}
-                >                                        Select
-                                    </button>
-                                    <button onClick={() => handleEditAddress(address)} className="bg-yellow-500 text-white py-1 px-4 rounded hover:bg-yellow-600">
-                                        Edit
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+                    <div className="w-full bg-white h-[70px] rounded-[10px] flex items-center gap-2 mt-4">
+                        <input
+                            type="checkbox"
+                            id="requestGST"
+                            checked={requestGST}
+                            onChange={() => setRequestGST(!requestGST)}
+                            className="ml-5 cursor-pointer"
+                        />
+                        <label htmlFor="requestGST" className="text-md font-medium">
+                            Get GST Invoice
+                        </label>
                     </div>
-                    <button onClick={() => { setShowAddressForm(true); setIsEditing(false); }} className="bg-green-500 text-white py-1 px-4 mt-2 rounded hover:bg-green-600">
-                        Add New Address
-                    </button>
+                    <h2 className="text-lg font-bold mb-4 mt-5">Delivery Address</h2>
+
+
+                    <div className="bg-white p-4 rounded-[10px] shadow-md max-h-60 overflow-y-auto">
+                        <div className="flex flex-col gap-2">
+                            {addresses.map((address) => (
+                                <div
+                                    key={address._id}
+                                    className={`mb-4 p-4 rounded-[10px] border border-gray-200 ${selectedAddress?._id === address._id ? 'bg-gray-100' : ''}`}
+                                >
+                                    <div className="mb-2">
+                                        <span className="font-semibold">{address.name}</span>
+                                    </div>
+                                    <div className="mb-2">
+                                        <span>{address.room} | {address.address}</span>
+                                    </div>
+                                    <div className="mb-2">
+                                        <span>{address.city}, {address.state}, {address.country} - {address.pin}</span>
+                                    </div>
+                                    <div className="mb-2">
+                                        <span>Mobile Number: {address.phone}</span>
+                                    </div>
+                                    <div className="mb-2">
+                                        <span>Email Id: {address.email}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center mt-2">
+                                        <button
+                                            onClick={() => handleEditAddress(address)}
+                                            className="py-2 px-3 rounded-[5px] bg-red-200 font-semibold text-red-500"
+                                        >
+                                            CHANGE DELIVERY ADDRESS
+                                        </button>
+                                        <button
+                                            onClick={() => setSelectedAddress(address)}
+                                            className="py-2 px-3 rounded-[5px] bg-blue-500 text-white font-semibold"
+                                        >
+                                            Select
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="flex justify-end mt-4">
+                            <button
+                                onClick={() => { setShowAddressForm(true); setIsEditing(false); }}
+                                className="py-3 px-5 rounded-[10px] bg-red-200 font-semibold text-red-500 transition ease-in duration-200"
+                            >
+                                <i className="fa fa-plus mr-2"></i>
+                                ADD NEW DELIVERY ADDRESS
+                            </button>
+                        </div>
+                    </div>
+
+
+
+
+
                     {showAddressForm && (
-                        <form onSubmit={handleAddressFormSubmit} className="mt-4 p-4 border rounded">
-                            <div className="flex flex-col gap-2">
+                        <form onSubmit={handleAddressFormSubmit} className="w-full">
+                            <div className="grid grid-cols-2 gap-4 w-full mt-4 p-4 rounded-[5px]">
                                 <input
                                     type="text"
                                     placeholder="Name"
                                     value={newAddress.name}
                                     onChange={(e) => setNewAddress({ ...newAddress, name: e.target.value })}
                                     required
-                                    className="border p-2 rounded"
+                                    className="rounded-[5px] focus:outline-none border-[1px] border-primary/30 w-full py-2 px-4 text-primary"
                                 />
                                 <input
                                     type="text"
@@ -267,7 +303,7 @@ const Buynowhomepage = () => {
                                     value={newAddress.email}
                                     onChange={(e) => setNewAddress({ ...newAddress, email: e.target.value })}
                                     required
-                                    className="border p-2 rounded"
+                                    className="rounded-[5px] focus:outline-none border-[1px] border-primary/30 w-full py-2 px-4 text-primary"
                                 />
                                 <input
                                     type="text"
@@ -275,7 +311,7 @@ const Buynowhomepage = () => {
                                     value={newAddress.room}
                                     onChange={(e) => setNewAddress({ ...newAddress, room: e.target.value })}
                                     required
-                                    className="border p-2 rounded"
+                                    className="rounded-[5px] focus:outline-none border-[1px] border-primary/30 w-full py-2 px-4 text-primary"
                                 />
                                 <input
                                     type="text"
@@ -283,7 +319,7 @@ const Buynowhomepage = () => {
                                     value={newAddress.address}
                                     onChange={(e) => setNewAddress({ ...newAddress, address: e.target.value })}
                                     required
-                                    className="border p-2 rounded"
+                                    className="rounded-[5px] focus:outline-none border-[1px] border-primary/30 w-full py-2 px-4 text-primary"
                                 />
                                 <input
                                     type="text"
@@ -291,7 +327,7 @@ const Buynowhomepage = () => {
                                     value={newAddress.city}
                                     onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
                                     required
-                                    className="border p-2 rounded"
+                                    className="rounded-[5px] focus:outline-none border-[1px] border-primary/30 w-full py-2 px-4 text-primary"
                                 />
                                 <input
                                     type="text"
@@ -299,7 +335,7 @@ const Buynowhomepage = () => {
                                     value={newAddress.state}
                                     onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
                                     required
-                                    className="border p-2 rounded"
+                                    className="rounded-[5px] focus:outline-none border-[1px] border-primary/30 w-full py-2 px-4 text-primary"
                                 />
                                 <input
                                     type="text"
@@ -307,7 +343,7 @@ const Buynowhomepage = () => {
                                     value={newAddress.country}
                                     onChange={(e) => setNewAddress({ ...newAddress, country: e.target.value })}
                                     required
-                                    className="border p-2 rounded"
+                                    className="rounded-[5px] focus:outline-none border-[1px] border-primary/30 w-full py-2 px-4 text-primary"
                                 />
                                 <input
                                     type="text"
@@ -315,7 +351,7 @@ const Buynowhomepage = () => {
                                     value={newAddress.pin}
                                     onChange={(e) => setNewAddress({ ...newAddress, pin: e.target.value })}
                                     required
-                                    className="border p-2 rounded"
+                                    className="rounded-[5px] focus:outline-none border-[1px] border-primary/30 w-full py-2 px-4 text-primary"
                                 />
                                 <input
                                     type="text"
@@ -323,154 +359,163 @@ const Buynowhomepage = () => {
                                     value={newAddress.phone}
                                     onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })}
                                     required
-                                    className="border p-2 rounded"
+                                    className="rounded-[5px] focus:outline-none border-[1px] border-primary/30 w-full py-2 px-4 text-primary"
                                 />
-                                <button type="submit" className="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-600">
-                                    {isEditing ? "Update Address" : "Add Address"}
+                            </div>
+                            <div className="flex justify-end mt-4 p-4 gap-2">
+                                <button type="submit" className="py-3 px-5 rounded-[10px] bg-blue-500 font-semibold text-white border-[1px] border-primary hover:text-primary transition ease-in duration-2000">
+                                    {isEditing ? "UPDATE ADDRESS" : "SAVE ADDRESS"}
                                 </button>
-                                <button onClick={() => setShowAddressForm(false)} type="button" className="bg-gray-500 text-white py-1 px-4 rounded hover:bg-gray-600">
-                                    Cancel
+                                <button onClick={() => setShowAddressForm(false)} type="button" className="py-3 px-5 rounded-[10px] bg-gray-500 font-semibold text-white border-[1px] border-primary hover:text-primary transition ease-in duration-2000">
+                                    DISCARD
                                 </button>
                             </div>
                         </form>
                     )}
-                </div>
 
-                <div className="flex flex-col md:flex-row items-center gap-4">
-                    <Image src={product.image} alt={product.name} width={150} height={150} />
-                    <div>
-                        <h2 className="text-lg font-semibold">{product.name}</h2>
-                        <p className="text-gray-500">₹ {product.price.toLocaleString()}</p>
-                        <p className="text-gray-500">{product.description}</p>
-                        <div className="flex mt-2 gap-2">
-                            <button className="bg-green-500 text-white font-bold text-xs px-1 rounded-[3px] flex items-center gap-1">
-                                {product.rating} <FaStar className="text-[10px]" />
-                            </button>
-                            <span className="text-[13px] text-black/70">({product.reviewCount} Reviews)</span>
-                        </div>
-
-                        <div className="flex mt-1 gap-2">
-                            <span className="text-[14px] font-semibold text-black/50">By: {product.brand}</span>
-                            <div className="flex items-center gap-2">
-                                <span className="text-[14px] font-semibold text-black/50 line-through">₹ {product.originalPrice.toLocaleString()}</span>
-                                <span className="text-[16px] font-bold text-green">{product.discountPercentage}% OFF</span>
+                    <h2 className="mt-5 text-lg font-semibold">Product Summary</h2>
 
 
-
-
-
+                    <div className="mt-5 bg-white flex flex-col md:flex-row items-center gap-4 rounded-[7px]">
+                        {/* Left Column: Product Image and Details */}
+                        <div className="mx-5 flex md:w-1/3 items-center">
+                            <div className="flex-shrink-0">
+                                <Image src={product.image} alt={product.name} width={150} height={150} />
                             </div>
-
-
-                        </div>
-                        <div className="flex items-center">
-                            <button
-                                className="bg-blue-500 text-white w-8 h-8 flex items-center justify-center rounded"
-                                onClick={() => handleQuantityChange(quantity - 1)}
-                                disabled={quantity <= 1}
-                            >
-                                -
-                            </button>
-                            <span className="mx-2 bg-blue-200 w-8 h-8 flex items-center justify-center rounded">
-                                {quantity}
-                            </span>
-                            <button
-                                className="bg-blue-500 text-white w-8 h-8 flex items-center justify-center rounded"
-                                onClick={() => handleQuantityChange(quantity + 1)}
-                            >
-                                +
-                            </button>
-                            <button
-                                onClick={handleRemoveProduct}
-                                className="ml-4 bg-red-500 text-white py-1 px-4 rounded hover:bg-red-600"
-                            >
-                                Remove
-                            </button>
-                        </div>
-
-                        <button onClick={handlePlaceOrder} className="ml-[600px] bg-blue-500 text-white py-1 px-4 mt-2 rounded hover:bg-blue-600">
-                            Place Order
-                        </button>
-                    </div>
-                </div>
-
-
-</div>
-
-            <div className="mt-4 ml-5">
-                <h3 className="text-md font-bold mb-2">Order Summary</h3>
-                <div className="border p-2 rounded">
-                    <div className="flex justify-between">
-                        <span>Subtotal</span>
-                        <span>₹ {totalPrice.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span>GST (18%)</span>
-                        <span>₹ {gst.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span>Shipping</span>
-                        <span>₹ {shipping.toLocaleString()}
-
-                        </span>
-                    </div>
-                    {discount > 0 && (
-                        <div className="flex justify-between">
-                            <span>Discount</span>
-                            <span>-₹ {discount.toLocaleString()}</span>
-                        </div>
-                    )}
-                    <div className="flex justify-between font-bold">
-                        <span>Total</span>
-                        <span>₹ {finalPrice.toLocaleString()}</span>
-                    </div>
-                </div>
-                <div className="border-[1px] border-primary/30 bg-white mt-6">
-                    <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
-                        <span className="font-semibold text-md">Apply Coupon</span>
-                    </div>
-                    <div className="flex flex-col py-4 px-3 border-b-[1px] border-primary/30">
-                        <div className="flex lg:flex-row md:flex-row flex-col gap-2">
-                            <input
-                                type="text"
-                                placeholder="Enter Coupon Code"
-                                value={coupon}
-                                onChange={(e) => setCoupon(e.target.value)}
-                                className="p-2 border-[1px] border-black/30 rounded-[5px] text-primary"
-                            />
-                            <button
-                                onClick={handleApplyCoupon}
-                                className="py-2 px-4 rounded-[5px] bg-black/10 text-black font-semibold text-sm"
-                            >
-                                Apply
-                            </button>
-                        </div>
-                        <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
-                            <i className="fa fa-money-bill text-lg text-green"></i>
-                            <div className="flex flex-col gap-1">
-                                <span className="font-semibold text-md">DISCOUNT100</span>
-                                <span className="font-normal text-sm">Flat Rs. 100 Off</span>
+                            <div className="ml-4">
+                                <h2 className="text-lg font-semibold">{product.name}</h2>
+                                <p className="text-gray-500 mt-1">₹ {product.price.toLocaleString()}</p>
+                                <p className="text-gray-500 mt-1">{product.description}</p>
                             </div>
                         </div>
-                        <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
-                            <i className="fa fa-money-bill text-lg text-green"></i>
-                            <div className="flex flex-col gap-1">
-                                <span className="font-semibold text-md">DISCOUNT150</span>
-                                <span className="font-normal text-sm">Flat Rs. 150 Off</span>
+
+                        {/* Center Column: Quantity Buttons */}
+                        <div className="flex flex-col items-center md:w-1/3">
+                            <div className="flex items-center">
+                                <button
+                                    className="bg-blue-500 text-white w-8 h-8 flex items-center justify-center rounded"
+                                    onClick={() => handleQuantityChange(quantity - 1)}
+                                    disabled={quantity <= 1}
+                                >
+                                    -
+                                </button>
+                                <span className="mx-2 bg-blue-200 w-8 h-8 flex items-center justify-center rounded">
+                                    {quantity}
+                                </span>
+                                <button
+                                    className="bg-blue-500 text-white w-8 h-8 flex items-center justify-center rounded"
+                                    onClick={() => handleQuantityChange(quantity + 1)}
+                                >
+                                    +
+                                </button>
                             </div>
                         </div>
-                        <div className="mt-6 ml-9">
-                            <h2 className="text-lg font-semibold">Total ₹ {finalPrice.toLocaleString()}</h2>
 
+                        {/* Right Column: Price Details */}
+                        <div className="flex flex-col items-center md:w-1/3">
+                            <div className="flex flex-col items-end">
+                                <p className="text-gray-500 line-through">₹ {product.originalPrice.toLocaleString()}</p>
+                                <p className="text-gray-500 font-semibold mt-1">₹ {product.price.toLocaleString()}</p>
+                            </div>
                         </div>
                     </div>
+
+
+
+
+
+
                 </div>
+
+                <div className="flex w-full h-[70px] rounded-[10px] bg-white justify-end">
+                    <button
+                        onClick={handlePlaceOrder}
+                        className="bg-blue-500 text-white mt-4 py-2 px-4 h-[40px] rounded-md w-half mr-2 max-w-xs"
+                    >
+                        Place Order ₹ {totalWithDiscount.toLocaleString()}
+                    </button>
+                </div>
+
             </div>
 
 
+
+            <div className="h-max lg:w-96 md:w-96 w-full flex-none flex flex-col mt-3 bg-gray-100 rounded-[5px] z-40">
+
+                <div className="border-[1px] border-primary/30 rounded-[10px] bg-white">
+                    <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
+                        <span className="font-semibold text-md">Payment Summary</span>
+                    </div>
+                    <div className="flex flex-col py-4 border-b-[1px] border-primary/30">
+
+                        <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
+                            <span>Subtotal</span>
+                            <span>₹ {totalPrice.toLocaleString()}</span>
+                        </div>
+
+                        <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
+                            <span>GST (18%)</span>
+                            <span>₹ {gst.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
+                            <span>Shipping</span>
+                            <span>₹ {shipping.toLocaleString()}</span>
+                        </div>
+                        {discount > 0 && (
+                            <div className="flex justify-between text-md font-normal text-lightText px-2 py-0.5">
+                                <span>Discount</span>
+                                <span>-₹ {discount.toLocaleString()}</span>
+                            </div>
+                        )}
+                        <div className="flex justify-between text-md font-semibold px-2 py-3">
+                            <span>Total</span>
+                            <span>₹ {finalPrice.toLocaleString()}</span>
+                        </div>
+                    </div>
+
+                    <div className="border-[1px] border-primary/30 bg-white mt-6">
+                        <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
+                            <span className="font-semibold text-md">Apply Coupon</span>
+                        </div>
+                        <div className="flex flex-col py-4 px-3 border-b-[1px] border-primary/30">
+                            <div className="flex lg:flex-row md:flex-row flex-col gap-2">
+                                <input
+                                    type="text"
+                                    placeholder="Enter Coupon Code"
+                                    value={coupon}
+                                    onChange={(e) => setCoupon(e.target.value)}
+                                    className="p-2 border-[1px] border-black/30 rounded-[5px] text-green-500"
+                                />
+                                <button
+                                    onClick={handleApplyCoupon}
+                                    className="py-2 px-4 rounded-[5px] bg-green-500 text-white font-semibold text-sm"
+                                >
+                                    Apply
+                                </button>
+                            </div>
+
+                            <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
+                                <i className="fa fa-money-bill text-lg text-green"></i>
+                                <div className="flex flex-col gap-1">
+                                    <span className="font-semibold text-md">DISCOUNT100</span>
+                                    <span className="font-normal text-sm">Flat Rs. 100 Off</span>
+                                </div>
+                            </div>
+                            <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
+                                <i className="fa fa-money-bill text-lg text-green"></i>
+                                <div className="flex flex-col gap-1">
+                                    <span className="font-semibold text-md">DISCOUNT150</span>
+                                    <span className="font-normal text-sm">Flat Rs. 150 Off</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
     );
 };
-
 export default Buynowhomepage;
 

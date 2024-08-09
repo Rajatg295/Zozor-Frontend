@@ -38,6 +38,7 @@ interface Product {
 const Checkout = () => {
   const router = useRouter();
   const [addresses, setAddresses] = useState<Address[]>([]);
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [editAddressId, setEditAddressId] = useState<string | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [cart, setCart] = useState<Product[]>([]);
@@ -102,6 +103,7 @@ const Checkout = () => {
       console.log("No cart data found in searchParams");
     }
   }, [searchParams]);
+
 
   useEffect(() => {
     const totalPrice = getTotalPriceWithoutExtras();
@@ -247,25 +249,6 @@ const Checkout = () => {
     totalWithDiscount,
   } = getTotalPrice();
 
-  // const handlePlaceOrder = () => {
-  //   const cartData = JSON.stringify(cart);
-  //   const addressData = JSON.stringify(addresses);
-  //   const discount = discountValue;
-  //   const total = totalValue;
-  //   const coupon = couponCode;
-
-  //   const queryString = `?data=${encodeURIComponent(JSON.stringify({
-  //     cart: cartData,
-  //     addresses: addressData,
-  //     discount,
-  //     total,
-  //     coupon
-  //   }))}`;
-
-  //   router.push(`/confirmation${queryString}`);
-  // };
-
-  // new
 
   const handlePlaceOrder = () => {
     const cartData = JSON.stringify(cart);
@@ -303,48 +286,12 @@ const Checkout = () => {
           </div>
 
           <h2 className="text-lg font-bold mb-4 mt-5">Delivery Address</h2>
-          {/* <div className="bg-white p-4 rounded-[10px] shadow-md">
-            {addresses.length > 0 ? (
-              addresses.map((address, index) => (
-                <div key={index} className="mb-4">
-                  <div className="mb-2">
-                    <span className="font-semibold">{address.name}</span>
-                  </div>
-                  <div className="mb-2">
-                    <span>
-                      {address.room} | {address.address}
-                    </span>
-                  </div>
-                  <div className="mb-2">
-                    <span>
-                      {address.city}, {address.state}, {address.country} -{" "}
-                      {address.pin}
-                    </span>
-                  </div>
-                  <div className="mb-2">
-                    <span>Mobile Number: {address.phone}</span>
-                  </div>
-                  <div className="mb-2">
-                    <span>Email Id: {address.email}</span>
-                  </div>
-                  <div className="flex justify-between items-center mt-2">
-                    <button
-                      onClick={() => handleEdit(address)}
-                      className="py-1 px-3 rounded-[5px] bg-red-200 font-semibold text-red-500"
-                    >
-                      Change Address
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No addresses available.</p>
-            )}
-          </div> */}
+
           <div className="bg-white p-4 rounded-[10px] shadow-md max-h-60 overflow-y-auto">
             {addresses.length > 0 ? (
               addresses.map((address, index) => (
-                <div key={index} className="mb-4">
+                <div key={index} className={`mb-4 p-4 rounded-[10px] border ${selectedAddress === address ? 'bg-gray-100' : 'bg-white'}`} // Conditional styling
+                >
                   <div className="mb-2">
                     <span className="font-semibold">{address.name}</span>
                   </div>
@@ -371,6 +318,12 @@ const Checkout = () => {
                       className="py-2 px-3 rounded-[5px] mt-3 bg-red-200 font-semibold text-red-500"
                     >
                       CHANGE DELIVERY ADDRESS
+                    </button>
+                    <button
+                      onClick={() => setSelectedAddress(address)}
+                      className="py-2 px-3 rounded-[5px] bg-blue-500 text-white font-semibold"
+                    >
+                      Select
                     </button>
                   </div>
                 </div>
@@ -484,6 +437,8 @@ const Checkout = () => {
             </div>
           </form>
         )}
+
+
         <h2 className="text-lg font-semibold">Product Summary</h2>
         <div className="bg-white rounded-[10px] shadow-md h-full">
           <div className="mb-8 mt-5 ml-9">
@@ -564,11 +519,7 @@ const Checkout = () => {
 
       <div className="h-max lg:w-96 md:w-96 w-full flex-none flex flex-col mt-3 bg-gray-100 rounded-[5px] z-40">
         <div className="border-[1px] border-primary/30 rounded-[10px] bg-white">
-          <div className="bg-green/10 text-green p-2">
-            <span className="font-semibold text-sm">
-              Save instantly ₹ 150.00 with online payment
-            </span>
-          </div>
+
           <div className="flex justify-between items-center py-4 px-2 border-b-[1px] border-primary/30">
             <span className="font-semibold text-md">Payment Summary</span>
           </div>
@@ -625,6 +576,7 @@ const Checkout = () => {
                 <span className="font-normal text-sm">Flat Rs. 100 Off</span>
               </div>
             </div>
+
             <div className="border-[2px] p-8 mt-2 border-green border-dashed rounded-[10px] flex gap-2">
               <i className="fa fa-money-bill text-lg text-green"></i>
               <div className="flex flex-col gap-1">
@@ -632,8 +584,10 @@ const Checkout = () => {
                 <span className="font-normal text-sm">Flat Rs. 150 Off</span>
               </div>
             </div>
+            
           </div>
         </div>
+
       </div>
     </div>
   );

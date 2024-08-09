@@ -58,7 +58,7 @@ const ProductPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [location, setLocation] = useState('');
   const [showAllReviews, setShowAllReviews] = useState(false);
-
+  const [showMore, setShowMore] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [newReview, setNewReview] = useState({
     name: "",
@@ -70,6 +70,10 @@ const ProductPage = () => {
   const handleQuantityChange = (newQuantity: number) => {
     setQuantity(newQuantity);
   };
+
+  const handleCopyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+};
 
   const calculateGST = (price: number, gstRate: number = 18) => {
     return price * (gstRate / 100);
@@ -340,6 +344,110 @@ const ProductPage = () => {
                     </button>
                   </div>
 
+                  <div className="mt-9 bg-green-100 p-4 rounded-lg shadow-md">
+                    <h3 className="text-lg font-bold mb-4 text-green-800">Offers and Coupons</h3>
+
+                    <div className="flex flex-col gap-4">
+                      {/* Coupon 1 */}
+                      <div className="border-[2px] p-6 border-green border-dashed rounded-lg flex items-start gap-4">
+                        <i className="fa fa-money-bill text-2xl text-green-600"></i>
+                        <div className="flex flex-col flex-grow">
+                          <div className="flex justify-between items-center">
+                            <div className="flex-grow">
+                              <span className="font-normal text-sm text-gray-700 mt-1">
+                                Get flat Rs 100 Off on Wires & Cables | Min cart value Rs 4,000
+                              </span>
+                            </div>
+                            <span className="font-semibold text-lg text-green-800 ml-4">DISCOUNT100</span>
+                            <button
+                              onClick={() => handleCopyToClipboard('DISCOUNT100')}
+                              className="text-sm text-blue-500 hover:underline ml-4"
+                            >
+                              Copy
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Conditionally render additional coupons */}
+                      {showMore && (
+                        <>
+                          <div className="border-[2px] p-6 border-green border-dashed rounded-lg flex items-start gap-4">
+                            <i className="fa fa-money-bill text-2xl text-green-600"></i>
+                            <div className="flex flex-col flex-grow">
+                              <div className="flex justify-between items-center">
+                                <div className="flex-grow">
+                                  <span className="font-normal text-sm text-gray-700 mt-1">
+                                    Get flat Rs 150 Off on Orders | Min cart value Rs 5,000
+                                  </span>
+                                </div>
+                                <span className="font-semibold text-lg text-green-800 ml-4">DISCOUNT150</span>
+                                <button
+                                  onClick={() => handleCopyToClipboard('DISCOUNT150')}
+                                  className="text-sm text-blue-500 hover:underline ml-4"
+                                >
+                                  Copy
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="border-[2px] p-6 border-green border-dashed rounded-lg flex items-start gap-4">
+                            <i className="fa fa-money-bill text-2xl text-green-600"></i>
+                            <div className="flex flex-col flex-grow">
+                              <div className="flex justify-between items-center">
+                                <div className="flex-grow">
+                                  <span className="font-normal text-sm text-gray-700 mt-1">
+                                    Get flat Rs 200 Off on Electronics | Min cart value Rs 7,000
+                                  </span>
+                                </div>
+                                <span className="font-semibold text-lg text-green-800 ml-4">DISCOUNT200</span>
+                                <button
+                                  onClick={() => handleCopyToClipboard('DISCOUNT200')}
+                                  className="text-sm text-blue-500 hover:underline ml-4"
+                                >
+                                  Copy
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="border-[2px] p-6 border-green border-dashed rounded-lg flex items-start gap-4">
+                            <i className="fa fa-money-bill text-2xl text-green-600"></i>
+                            <div className="flex flex-col flex-grow">
+                              <div className="flex justify-between items-center">
+                                <div className="flex-grow">
+                                  <span className="font-normal text-sm text-gray-700 mt-1">
+                                    Get flat Rs 250 Off on Orders Above Rs 10,000
+                                  </span>
+                                </div>
+                                <span className="font-semibold text-lg text-green-800 ml-4">DISCOUNT250</span>
+                                <button
+                                  onClick={() => handleCopyToClipboard('DISCOUNT250')}
+                                  className="text-sm text-blue-500 hover:underline ml-4"
+                                >
+                                  Copy
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Button to toggle additional coupons */}
+                      <button
+                        onClick={() => setShowMore(!showMore)}
+                        className="mt-4 py-2 px-4 rounded-lg text-blue-500 font-semibold transition ease-in-out duration-300"
+                      >
+                        {showMore ? 'Show Less' : 'Show More'}
+                        <div className="my-4 border-t border-gray-300"></div>
+                      </button>
+
+                      {/* Line through below the button */}
+
+                    </div>
+                  </div>
+
                   <div className="flex mt-2 gap-2 mt-6">
                     <span className="text-md font-semibold">
                       Buy More & Save More
@@ -428,8 +536,10 @@ const ProductPage = () => {
                 </div>
               </div>
             </div>
+
           </div>
-          <div className="p-6 mt-9 mb-5 bg-blue-100 shadow-md rounded-lg">
+
+          <div className="p-6 mt-9 mb-5 bg-white shadow-md rounded-lg">
             <h3 className="text-xl font-semibold mb-2">Average Rating: 4.2</h3>
             <h2 className="text-2xl font-bold mb-4">Reviews</h2>
 
@@ -634,29 +744,29 @@ const ProductPage = () => {
                 ))}
               </ul>
             </div> */}
-            
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2">Customer Reviews</h3>
-        <ul>
-          {reviews.slice(0, showAllReviews ? reviews.length : 1).map((review) => (
-            <li key={review.id} className="mb-4 p-4 border-b border-gray-200">
-              <div className="flex items-center mb-2">
-                {renderStars(review.rating)}
-                <span className="ml-2 font-semibold">{review.name}</span>
-              </div>
-              <p className="text-gray-700">{review.comment}</p>
-            </li>
-          ))}
-        </ul>
-        {reviews.length > 1 && (
-          <button
-            className="mt-4 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-            onClick={() => setShowAllReviews(!showAllReviews)}
-          >
-            {showAllReviews ? 'Show Less' : `View ${reviews.length - 1} More Helpful Reviews`}
-          </button>
-        )}
-      </div>
+
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Customer Reviews</h3>
+              <ul>
+                {reviews.slice(0, showAllReviews ? reviews.length : 1).map((review) => (
+                  <li key={review.id} className="mb-4 p-4 border-b border-gray-200">
+                    <div className="flex items-center mb-2">
+                      {renderStars(review.rating)}
+                      <span className="ml-2 font-semibold">{review.name}</span>
+                    </div>
+                    <p className="text-gray-700">{review.comment}</p>
+                  </li>
+                ))}
+              </ul>
+              {reviews.length > 1 && (
+                <button
+                  className="mt-4 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                  onClick={() => setShowAllReviews(!showAllReviews)}
+                >
+                  {showAllReviews ? 'Show Less' : `View ${reviews.length - 1} More Helpful Reviews`}
+                </button>
+              )}
+            </div>
 
           </div>
 
@@ -708,13 +818,13 @@ const ProductPage = () => {
                 >
                   +
                 </button>
-                
+
               </div><button
-                  onClick={handleRemoveProduct}
-                  className="ml-2 bg-red-500 text-white px-2 rounded hover:bg-red-600"
-                >
-                  Remove
-                </button>
+                onClick={handleRemoveProduct}
+                className="ml-2 bg-red-500 text-white px-2 rounded hover:bg-red-600"
+              >
+                Remove
+              </button>
             </div>
 
             <button
@@ -752,28 +862,28 @@ const ProductPage = () => {
 
 
 
-<div className="flex flex-col mt-6">
-      <span className="font-semibold text-md">Delivery Details</span>
+            <div className="flex flex-col mt-6">
+              <span className="font-semibold text-md">Delivery Details</span>
 
-      <div className="lg:w-72 md:w-72 w-full rounded-[7px] border-[1px] border-secondary p-1 flex mt-2">
-        <div className="flex items-center pl-2 pr-1">
-          <FaMapMarkerAlt className="text-red-500" />
-        </div>
-        <input
-          type="text"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          className="border-[0px]  focus:outline-none px-2 w-full"
-          placeholder="Enter your location"
-        />
-        <button className="text-sm px-3 py-1.5 rounded-[7px] bg-red-200 font-semibold text-red-500 w-max">
-          CHECK
-        </button>
-      </div>
-      <span className="font-normal text-xs">
-        Check serviceability at your location
-      </span>
-    </div>
+              <div className="lg:w-72 md:w-72 w-full rounded-[7px] border-[1px] border-secondary p-1 flex mt-2">
+                <div className="flex items-center pl-2 pr-1">
+                  <FaMapMarkerAlt className="text-red-500" />
+                </div>
+                <input
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="border-[0px]  focus:outline-none px-2 w-full"
+                  placeholder="Enter your location"
+                />
+                <button className="text-sm px-3 py-1.5 rounded-[7px] bg-red-200 font-semibold text-red-500 w-max">
+                  CHECK
+                </button>
+              </div>
+              <span className="font-normal text-xs">
+                Check serviceability at your location
+              </span>
+            </div>
 
 
 
