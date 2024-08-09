@@ -55,7 +55,7 @@ const Profile: React.FC = () => {
   });
   const handleSectionClick = (section: string, breadcrumbText: string) => {
     setActiveSection(section);
-    setBreadcrumb(`Profile ${breadcrumbText}`);
+    setBreadcrumb(`Profile > ${breadcrumbText}`);
   };
 
   const handleButtonClick = () => {
@@ -124,7 +124,33 @@ const Profile: React.FC = () => {
     HTMLFormElement
   > = (e) => {
     e.preventDefault();
-    // Handle form submission
+  };
+
+  const handleBreadcrumbClick = (part: string) => {
+    switch (part) {
+      case 'Profile':
+        setActiveSection('profile');
+        setBreadcrumb('Profile');
+        break;
+      case 'My Address':
+        setActiveSection('address');
+        setBreadcrumb('Profile > My Address');
+        break;
+      case 'My Orders':
+        setActiveSection('orders');
+        setBreadcrumb('Profile > My Orders');
+        break;
+      case 'My Business Details':
+        setActiveSection('business');
+        setBreadcrumb('Profile > My Business Details');
+        break;
+      case 'My Wishlist':
+        setActiveSection('wishlist');
+        setBreadcrumb('Profile > My Wishlist');
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -133,8 +159,24 @@ const Profile: React.FC = () => {
         {/* Sidebar Section */}
         <div className="h-max lg:w-64 md:w-64 w-full flex-none flex flex-col lg:gap-4 md:gap-4 gap-2 rounded-[5px] z-40">
           {/* Breadcrumb */}
-          <div className="w-full px-4 bg-gray-100 rounded-[10px]">
-            <span className="text-md hover:text-red-400 font-medium">{breadcrumb}</span>
+          <div className="w-full px-4 bg-gray-100 rounded-[10px] overflow-hidden">
+
+            <span className="text-md hover:text-red-400 font-medium flex items-center whitespace-nowrap overflow-hidden text-ellipsis">
+              {breadcrumb.split(" > ").map((part, index, array) => (
+                <React.Fragment key={index}>
+                  <span
+                    className={`cursor-pointer ${index === array.length - 1 ? 'font-semibold' : 'text-red-600'}`}
+                    onClick={() => handleBreadcrumbClick(part)}
+                  >
+                    {part}
+                  </span>
+
+                  {index < array.length - 1 && (
+                    <FaChevronRight className="mx-1 text-gray-400" />
+                  )}
+                </React.Fragment>
+              ))}
+            </span>
           </div>
           {/* User Info Section */}
 
@@ -144,9 +186,8 @@ const Profile: React.FC = () => {
               <span className="text-xs">Name</span>
               <button
                 onClick={() => handleSectionClick("profile", "Profile")}
-                className={`w-full py-4 ${
-                  activeSection === "profile" ? "text-red-200" : "text-black"
-                } hover:text-red-200 flex items-center gap-4 transition ease-in duration-2000`}
+                className={`w-full py-4 ${activeSection === "profile" ? "text-red-200" : "text-black"
+                  } hover:text-red-200 flex items-center gap-4 transition ease-in duration-2000`}
               >
                 <span className="text-md text-white font-semibold">
                   User Name
@@ -159,18 +200,16 @@ const Profile: React.FC = () => {
           <div className="w-full px-4 bg-white rounded-[10px]">
             <button
               onClick={() => handleSectionClick("address", "My Address")}
-              className={`w-full py-4 border-b-[1px] ${
-                activeSection === "address" ? "text-red-500" : "text-black"
-              } hover:text-red-500 flex items-center gap-4 transition ease-in duration-2000`}
+              className={`w-full py-4 border-b-[1px] ${activeSection === "address" ? "text-red-500" : "text-black"
+                } hover:text-red-500 flex items-center gap-4 transition ease-in duration-2000`}
             >
               <FiMapPin className="text-2xl" />
               <span className="text-md font-medium">My Address</span>
             </button>
             <button
               onClick={() => handleSectionClick("orders", "My Orders")}
-              className={`w-full py-4 border-b-[1px] ${
-                activeSection === "orders" ? "text-red-500" : "text-black"
-              } hover:text-red-500 flex items-center gap-4 transition ease-in duration-2000`}
+              className={`w-full py-4 border-b-[1px] ${activeSection === "orders" ? "text-red-500" : "text-black"
+                } hover:text-red-500 flex items-center gap-4 transition ease-in duration-2000`}
             >
               <FaFile className="text-2xl" />
               <span className="text-md font-medium">My Orders</span>
@@ -179,18 +218,16 @@ const Profile: React.FC = () => {
               onClick={() =>
                 handleSectionClick("business", "My Business Details")
               }
-              className={`w-full py-4 border-b-[1px] ${
-                activeSection === "business" ? "text-red-500" : "text-black"
-              } hover:text-red-500 flex items-center gap-4 transition ease-in duration-2000`}
+              className={`w-full py-4 border-b-[1px] ${activeSection === "business" ? "text-red-500" : "text-black"
+                } hover:text-red-500 flex items-center gap-4 transition ease-in duration-2000`}
             >
               <FaShoppingBag className="text-2xl" />
               <span className="text-md font-medium">My Business Details</span>
             </button>
             <button
               onClick={() => handleSectionClick("wishlist", "My Wishlist")}
-              className={`w-full py-4 ${
-                activeSection === "wishlist" ? "text-red-500" : "text-black"
-              } hover:text-red-500 flex items-center gap-4 transition ease-in duration-2000`}
+              className={`w-full py-4 ${activeSection === "wishlist" ? "text-red-500" : "text-black"
+                } hover:text-red-500 flex items-center gap-4 transition ease-in duration-2000`}
             >
               <FaHeart className="text-2xl" />
               <span className="text-md font-medium">My Wishlist</span>
@@ -253,6 +290,7 @@ const Profile: React.FC = () => {
                     setNewAddress={setNewAddress}
                     handleAddressFormSubmit={handleAddressFormSubmit}
                     isEditing={isEditing}
+                    handleCancel={() => setShowForm(false)}
                   />
                 )}
               </div>
@@ -287,13 +325,14 @@ const Profile: React.FC = () => {
                 setNewAddress={setNewAddress}
                 handleAddressFormSubmit={handleAddressFormSubmit}
                 isEditing={isEditing}
+                handleCancel={() => setShowForm(false)}
               />
             </div>
           )}
 
           {activeSection === "business" && (
-            <div className="w-full bg-white p-4 rounded-[10px]">
-              <div className="flex justify-between items-center">
+            <div className="w-full bg-white p-4 rounded-[10px] shadow-md">
+              <div className="flex justify-between items-center mb-4">
                 <span className="font-semibold text-md">
                   My Business Details
                 </span>
@@ -301,12 +340,11 @@ const Profile: React.FC = () => {
               <BusinessDetailsForm
                 formData={formData}
                 handleChange={handleChange}
-                handleBusinessDetailsFormSubmit={
-                  handleBusinessDetailsFormSubmit
-                }
+                handleBusinessDetailsFormSubmit={handleBusinessDetailsFormSubmit}
               />
             </div>
           )}
+
         </div>
       </div>
     </div>

@@ -73,7 +73,7 @@ const ProductPage = () => {
 
   const handleCopyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-};
+  };
 
   const calculateGST = (price: number, gstRate: number = 18) => {
     return price * (gstRate / 100);
@@ -344,91 +344,108 @@ const ProductPage = () => {
                     </button>
                   </div>
 
-                  <div className="mt-9 bg-green-100 p-4 rounded-lg shadow-md">
+                  <div className="mt-9 border border-green-500 bg-green-100 p-4 rounded-lg shadow-md">
                     <h3 className="text-lg font-bold mb-4 text-green-800">Offers and Coupons</h3>
 
                     <div className="flex flex-col gap-4">
                       {/* Coupon 1 */}
-                      <div className="border-[2px] p-6 border-green border-dashed rounded-lg flex items-start gap-4">
+                      <div className="p-6 rounded-lg flex items-start gap-4">
                         <i className="fa fa-money-bill text-2xl text-green-600"></i>
                         <div className="flex flex-col flex-grow">
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-start">
                             <div className="flex-grow">
                               <span className="font-normal text-sm text-gray-700 mt-1">
                                 Get flat Rs 100 Off on Wires & Cables | Min cart value Rs 4,000
                               </span>
                             </div>
-                            <span className="font-semibold text-lg text-green-800 ml-4">DISCOUNT100</span>
-                            <button
-                              onClick={() => handleCopyToClipboard('DISCOUNT100')}
-                              className="text-sm text-blue-500 hover:underline ml-4"
-                            >
-                              Copy
-                            </button>
+                            <div className="ml-4">
+                              <div className="ml-5 font-semibold text-lg text-green-800 border-2 border-green-500 border-dashed p-1">
+                                <span className="font-semibold text-lg text-green-800 ml-4">DISCOUNT100</span>
+                              </div>
+                              <button
+                                onClick={() => handleCopyToClipboard('DISCOUNT100')}
+                                className="text-sm text-blue-500 hover:underline mt-2 ml-4"
+                              >
+                                Click to Copy
+                              </button>
+                            </div>
                           </div>
+
                         </div>
                       </div>
 
                       {/* Conditionally render additional coupons */}
                       {showMore && (
                         <>
-                          <div className="border-[2px] p-6 border-green border-dashed rounded-lg flex items-start gap-4">
+                          <div className=" p-6 rounded-lg flex items-start gap-4">
                             <i className="fa fa-money-bill text-2xl text-green-600"></i>
                             <div className="flex flex-col flex-grow">
-                              <div className="flex justify-between items-center">
-                                <div className="flex-grow">
-                                  <span className="font-normal text-sm text-gray-700 mt-1">
-                                    Get flat Rs 150 Off on Orders | Min cart value Rs 5,000
-                                  </span>
-                                </div>
+                            <div className="flex justify-between items-start">
+                            <div className="flex-grow">
+                              <span className="font-normal text-sm text-gray-700 mt-1">
+                                Get flat Rs 100 Off on Wires & Cables | Min cart value Rs 4,000
+                              </span>
+                            </div>
+                            <div className="ml-4">
+                              <div className="ml-5 font-semibold text-lg text-green-800 border-2 border-green-500 border-dashed p-1">
                                 <span className="font-semibold text-lg text-green-800 ml-4">DISCOUNT150</span>
-                                <button
-                                  onClick={() => handleCopyToClipboard('DISCOUNT150')}
-                                  className="text-sm text-blue-500 hover:underline ml-4"
-                                >
-                                  Copy
-                                </button>
                               </div>
+                              <button
+                                onClick={() => handleCopyToClipboard('DISCOUNT150')}
+                                className="text-sm text-blue-500 hover:underline mt-2 ml-4"
+                              >
+                                Click to Copy
+                              </button>
+                            </div>
+                          </div>
                             </div>
                           </div>
 
-                          <div className="border-[2px] p-6 border-green border-dashed rounded-lg flex items-start gap-4">
+                          <div className=" p-6 rounded-lg flex items-start gap-4">
                             <i className="fa fa-money-bill text-2xl text-green-600"></i>
                             <div className="flex flex-col flex-grow">
-                              <div className="flex justify-between items-center">
-                                <div className="flex-grow">
-                                  <span className="font-normal text-sm text-gray-700 mt-1">
-                                    Get flat Rs 200 Off on Electronics | Min cart value Rs 7,000
-                                  </span>
-                                </div>
+                            <div className="flex justify-between items-start">
+                            <div className="flex-grow">
+                              <span className="font-normal text-sm text-gray-700 mt-1">
+                                Get flat Rs 100 Off on Wires & Cables | Min cart value Rs 4,000
+                              </span>
+                            </div>
+                            <div className="ml-4">
+                              <div className="ml-5 font-semibold text-lg text-green-800 border-2 border-green-500 border-dashed p-1">
                                 <span className="font-semibold text-lg text-green-800 ml-4">DISCOUNT200</span>
-                                <button
-                                  onClick={() => handleCopyToClipboard('DISCOUNT200')}
-                                  className="text-sm text-blue-500 hover:underline ml-4"
-                                >
-                                  Copy
-                                </button>
                               </div>
+                              <button
+                                onClick={() => handleCopyToClipboard('DISCOUNT200')}
+                                className="text-sm text-blue-500 hover:underline mt-2 ml-4"
+                              >
+                                Click to Copy
+                              </button>
+                            </div>
+                          </div>
                             </div>
                           </div>
 
-                          <div className="border-[2px] p-6 border-green border-dashed rounded-lg flex items-start gap-4">
+                          <div className=" p-6  rounded-lg flex items-start gap-4">
                             <i className="fa fa-money-bill text-2xl text-green-600"></i>
                             <div className="flex flex-col flex-grow">
-                              <div className="flex justify-between items-center">
-                                <div className="flex-grow">
-                                  <span className="font-normal text-sm text-gray-700 mt-1">
-                                    Get flat Rs 250 Off on Orders Above Rs 10,000
-                                  </span>
-                                </div>
+                            <div className="flex justify-between items-start">
+                            <div className="flex-grow">
+                              <span className="font-normal text-sm text-gray-700 mt-1">
+                                Get flat Rs 100 Off on Wires & Cables | Min cart value Rs 4,000
+                              </span>
+                            </div>
+                            <div className="ml-4">
+                              <div className="ml-5 font-semibold text-lg text-green-800 border-2 border-green-500 border-dashed p-1">
                                 <span className="font-semibold text-lg text-green-800 ml-4">DISCOUNT250</span>
-                                <button
-                                  onClick={() => handleCopyToClipboard('DISCOUNT250')}
-                                  className="text-sm text-blue-500 hover:underline ml-4"
-                                >
-                                  Copy
-                                </button>
                               </div>
+                              <button
+                                onClick={() => handleCopyToClipboard('DISCOUNT250')}
+                                className="text-sm text-blue-500 hover:underline mt-2 ml-4"
+                              >
+                                Click to Copy
+                              </button>
+                            </div>
+                          </div>
                             </div>
                           </div>
                         </>
@@ -442,11 +459,9 @@ const ProductPage = () => {
                         {showMore ? 'Show Less' : 'Show More'}
                         <div className="my-4 border-t border-gray-300"></div>
                       </button>
-
-                      {/* Line through below the button */}
-
                     </div>
                   </div>
+
 
                   <div className="flex mt-2 gap-2 mt-6">
                     <span className="text-md font-semibold">
